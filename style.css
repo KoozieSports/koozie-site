@@ -1,25 +1,46 @@
-/* style.css for Koozie Sports */
+/* style.css for Koozie Sports - Revised */
 
 /* --- 0. Global Settings & Variables --- */
-@import url('https://fonts.googleapis.com/css2?family=Architects+Daughter&family=Roboto:wght@400;700&display=swap');
-@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css'); /* Ensure Font Awesome is linked */
+@import url('https://fonts.googleapis.com/css2?family=Architects+Daughter&family=Roboto:wght@400;700&family=Permanent+Marker&display=swap');
+/* Font Awesome is now linked in HTML */
 
 :root {
-    /* Colors */
-    --notepad-bg: #fdfaef; /* Creamy off-white paper */
-    --notepad-lines: #aaccff; /* Light blue lines */
-    --notepad-margin-line: #f08080; /* Light red/pink for margin line */
+    /* Colors - Normal Mode */
+    --notepad-bg: #fdfaef;
+    --notepad-lines: #dde4ee; /* Softened blue */
+    --notepad-margin-line: #f0a0a0; /* Softened red */
     --text-color: #333;
-    --heading-color: #1a2a4a; /* Dark blue */
-    --accent-red: #e63946; /* Strong red */
-    --accent-blue: #457b9d; /* Medium blue */
+    --heading-color: #1a2a4a;
+    --accent-red: #e63946;
+    --accent-blue: #457b9d;
+    --link-color: var(--accent-blue);
+    --link-hover: var(--accent-red);
     --white: #ffffff;
-    --footer-bg: #e8e4d8; /* Slightly darker beige for footer */
+    --light-grey-bg: rgba(230, 235, 240, 0.4); /* Subtle alt bg */
+    --card-bg: var(--white);
+    --card-shadow: rgba(0, 0, 0, 0.08);
+    --footer-bg: #e8e4d8;
+    --footer-text: #555;
+    --marker-color: #2a9d8f; /* Teal for marker effect */
+    --quote-bg: rgba(var(--accent-blue), 0.05);
+
+    /* Colors - Drunk Mode (will be overridden by body.drunk-mode-active) */
+    --dm-notepad-bg: #fffacd; /* Lemon chiffon - more yellow paper */
+    --dm-notepad-lines: #ffb6c1; /* Light pink lines */
+    --dm-text-color: #4b0082; /* Indigo text */
+    --dm-heading-color: #8b0000; /* Dark red headings */
+    --dm-accent-red: #ff6347; /* Tomato red */
+    --dm-accent-blue: #1e90ff; /* Dodger blue */
+    --dm-link-color: var(--dm-accent-blue);
+    --dm-link-hover: var(--dm-accent-red);
+    --dm-card-bg: #f0e68c; /* Khaki card bg */
+    --dm-marker-color: #ff4500; /* OrangeRed marker */
 
     /* Fonts */
     --font-body: 'Roboto', sans-serif;
     --font-handwritten: 'Architects Daughter', cursive;
-    --font-heading: 'Roboto', sans-serif; /* Or maybe a bolder serif? */
+    --font-marker: 'Permanent Marker', cursive;
+    --font-heading: 'Roboto', sans-serif;
 
     /* Layout */
     --container-width: 1140px;
@@ -27,8 +48,9 @@
     --header-shrink-height: 65px;
     --base-spacing: 1rem; /* 16px */
 
-    /* Transitions */
+    /* Transitions & Effects */
     --transition-speed: 0.3s;
+    --bubble-size: 15px; /* For bubble effect */
 }
 
 /* Basic Reset */
@@ -42,33 +64,32 @@
 
 html {
     scroll-behavior: smooth;
-    font-size: 100%; /* Typically 16px */
+    font-size: 100%;
+    /* Add scroll-padding-top for fixed header offset */
+    scroll-padding-top: var(--header-height);
+    transition: scroll-padding-top var(--transition-speed) ease;
 }
+body.header-scrolled html {
+     scroll-padding-top: var(--header-shrink-height);
+}
+
 
 body {
     font-family: var(--font-body);
     color: var(--text-color);
     background-color: var(--notepad-bg);
     line-height: 1.6;
-    overflow-x: hidden; /* Prevent horizontal scroll */
-    /* Add subtle notepad lines to the whole page */
-    background-image: linear-gradient(var(--notepad-lines) 1px, transparent 1px);
-    background-size: 100% 2.2em; /* Adjust line spacing */
-    background-attachment: local; /* Lines scroll with content */
-    position: relative; /* Needed for potential absolute positioned elements like overlays */
+    overflow-x: hidden;
+    background-image:
+        linear-gradient(var(--notepad-margin-line) 0%, var(--notepad-margin-line) 100%) 35px 0 / 1px auto no-repeat, /* Vertical Margin Line */
+        linear-gradient(var(--notepad-lines) 1px, transparent 1px); /* Horizontal Lines */
+    background-size: 1px auto, 100% 2.2em;
+    background-attachment: local;
+    position: relative;
+    transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease; /* Transition for drunk mode */
 }
+/* No need for body::before */
 
-/* Add vertical margin line */
-body::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 35px; /* Adjust position */
-    width: 1px;
-    height: 100%;
-    background-color: var(--notepad-margin-line);
-    z-index: -1; /* Behind content */
-}
 
 /* --- 1. Layout & Container --- */
 .container {
@@ -85,13 +106,13 @@ img {
 }
 
 a {
-    color: var(--accent-blue);
+    color: var(--link-color);
     text-decoration: none;
     transition: color var(--transition-speed) ease;
 }
 
 a:hover, a:focus {
-    color: var(--accent-red);
+    color: var(--link-hover);
     text-decoration: underline;
 }
 
@@ -101,21 +122,20 @@ h1, h2, h3, h4, h5, h6 {
     line-height: 1.2;
     margin-bottom: calc(var(--base-spacing) * 0.75);
     font-weight: 700;
+    transition: color var(--transition-speed) ease; /* Transition for drunk mode */
 }
 
 h1 { font-size: 2.8rem; }
-h2 { font-size: 2.2rem; margin-top: calc(var(--base-spacing) * 2); } /* Section titles */
+h2 { font-size: 2.2rem; margin-top: calc(var(--base-spacing) * 2); }
 h3 { font-size: 1.5rem; color: var(--accent-blue); }
 
 section {
     padding: calc(var(--base-spacing) * 3) 0;
-    position: relative; /* For pseudo-elements like lines if needed per section */
+    position: relative;
 }
 
 .alt-bg {
-    background-color: rgba(230, 230, 240, 0.3); /* Very light blueish overlay */
-    /* Or use a slightly different paper texture/color */
-    /* background-color: #f9f5e9; */
+    background-color: var(--light-grey-bg);
 }
 
 .section-title {
@@ -125,7 +145,6 @@ section {
     padding-bottom: var(--base-spacing);
 }
 
-/* Underline effect for section titles */
 .section-title::after {
     content: '';
     position: absolute;
@@ -135,6 +154,7 @@ section {
     width: 80px;
     height: 3px;
     background-color: var(--accent-red);
+    transition: background-color var(--transition-speed) ease; /* Transition for drunk mode */
 }
 
 .section-subtitle {
@@ -145,10 +165,19 @@ section {
     font-size: 1.1rem;
 }
 
+/* Visually Hidden Class */
+.visually-hidden {
+  position: absolute !important;
+  height: 1px; width: 1px;
+  overflow: hidden;
+  clip: rect(1px, 1px, 1px, 1px);
+  white-space: nowrap; /* Added */
+}
+
 /* --- 2. Header & Navigation --- */
 #main-header {
     background-color: var(--white);
-    padding: 0; /* Remove padding, handled by container height */
+    padding: 0;
     position: fixed;
     top: 0;
     left: 0;
@@ -156,10 +185,9 @@ section {
     z-index: 1000;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     height: var(--header-height);
-    transition: height var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
-    border-bottom: 3px solid var(--accent-blue); /* Patriotic touch */
+    transition: height var(--transition-speed) ease, box-shadow var(--transition-speed) ease, background-color var(--transition-speed) ease;
+    border-bottom: 3px solid var(--accent-blue);
 }
-
 #main-header.scrolled {
     height: var(--header-shrink-height);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
@@ -169,49 +197,29 @@ section {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    height: 100%; /* Make container fill header height */
+    height: 100%;
 }
 
 #logo-link {
-    display: inline-block; /* Allows height setting */
-    height: 100%; /* Make link fill vertical space */
-    padding: 5px 0; /* Vertical padding for logo */
+    display: inline-block;
+    height: 100%;
+    padding: 5px 0;
     transition: padding var(--transition-speed) ease;
 }
-#logo-link:hover, #logo-link:focus {
-    text-decoration: none; /* Remove underline from logo */
-}
+#logo-link:hover, #logo-link:focus { text-decoration: none; }
 
 #logo-img {
-    height: 100%; /* Make logo fill link height */
+    height: 100%;
     width: auto;
-    object-fit: contain; /* Prevents distortion */
+    object-fit: contain;
     transition: height var(--transition-speed) ease;
 }
 
-/* #main-header.scrolled #logo-link {
-    padding: 2px 0;
-} */
-/* Logo height naturally adjusts with header height */
+#main-nav { display: flex; align-items: center; }
+#nav-links { list-style: none; display: flex; margin: 0; padding: 0; }
+#nav-links li { margin-left: calc(var(--base-spacing) * 1.5); }
 
-
-#main-nav {
-    display: flex;
-    align-items: center;
-}
-
-#nav-links {
-    list-style: none;
-    display: flex;
-    margin: 0;
-    padding: 0;
-}
-
-#nav-links li {
-    margin-left: calc(var(--base-spacing) * 1.5);
-}
-
-#nav-links a {
+#nav-links a.nav-item { /* Changed selector */
     font-weight: 700;
     color: var(--heading-color);
     text-transform: uppercase;
@@ -221,8 +229,7 @@ section {
     text-decoration: none;
     transition: color var(--transition-speed) ease;
 }
-
-#nav-links a::after {
+#nav-links a.nav-item::after {
     content: '';
     position: absolute;
     bottom: -2px;
@@ -230,32 +237,28 @@ section {
     width: 0;
     height: 2px;
     background-color: var(--accent-red);
-    transition: width var(--transition-speed) ease;
+    transition: width var(--transition-speed) ease, background-color var(--transition-speed) ease;
 }
+#nav-links a.nav-item:hover,
+#nav-links a.nav-item:focus,
+#nav-links a.nav-item.active { color: var(--link-hover); }
 
-#nav-links a:hover,
-#nav-links a:focus,
-#nav-links a.active {
-    color: var(--accent-red);
-}
+#nav-links a.nav-item:hover::after,
+#nav-links a.nav-item:focus::after,
+#nav-links a.nav-item.active::after { width: 100%; }
 
-#nav-links a:hover::after,
-#nav-links a:focus::after,
-#nav-links a.active::after {
-    width: 100%;
-}
-
-/* Hamburger Menu */
 #hamburger-menu {
-    display: none; /* Hidden on desktop */
+    display: none;
     background: none;
     border: none;
     font-size: 1.8rem;
     color: var(--heading-color);
     cursor: pointer;
     padding: 5px;
-    margin-left: var(--base-spacing); /* Space between nav and hamburger */
+    margin-left: var(--base-spacing);
+    transition: color var(--transition-speed) ease;
 }
+#hamburger-menu i { transition: transform 0.2s ease-in-out; } /* Added transition for icon change */
 
 /* Drunk Mode Toggle Button */
 #drunk-mode-toggle {
@@ -263,66 +266,106 @@ section {
     border: 1px solid var(--accent-blue);
     border-radius: 5px;
     color: var(--accent-blue);
-    font-size: 1.2rem; /* Adjust icon size */
+    font-size: 1.2rem;
     cursor: pointer;
     padding: 5px 10px;
     margin-left: var(--base-spacing);
     transition: all var(--transition-speed) ease;
-    line-height: 1; /* Align icon better */
+    line-height: 1;
+    position: relative; /* For tooltip */
 }
-
 #drunk-mode-toggle:hover,
 #drunk-mode-toggle:focus {
     background-color: var(--accent-blue);
     color: var(--white);
 }
 
-/* Specific body class will toggle icon */
+/* Tooltip Text */
+#drunk-mode-toggle .tooltip-text {
+    position: absolute;
+    bottom: 125%; /* Position above the button */
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(0, 0, 0, 0.75);
+    color: #fff;
+    padding: 5px 8px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity var(--transition-speed) ease, visibility var(--transition-speed) ease;
+    pointer-events: none; /* Don't interfere with button clicks */
+    z-index: 10;
+}
+#drunk-mode-toggle:hover .tooltip-text,
+#drunk-mode-toggle:focus .tooltip-text {
+    opacity: 1;
+    visibility: visible;
+}
+
+
+/* Drunk mode active changes icon via body class */
 .drunk-mode-active #drunk-mode-toggle i::before {
-    content: "\f0fc"; /* Font Awesome beer mug full icon - check class */
+    content: "\e1a2"; /* Font Awesome beer mug full (check FA gallery for exact code if needed) - Using a placeholder code here */
     font-family: "Font Awesome 6 Free";
     font-weight: 900;
+}
+/* Specific styling for the filled beer icon if needed */
+.drunk-mode-active #drunk-mode-toggle i.fa-beer-mug-empty::before {
+     content: "\f0fc"; /* Actual FA code for full mug */
 }
 
 
 /* --- 3. Main Content Sections --- */
 
-/* Adjust main content padding for fixed header */
-main {
-    padding-top: var(--header-height);
-    transition: padding-top var(--transition-speed) ease;
-}
-body.header-scrolled main {
-    padding-top: var(--header-shrink-height);
-}
+/* No padding needed now thanks to scroll-padding-top */
+/* main { padding-top: var(--header-height); transition: padding-top var(--transition-speed) ease; }
+body.header-scrolled main { padding-top: var(--header-shrink-height); } */
 
 
 /* Hero Section */
 #hero {
-    background-color: var(--accent-blue); /* Placeholder, replace with image if desired */
-    /* background: url('images/hero-bg.jpg') no-repeat center center/cover; */
+    /* Use a background image */
+    background: url('images/hero-bg.jpg') no-repeat center center/cover;
     color: var(--white);
     text-align: center;
     padding: calc(var(--base-spacing) * 5) 0;
     position: relative;
-    /* Remove notepad lines for this section if it has a dark bg */
-    background-image: none;
+    background-image: none; /* Remove notepad lines */
+    display: flex; /* To center content vertically */
+    align-items: center;
+    min-height: 60vh; /* Give it some height */
+    overflow: hidden; /* Hide potential overflow from effects */
 }
-#hero::before { display: none; } /* Hide vertical margin line */
+/* Hero Overlay */
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(26, 42, 74, 0.6); /* Dark blue overlay for contrast */
+    z-index: 1;
+}
+.hero-content {
+    position: relative; /* Above overlay */
+    z-index: 2;
+}
 
 #hero h1 {
     color: var(--white);
     font-size: 3.5rem;
     font-weight: 700;
     margin-bottom: var(--base-spacing);
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Stronger shadow */
 }
-
 #hero .tagline {
     font-family: var(--font-handwritten);
     font-size: 1.8rem;
     margin-bottom: calc(var(--base-spacing) * 2);
     color: rgba(255, 255, 255, 0.9);
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4);
 }
 
 /* Buttons */
@@ -335,60 +378,82 @@ body.header-scrolled main {
     font-weight: 700;
     display: inline-block;
     text-decoration: none;
-    transition: background-color var(--transition-speed) ease, transform var(--transition-speed) ease;
+    transition: background-color var(--transition-speed) ease, transform var(--transition-speed) ease, box-shadow var(--transition-speed);
     box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+    border: none; /* Reset border */
 }
-
 .cta-button:hover, .cta-button:focus {
-    background-color: darken(var(--accent-red), 10%);
+    background-color: #c4303d; /* Darken red */
     color: var(--white);
     text-decoration: none;
-    transform: translateY(-2px);
-    box-shadow: 4px 4px 8px rgba(0,0,0,0.3);
+    transform: translateY(-3px) scale(1.02); /* Lift and slightly grow */
+    box-shadow: 4px 6px 10px rgba(0,0,0,0.3);
 }
-
 .cta-button.secondary {
     background-color: transparent;
     color: var(--accent-blue);
     border: 2px solid var(--accent-blue);
     box-shadow: none;
 }
-
 .cta-button.secondary:hover, .cta-button.secondary:focus {
     background-color: var(--accent-blue);
     color: var(--white);
     transform: none;
-     box-shadow: none;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.1); /* Subtle shadow on hover */
+}
+
+/* NEW: Quote Section */
+#quote-of-week {
+    background-color: var(--quote-bg);
+    padding: calc(var(--base-spacing) * 2) 0;
+    text-align: center;
+}
+.quote-text {
+    font-family: var(--font-marker); /* Use marker font */
+    font-size: 1.8rem;
+    color: var(--heading-color);
+    line-height: 1.4;
+    max-width: 800px;
+    margin: 0 auto;
+    border-left: 5px solid var(--accent-red);
+    padding-left: var(--base-spacing);
+    font-style: italic;
+}
+.quote-text .handwritten-emphasis {
+    font-family: var(--font-handwritten); /* Use other handwritten font */
+    font-size: 0.9em;
+    color: var(--text-color);
+    display: block; /* Put attribution on new line */
+    margin-top: calc(var(--base-spacing) * 0.5);
+    font-style: normal;
+}
+.quote-attribution {
+    font-family: var(--font-handwritten);
+    font-size: 1.2rem;
+    color: #777;
+    margin-top: var(--base-spacing);
 }
 
 /* About Section */
-.about-content.layout-two-column {
-    display: flex;
-    flex-wrap: wrap;
-    gap: calc(var(--base-spacing) * 2);
-    align-items: center;
+.about-content.layout-two-column { display: flex; flex-wrap: wrap; gap: calc(var(--base-spacing) * 2); align-items: center; }
+.layout-two-column > div { flex: 1; min-width: 300px; }
+.about-content .text-content p { margin-bottom: var(--base-spacing); }
+
+/* Marker Text Style */
+.marker-text {
+    font-family: var(--font-marker);
+    color: var(--marker-color);
+    /* Optional: Slight background highlight */
+    /* background: linear-gradient(to top, rgba(var(--marker-color), 0.2) 30%, transparent 30%); */
+    padding: 0 0.1em; /* Add minimal padding if using background */
+    transition: color var(--transition-speed) ease; /* Transition for drunk mode */
 }
 
-.layout-two-column > div {
-    flex: 1;
-    min-width: 300px; /* Prevent excessive shrinking */
-}
-
-.about-content .text-content p {
-    margin-bottom: var(--base-spacing);
-}
-
-.handwritten-emphasis {
-    font-family: var(--font-handwritten);
-    font-size: 1.2em; /* Slightly larger */
-    color: var(--accent-red);
-}
+.handwritten-emphasis { font-family: var(--font-handwritten); font-size: 1.2em; color: var(--accent-red); }
 
 .framed-image {
     border: 8px solid var(--white);
     box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.2);
-    /* Slight random rotation possibility (could be enhanced with JS) */
-    /* transform: rotate(-2deg); */
 }
 
 .caption.handwritten-caption {
@@ -399,104 +464,65 @@ body.header-scrolled main {
     font-size: 1.1rem;
 }
 
-/* Featured League / Featured Blog / Gallery Grids */
-.league-grid,
-.featured-grid,
-.gallery-grid {
+/* Cards (League, Featured, Gallery) */
+.league-grid, .featured-grid, .gallery-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: calc(var(--base-spacing) * 2);
     margin-bottom: calc(var(--base-spacing) * 2);
 }
 
-.league-card,
-.featured-item,
-.gallery-item {
-    background-color: var(--white);
+.card-item { /* Generic card styles */
+    background-color: var(--card-bg);
     padding: var(--base-spacing);
-    border-radius: 5px;
-    box-shadow: 1px 1px 4px rgba(0,0,0,0.1);
-    transition: transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
-    /* Add a subtle 'torn paper' edge maybe? */
-     border: 1px solid #eee;
+    border-radius: 8px; /* Slightly rounder */
+    box-shadow: 2px 2px 6px var(--card-shadow);
+    transition: transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease, background-color var(--transition-speed) ease;
+    border: 1px solid #eee;
+    overflow: hidden; /* Ensure content stays within rounded corners */
+}
+.card-item:hover {
+    transform: translateY(-6px);
+    box-shadow: 4px 8px 12px var(--card-shadow);
 }
 
-.league-card:hover,
-.featured-item:hover,
-.gallery-item:hover {
-    transform: translateY(-5px);
-    box-shadow: 4px 4px 10px rgba(0,0,0,0.15);
+.card-image { /* Style for images within cards */
+    margin: calc(var(--base-spacing) * -1) calc(var(--base-spacing) * -1) var(--base-spacing); /* Extend to edges */
+    border-bottom: 1px solid #eee;
+    transition: transform 0.4s ease;
 }
 
-.league-card img,
-.featured-item img {
-    margin-bottom: var(--base-spacing);
-    border-bottom: 1px solid #eee; /* Separator */
-    padding-bottom: var(--base-spacing);
+.interactive-image:hover {
+    transform: scale(1.05); /* Zoom effect on hover */
+}
+.card-item:hover .card-image {
+     transform: scale(1.03); /* Subtle zoom within card hover */
 }
 
-.league-card h3,
-.featured-item h3 {
-    margin-bottom: calc(var(--base-spacing) * 0.5);
-    font-size: 1.3rem;
-}
-.league-card h3 a,
-.featured-item h3 a {
-    color: inherit; /* Take color from h3 */
-    text-decoration: none;
-}
-.league-card h3 a:hover,
-.featured-item h3 a:hover {
-    color: var(--accent-red);
-    text-decoration: underline;
-}
 
-.league-card p,
-.featured-item p {
-    margin-bottom: calc(var(--base-spacing) * 0.75);
-    font-size: 0.95rem;
-    color: #555;
-}
+/* Specific Card Types */
+.league-card h3, .featured-item h3 { margin-bottom: calc(var(--base-spacing) * 0.5); font-size: 1.3rem; }
+.league-card h3 a, .featured-item h3 a { color: inherit; text-decoration: none; }
+.league-card h3 a:hover, .featured-item h3 a:hover { color: var(--link-hover); text-decoration: underline; }
+.league-card p, .featured-item p { margin-bottom: calc(var(--base-spacing) * 0.75); font-size: 0.95rem; color: #555; }
+.read-more { font-weight: 700; font-size: 0.9rem; color: var(--link-color); text-decoration: none; }
+.read-more:hover { color: var(--link-hover); text-decoration: underline; }
+.item-date { display: block; font-size: 0.85rem; color: #777; margin-top: var(--base-spacing); font-family: var(--font-handwritten); }
 
-.read-more {
-    font-weight: 700;
-    font-size: 0.9rem;
-    color: var(--accent-blue);
-    text-decoration: none;
-}
-.read-more:hover {
-    color: var(--accent-red);
-    text-decoration: underline;
-}
+/* Gallery Items */
+.gallery-item a[data-lightbox] { cursor: zoom-in; display: block; } /* Indicate clickability */
+.gallery-item .framed-image { margin-bottom: var(--base-spacing); }
+.gallery-item .caption { margin-bottom: var(--base-spacing); } /* Add spacing below caption */
 
-.item-date {
-    display: block;
-    font-size: 0.85rem;
-    color: #777;
-    margin-top: var(--base-spacing);
-    font-family: var(--font-handwritten); /* Make dates handwritten */
-}
-
-.gallery-item .framed-image {
-    margin-bottom: var(--base-spacing);
-}
 
 /* Contact Section */
-#contact .contact-info p {
-    margin-bottom: calc(var(--base-spacing) * 0.5);
-    font-size: 1.1rem;
-}
-#contact .contact-info i {
+#contact .contact-info p { margin-bottom: calc(var(--base-spacing) * 0.5); font-size: 1.1rem; }
+#contact .contact-info i.fa-fw { /* Fixed width already applied in HTML */
     margin-right: 10px;
     color: var(--accent-blue);
-    width: 20px; /* Align icons */
-    text-align: center;
+    transition: color var(--transition-speed) ease;
 }
-
-.contact-link {
-    font-weight: 700;
-}
-
+.contact-link { font-weight: 700; }
 .handwritten-note {
     font-family: var(--font-handwritten);
     font-size: 1.2rem;
@@ -505,281 +531,303 @@ body.header-scrolled main {
     text-align: center;
     border: 1px dashed var(--notepad-margin-line);
     padding: calc(var(--base-spacing) * 0.5);
-    display: inline-block; /* Fit content */
-    margin-left: auto;
-    margin-right: auto;
+    display: inline-block;
+    max-width: 90%; /* Prevent overflow on small screens */
+    transition: color var(--transition-speed) ease, border-color var(--transition-speed) ease;
 }
+/* Contact Form Placeholder */
+.contact-form-placeholder {
+    margin-top: calc(var(--base-spacing) * 2.5);
+    padding: var(--base-spacing) calc(var(--base-spacing) * 1.5);
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: rgba(255, 255, 255, 0.5);
+}
+.contact-form-placeholder h3 {
+    text-align: center;
+    margin-bottom: var(--base-spacing);
+    font-size: 1.4rem;
+}
+.form-group {
+    margin-bottom: var(--base-spacing);
+}
+.contact-form-placeholder input[type="text"],
+.contact-form-placeholder textarea {
+    width: 100%;
+    padding: calc(var(--base-spacing) * 0.6);
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-family: var(--font-body);
+    font-size: 1rem;
+}
+.contact-form-placeholder textarea {
+    min-height: 80px;
+    resize: vertical;
+}
+.contact-form-placeholder button[type="submit"] {
+    display: block;
+    margin: var(--base-spacing) auto 0;
+}
+
 
 /* --- 4. Footer --- */
 #main-footer {
     background-color: var(--footer-bg);
     padding: calc(var(--base-spacing) * 1.5) 0;
     margin-top: calc(var(--base-spacing) * 3);
-    border-top: 3px solid var(--accent-red); /* Patriotic touch */
-    color: #555;
+    border-top: 3px solid var(--accent-red);
+    color: var(--footer-text);
     font-size: 0.9rem;
-    /* Remove main body lines from footer area */
-    background-image: none;
+    background-image: none; /* Remove notepad lines */
+    transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease, border-color var(--transition-speed) ease;
 }
-#main-footer::before { display: none; } /* Hide vertical margin line */
-
-
-.footer-content {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: var(--base-spacing);
-}
-
-.footer-left p {
-    margin-bottom: 5px;
-}
-
-.footer-tagline {
-    font-family: var(--font-handwritten);
-    font-size: 1rem;
-    color: #777;
-}
-
-.footer-right {
-    display: flex;
-    align-items: center;
-    gap: var(--base-spacing);
-}
-
+.footer-content { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: var(--base-spacing); }
+.footer-left p { margin-bottom: 5px; }
+.footer-tagline { font-family: var(--font-handwritten); font-size: 1rem; color: #777; }
+.footer-right { display: flex; align-items: center; gap: var(--base-spacing); }
 .social-links a {
     color: var(--heading-color);
     font-size: 1.5rem;
     margin-left: var(--base-spacing);
     text-decoration: none;
     transition: color var(--transition-speed) ease, transform var(--transition-speed);
-    display: inline-block; /* Allow transform */
+    display: inline-block;
 }
-
-.social-links a:hover, .social-links a:focus {
-    color: var(--accent-red);
-    transform: scale(1.1);
-}
-
+.social-links a:hover, .social-links a:focus { color: var(--link-hover); transform: scale(1.15) rotate(-5deg); } /* Added rotation */
 .back-to-top {
     color: var(--accent-blue);
-    font-size: 1.5rem;
+    font-size: 1.8rem; /* Made icon larger */
     text-decoration: none;
     transition: color var(--transition-speed) ease, transform var(--transition-speed);
-    display: inline-block; /* Allow transform */
+    display: inline-block;
 }
-.back-to-top:hover, .back-to-top:focus {
-    color: var(--accent-red);
-     transform: translateY(-3px);
-}
+.back-to-top:hover, .back-to-top:focus { color: var(--link-hover); transform: translateY(-4px); }
 
 
-/* --- 5. Helper Classes (Animations, Drunk Mode Prep) --- */
+/* --- 5. Helper Classes & Animations --- */
 
-/* Basic Scroll Animation Placeholders (JS will add 'visible' class) */
-.animate-on-scroll {
-    opacity: 0;
-    transform: translateY(20px);
-    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-}
-.animate-on-scroll.visible {
-    opacity: 1;
-    transform: translateY(0);
-}
-/* Add delays */
-.delay-1 { transition-delay: 0.1s; }
-.delay-2 { transition-delay: 0.2s; }
-.delay-3 { transition-delay: 0.3s; }
-/* Add more as needed */
+/* Scroll Animations */
+.animate-on-scroll { opacity: 0; transform: translateY(30px); transition: opacity 0.7s ease-out, transform 0.7s ease-out; }
+.animate-on-scroll.visible { opacity: 1; transform: translateY(0); }
+.delay-1 { transition-delay: 0.15s; }
+.delay-2 { transition-delay: 0.3s; }
+.delay-3 { transition-delay: 0.45s; }
 
-
-/* "Drunk Mode" Styling - Activated by adding .drunk-mode-active to <body> */
-body.drunk-mode-active {
-    /* Example: slightly skew the whole page? Use cautiously. */
-    /* transform: rotate(0.5deg); */
-    /* Maybe make lines wavy? Harder with gradients, easier with SVG */
-    /* background-image: url('wavy-lines.svg'); */
-    cursor: crosshair; /* Fun cursor */
-}
-
-.drunk-mode-active .tilt-element {
-    transition: transform 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55); /* Bouncy transition */
-    /* Random subtle tilt */
-    transform: rotate(calc( ( var(--random-tilt, 0.5) - 0.5 ) * 6deg )); /* Use JS to set --random-tilt */
-}
-
-.drunk-mode-active .wobble-on-hover:hover {
-    animation: wobble 0.8s ease-in-out;
-}
-
-/* Define wobble animation */
-@keyframes wobble {
-  0%, 100% { transform: translateX(0%); }
-  15% { transform: translateX(-10px) rotate(-3deg); }
-  30% { transform: translateX(8px) rotate(2deg); }
-  45% { transform: translateX(-6px) rotate(-1deg); }
-  60% { transform: translateX(4px) rotate(1deg); }
-  75% { transform: translateX(-2px) rotate(-0.5deg); }
-}
-
-/* Beer Spill Overlay */
-#beer-spill-overlay {
+/* Bubble Overlay Effect */
+#bubble-overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: url('images/beer-spill.png') no-repeat bottom right; /* Placeholder - needs a transparent PNG */
-    background-size: contain; /* Or maybe cover, depending on image */
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 1001; /* Above content, below header maybe */
     opacity: 0;
     visibility: hidden;
-    z-index: 1001; /* Above content, below modals if any */
-    pointer-events: none; /* Allows clicks through */
-    transition: opacity 0.5s ease, visibility 0.5s ease;
+    transition: opacity 0.8s ease, visibility 0.8s ease;
+}
+#bubble-overlay::before,
+#bubble-overlay::after { /* Use pseudo-elements for bubbles */
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+}
+#bubble-overlay::before {
+    /* Multiple small radial gradients as bubbles */
+    background-image: radial-gradient(circle at center, rgba(255, 223, 186, 0.5) 0%, rgba(255, 223, 186, 0.5) 30%, transparent 60%), /* Bisque-like color */
+                      radial-gradient(circle at center, rgba(255, 255, 255, 0.6) 0%, rgba(255, 255, 255, 0.6) 25%, transparent 50%),
+                      radial-gradient(circle at center, rgba(255, 223, 186, 0.4) 0%, rgba(255, 223, 186, 0.4) 35%, transparent 70%);
+    background-repeat: repeat;
+    background-size: var(--bubble-size) var(--bubble-size), /* Vary sizes */
+                     calc(var(--bubble-size) * 0.7) calc(var(--bubble-size) * 0.7),
+                     calc(var(--bubble-size) * 1.3) calc(var(--bubble-size) * 1.3);
+    background-position: 10% 100%, 50% 100%, 80% 100%; /* Start at bottom */
+    animation: bubbles-rise 15s linear infinite;
 }
 
-.drunk-mode-active #beer-spill-overlay {
-    opacity: 0.4; /* Adjust transparency */
+@keyframes bubbles-rise {
+    0% { background-position: 10% 100%, 50% 100%, 80% 100%; opacity: 1; }
+    50% { background-position: 15% 50%, 55% 50%, 75% 50%; opacity: 0.8; }
+    99% { background-position: 20% 0%, 60% 0%, 70% 0%; opacity: 0.2; }
+    100% { background-position: 20% -10%, 60% -10%, 70% -10%; opacity: 0; } /* Move fully off screen */
+}
+
+
+/* --- 6. Drunk Mode Specific Styles --- */
+body.drunk-mode-active {
+    /* Change main colors */
+    --notepad-bg: var(--dm-notepad-bg);
+    --notepad-lines: var(--dm-notepad-lines);
+    --text-color: var(--dm-text-color);
+    --heading-color: var(--dm-heading-color);
+    --accent-red: var(--dm-accent-red);
+    --accent-blue: var(--dm-accent-blue);
+    --link-color: var(--dm-link-color);
+    --link-hover: var(--dm-link-hover);
+    --card-bg: var(--dm-card-bg);
+    --marker-color: var(--dm-marker-color);
+
+    /* Add slight overall rotation and maybe a filter */
+    transform: rotate(0.3deg);
+    filter: hue-rotate(10deg) saturate(110%);
+    cursor: url('images/beer-cursor.png'), crosshair; /* Custom cursor (needs image) */
+
+    /* Make lines wavy (SVG would be better, approximation with gradient) */
+     background-image:
+        linear-gradient(var(--notepad-margin-line) 0%, var(--notepad-margin-line) 100%) 35px 0 / 1px auto no-repeat,
+        repeating-linear-gradient(
+            45deg,
+            var(--dm-notepad-lines),
+            var(--dm-notepad-lines) 1px,
+            transparent 1px,
+            transparent 2.2em
+        );
+    /* background-size needs adjustment for wavy lines */
+    background-size: 1px auto, 100% 2.2em;
+}
+
+/* Make bubble overlay visible */
+.drunk-mode-active #bubble-overlay {
+    opacity: 0.8; /* Make bubbles more prominent */
     visibility: visible;
 }
 
-
-/* --- 6. Responsiveness --- */
-
-/* Medium Devices (Tablets, smaller desktops) */
-@media (max-width: 992px) {
-    :root {
-        --header-height: 80px;
-        --header-shrink-height: 60px;
-    }
-    h1 { font-size: 2.5rem; }
-    #hero h1 { font-size: 3rem; }
-    h2 { font-size: 2rem; }
-
-    .container { width: 95%; }
-
-    body::before { left: 25px; } /* Adjust margin line */
+/* Enhance element tilting */
+.drunk-mode-active .tilt-element {
+    transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); /* Springy transition */
+    transform: rotate(calc( ( var(--random-tilt, 0.5) - 0.5 ) * 8deg )) scale(0.98); /* Stronger tilt + slight shrink */
 }
 
-/* Small Devices (Landscape Phones, Large Portrait Phones) */
+/* Wobble Animation */
+.drunk-mode-active .wobble-on-hover:hover {
+    animation: wobble 0.9s ease-in-out infinite; /* Loop wobble on hover */
+}
+@keyframes wobble {
+  0%, 100% { transform: translateX(0%) rotate(0deg); }
+  15% { transform: translateX(-8px) rotate(-4deg); }
+  30% { transform: translateX(6px) rotate(3deg); }
+  45% { transform: translateX(-5px) rotate(-2deg); }
+  60% { transform: translateX(4px) rotate(1.5deg); }
+  75% { transform: translateX(-3px) rotate(-1deg); }
+}
+
+/* Text Effects in Drunk Mode */
+.drunk-mode-active h1,
+.drunk-mode-active h2,
+.drunk-mode-active .quote-text {
+     /* Optional: Very subtle text shadow to make it 'swim' a bit */
+     text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1);
+     animation: text-swim 5s ease-in-out infinite alternate;
+}
+
+@keyframes text-swim {
+    from { letter-spacing: normal; }
+    to { letter-spacing: 1px; }
+}
+
+/* Override specific element colors if needed */
+.drunk-mode-active #main-header {
+     background-color: #fff8dc; /* Cornsilk header */
+     border-bottom-color: var(--dm-accent-red);
+}
+.drunk-mode-active #main-footer {
+     background-color: #faf0e6; /* Linen footer */
+     border-top-color: var(--dm-accent-blue);
+}
+.drunk-mode-active .cta-button {
+     background-color: var(--dm-accent-red);
+     color: var(--white);
+}
+.drunk-mode-active .cta-button:hover {
+     background-color: #ff7f50; /* Coral hover */
+}
+.drunk-mode-active .cta-button.secondary {
+     color: var(--dm-accent-blue);
+     border-color: var(--dm-accent-blue);
+}
+.drunk-mode-active .cta-button.secondary:hover {
+     background-color: var(--dm-accent-blue);
+     color: var(--white);
+}
+
+
+/* --- 7. Responsiveness --- */
+
+/* Medium Devices */
+@media (max-width: 992px) {
+    :root { --header-height: 80px; --header-shrink-height: 60px; }
+    html { scroll-padding-top: var(--header-height); }
+    body.header-scrolled html { scroll-padding-top: var(--header-shrink-height); }
+    body { background-position: 25px 0, 0 0; } /* Adjust margin line */
+    h1 { font-size: 2.5rem; } #hero h1 { font-size: 3rem; } h2 { font-size: 2rem; }
+    .container { width: 95%; }
+    .quote-text { font-size: 1.6rem; }
+}
+
+/* Small Devices */
 @media (max-width: 768px) {
-    :root {
-        --header-height: 70px;
-        --header-shrink-height: 55px;
-    }
-    h1 { font-size: 2.2rem; }
-    #hero h1 { font-size: 2.5rem; }
-    #hero .tagline { font-size: 1.5rem; }
-    h2 { font-size: 1.8rem; }
+    :root { --header-height: 70px; --header-shrink-height: 55px; }
+    html { scroll-padding-top: var(--header-height); }
+    body.header-scrolled html { scroll-padding-top: var(--header-shrink-height); }
+    body { background-position: 15px 0, 0 0; } /* Adjust margin line */
+    h1 { font-size: 2.2rem; } #hero h1 { font-size: 2.5rem; } #hero .tagline { font-size: 1.5rem; } h2 { font-size: 1.8rem; }
+    .quote-text { font-size: 1.4rem; }
 
-    /* Make two-column layouts stack */
-    .layout-two-column {
-        flex-direction: column;
-    }
-    .layout-two-column > div {
-        min-width: 100%; /* Take full width when stacked */
-    }
-    /* Reverse image/text order if needed visually */
-    /* .about-content.layout-two-column { flex-direction: column-reverse; } */
+    .layout-two-column { flex-direction: column; }
+    .layout-two-column > div { min-width: 100%; }
 
-    /* Hamburger Menu Activation */
-    #hamburger-menu {
-        display: block; /* Show hamburger */
-        z-index: 1003; /* Above overlay */
-    }
-
-    #main-nav {
-        /* Adjust layout to accommodate hamburger and toggle */
-        order: 1; /* Move nav container (ul + hamburger) after logo */
-        margin-left: auto; /* Push it right */
-        display: contents; /* Allow direct flex alignment of button and toggle */
-    }
-
+    #hamburger-menu { display: block; z-index: 1003; }
+    #main-nav { order: 1; margin-left: auto; display: contents; }
 
     #nav-links {
-        position: fixed;
-        top: 0;
-        right: -100%; /* Start off-screen */
-        width: 70%;
-        max-width: 300px;
-        height: 100vh;
-        background-color: var(--white);
-        flex-direction: column;
+        position: fixed; top: 0; right: -100%; width: 70%; max-width: 300px; height: 100vh;
+        background-color: var(--white); flex-direction: column;
         padding: calc(var(--header-height) + var(--base-spacing) * 2) var(--base-spacing);
-        box-shadow: -3px 0 10px rgba(0,0,0,0.2);
-        transition: right var(--transition-speed) ease-in-out;
-        z-index: 1002; /* Below hamburger, above content */
-        /* Add notepad lines inside mobile menu */
+        box-shadow: -3px 0 10px rgba(0,0,0,0.2); transition: right var(--transition-speed) ease-in-out; z-index: 1002;
         background-image: linear-gradient(var(--notepad-lines) 1px, transparent 1px);
-        background-size: 100% 2.2em;
-        background-position: 0 var(--header-height); /* Align lines below header space */
+        background-size: 100% 2.2em; background-position: 0 var(--header-height);
+        overflow-y: auto; /* Allow scrolling if menu is long */
     }
+    #nav-links.nav-open { right: 0; }
+    #nav-links li { margin: 0; width: 100%; }
+    #nav-links a.nav-item { display: block; padding: var(--base-spacing) 0; border-bottom: 1px solid var(--notepad-lines); font-size: 1.1rem; }
+    #nav-links a.nav-item::after { display: none; }
+    #nav-links a.nav-item:hover, #nav-links a.nav-item:focus, #nav-links a.nav-item.active { background-color: var(--light-grey-bg); }
 
-    #nav-links.nav-open {
-        right: 0; /* Slide in */
-    }
+    #drunk-mode-toggle { order: 2; margin-left: 10px; }
+    #drunk-mode-toggle .tooltip-text { display: none; } /* Hide tooltip on mobile */
 
-    #nav-links li {
-        margin: 0;
-        width: 100%;
-    }
-
-    #nav-links a {
-        display: block;
-        padding: var(--base-spacing) 0;
-        border-bottom: 1px solid var(--notepad-lines);
-        font-size: 1.1rem;
-    }
-    #nav-links a::after { display: none; } /* Remove underline effect */
-    #nav-links a:hover, #nav-links a:focus, #nav-links a.active {
-        background-color: rgba(230, 230, 240, 0.3); /* Light hover bg */
-    }
-
-    #drunk-mode-toggle {
-         order: 2; /* Place after hamburger */
-         margin-left: 10px; /* Spacing from hamburger */
-         /* Ensure it's clickable when menu is open? Maybe adjust z-index if needed */
-    }
-
-    .footer-content {
-        flex-direction: column;
-        text-align: center;
-    }
-    .footer-right {
-        justify-content: center;
-    }
+    .footer-content { flex-direction: column; text-align: center; }
+    .footer-right { justify-content: center; }
     .social-links a:first-child { margin-left: 0; }
-
-    body::before { left: 15px; } /* Adjust margin line */
 }
 
-
-/* Extra Small Devices (Portrait Phones) */
+/* Extra Small Devices */
 @media (max-width: 576px) {
-    :root {
-        --base-spacing: 0.8rem; /* Slightly reduce base spacing */
-        --header-height: 60px;
-        --header-shrink-height: 50px;
-    }
-    body { background-size: 100% 2em; } /* Adjust line spacing */
-    h1 { font-size: 2rem; }
-    #hero { padding: calc(var(--base-spacing) * 4) 0; }
-    #hero h1 { font-size: 2.2rem; }
-    #hero .tagline { font-size: 1.3rem; }
-    h2 { font-size: 1.6rem; }
-    h3 { font-size: 1.2rem; }
-
-    .cta-button {
-        padding: calc(var(--base-spacing) * 0.7) calc(var(--base-spacing) * 1.5);
-        font-size: 0.9rem;
+    :root { --base-spacing: 0.8rem; --header-height: 60px; --header-shrink-height: 50px; --bubble-size: 10px;}
+    html { scroll-padding-top: var(--header-height); }
+    body.header-scrolled html { scroll-padding-top: var(--header-shrink-height); }
+    body { background-image: linear-gradient(var(--notepad-lines) 1px, transparent 1px); background-size: 100% 2em; } /* Hide margin line */
+    .drunk-mode-active body {
+       background-image: repeating-linear-gradient(45deg, var(--dm-notepad-lines), var(--dm-notepad-lines) 1px, transparent 1px, transparent 2em);
+       background-size: 100% 2em;
     }
 
+    h1 { font-size: 2rem; } #hero { padding: calc(var(--base-spacing) * 4) 0; min-height: 40vh; }
+    #hero h1 { font-size: 2.2rem; } #hero .tagline { font-size: 1.3rem; } h2 { font-size: 1.6rem; } h3 { font-size: 1.2rem; }
+    .quote-text { font-size: 1.2rem; }
+
+    .cta-button { padding: calc(var(--base-spacing) * 0.7) calc(var(--base-spacing) * 1.5); font-size: 0.9rem; }
     section { padding: calc(var(--base-spacing) * 2) 0; }
     .section-title { margin-bottom: var(--base-spacing); }
     .section-subtitle { margin-bottom: var(--base-spacing); font-size: 1rem;}
-
     #main-footer { padding: var(--base-spacing) 0; }
+    .social-links a { font-size: 1.3rem; margin-left: calc(var(--base-spacing) * 0.8); }
+    .back-to-top { font-size: 1.5rem; }
 
-    body::before { display: none; } /* Hide margin line on very small screens */
+    .contact-form-placeholder { padding: var(--base-spacing); }
 }
