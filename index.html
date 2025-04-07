@@ -10,7 +10,7 @@
     <!-- Preconnect Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Architects+Daughter&family=Roboto:wght@400;700&family=Permanent+Marker&display=swap" rel="stylesheet"> <!-- Added Permanent Marker -->
+    <link href="https://fonts.googleapis.com/css2?family=Architects+Daughter&family=Roboto:wght@400;700&family=Permanent+Marker&display=swap" rel="stylesheet">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <!-- Favicon -->
@@ -19,14 +19,16 @@
     <link rel="shortcut icon" href="/images/favicon.ico" />
     <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png" />
     <link rel="manifest" href="/images/site.webmanifest" />
+    <!-- NOTE: If using a specific Carousel library (like Swiper.js or Slick), link its CSS here -->
+    <!-- e.g., <link rel="stylesheet" href="path/to/swiper-bundle.min.css" /> -->
 </head>
 <body id="page-top">
 
     <header id="main-header">
         <div class="container header-container">
             <a href="#page-top" id="logo-link" title="Koozie Sports Home">
-                <img src="images/logo.jpg" alt="Koozie Sports Logo" id="logo-img">
-                <!-- <span class="site-title">Koozie Sports</span> -->
+                <!-- Added class 'spinning-logo' for CSS control -->
+                <img src="images/logo.jpg" alt="Koozie Sports Logo" id="logo-img" class="spinning-logo">
             </a>
 
             <nav id="main-nav">
@@ -39,6 +41,8 @@
                     <li><a href="#featured-league" class="nav-item">Leagues</a></li>
                     <li><a href="blog.html" class="nav-item">Blog</a></li> <!-- Link to future blog page -->
                     <li><a href="#gallery" class="nav-item">Gallery</a></li>
+                    <!-- NEW: Link to social section -->
+                    <li><a href="#social-feeds" class="nav-item">Social</a></li>
                     <li><a href="#contact" class="nav-item">Contact</a></li>
                 </ul>
             </nav>
@@ -46,7 +50,7 @@
             <!-- Drunk Mode Toggle -->
             <button id="drunk-mode-toggle" title="Activate 'Fun' Mode">
                 <i class="fas fa-beer-mug-empty"></i> <!-- Icon will change via CSS -->
-                <span class="tooltip-text">Toggle Fun Mode</span> <!-- Added Tooltip -->
+                <span class="tooltip-text">Toggle Fun Mode</span>
             </button>
         </div>
     </header>
@@ -54,7 +58,7 @@
     <main>
         <!-- Hero Section -->
         <section id="hero" class="notepad-section hero-bg">
-            <div class="hero-overlay"></div> <!-- Overlay for contrast/effects -->
+            <div class="hero-overlay"></div>
             <div class="container hero-content">
                 <h1 class="hero-title animate-on-scroll">Koozie Sports</h1>
                 <p class="tagline animate-on-scroll delay-1">Just sports, maybe a couple beers.</p>
@@ -62,7 +66,7 @@
             </div>
         </section>
 
-        <!-- NEW: Quote of the Week Section -->
+        <!-- Quote of the Week Section -->
         <section id="quote-of-week" class="notepad-section text-center">
              <div class="container">
                  <blockquote class="quote-text animate-on-scroll">
@@ -93,7 +97,7 @@
         <!-- Featured League/Sport Section -->
         <section id="featured-league" class="notepad-section alt-bg">
             <div class="container">
-                <h2 class="section-title animate-on-scroll">Currently Obsessed With: <span class="dynamic-league-name marker-text">Pickleball Pandemonium</span></h2> <!-- Updated example -->
+                <h2 class="section-title animate-on-scroll">Currently Obsessed With: <span class="dynamic-league-name marker-text">Pickleball Pandemonium</span></h2>
                  <p class="section-subtitle animate-on-scroll">Deep dives, power rankings that make no sense, and predictions fueled by optimism (and hops).</p>
                 <div class="league-grid">
                     <div class="league-card card-item animate-on-scroll tilt-element">
@@ -153,7 +157,7 @@
                 <p class="section-subtitle animate-on-scroll">Snapshots from the sidelines, tailgates, and questionable victory dances.</p>
                 <div class="gallery-grid">
                     <div class="gallery-item card-item animate-on-scroll tilt-element">
-                        <a href="images/gallery-1-large.jpg" data-lightbox="koozie-gallery" data-title="Pre-game Rituals: Fuelling up!"> <!-- Added Lightbox Trigger -->
+                        <a href="images/gallery-1-large.jpg" data-lightbox="koozie-gallery" data-title="Pre-game Rituals: Fuelling up!">
                             <img src="images/gallery-1.jpg" alt="Tailgate Scene" class="framed-image interactive-image">
                         </a>
                         <p class="caption handwritten-caption">Pre-game Rituals</p>
@@ -177,27 +181,78 @@
                         <p class="caption handwritten-caption">Mascot Mayhem</p>
                     </div>
                 </div>
-                <!-- Add instructions for lightbox if necessary (JS library needed) -->
                 <p class="handwritten-note animate-on-scroll delay-1">Click images to enlarge (if we figure out how)</p>
             </div>
         </section>
 
+        <!-- NEW: Social Feeds Section -->
+        <section id="social-feeds" class="notepad-section">
+            <div class="container">
+                <h2 class="section-title animate-on-scroll">Straight From The Source</h2>
+                <p class="section-subtitle animate-on-scroll">Catch the latest nonsense directly from our social channels.</p>
+
+                <div class="social-feeds-grid">
+                    <!-- Instagram Feed -->
+                    <div class="social-feed-item animate-on-scroll delay-1">
+                        <h3 class="marker-text"><i class="fab fa-instagram fa-fw"></i> Latest Instagram Posts</h3>
+                        <div class="instagram-carousel-placeholder card-item">
+                            <!--
+                                ** Instagram Feed Integration **
+                                Option 1 (Recommended): Use a third-party widget.
+                                  - Go to a service like LightWidget (lightwidget.com), Elfsight (elfsight.com), etc.
+                                  - Configure the widget to show your feed (@koozie_sports).
+                                  - Copy the embed code they provide and paste it HERE, replacing this comment block.
+                                  - Example (concept only): <iframe src="//lightwidget.com/widgets/..." ...></iframe>
+
+                                Option 2 (Manual): Manually add images/links. Less ideal, needs constant updates.
+                                  <div class="manual-insta-grid">
+                                      <a href="[Link to Post 1]" target="_blank"><img src="images/insta-1.jpg" alt="Instagram Post 1"></a>
+                                      <a href="[Link to Post 2]" target="_blank"><img src="images/insta-2.jpg" alt="Instagram Post 2"></a>
+                                      ...
+                                  </div>
+
+                                Option 3 (API): Requires Facebook Developer App, permissions, and complex setup. Not implemented here.
+                            -->
+                            <p>Loading Instagram feed...</p>
+                            <p class="handwritten-caption">(Or it would be, if we hooked it up! For now, <a href="https://www.instagram.com/koozie_sports/" target="_blank">visit Instagram</a>)</p>
+                        </div>
+                    </div>
+
+                    <!-- YouTube Feed -->
+                    <div class="social-feed-item animate-on-scroll delay-2">
+                        <h3 class="marker-text"><i class="fab fa-youtube fa-fw"></i> Latest YouTube Videos</h3>
+                        <div class="youtube-carousel-placeholder card-item">
+                            <!-- This div will be populated by script.js using the YouTube Data API -->
+                            <p>Loading YouTube videos...</p>
+                             <div id="youtube-video-items" class="youtube-video-grid">
+                                <!-- Video items will be injected here by JS -->
+                             </div>
+                             <p id="youtube-error-message" class="error-message" style="display: none;"></p>
+                             <p class="handwritten-caption" id="youtube-fallback-message">(If nothing shows up, our API key might be on a beer run. <a href="https://www.youtube.com/@koozie_sports" target="_blank">Visit YouTube</a>)</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
         <!-- Contact Section -->
-        <section id="contact" class="notepad-section">
+        <section id="contact" class="notepad-section alt-bg"> <!-- Changed background for variety -->
              <div class="container">
                  <h2 class="section-title animate-on-scroll">Talk to Us (We Might Listen)</h2>
                  <p class="animate-on-scroll">Got a scorching hot take? A correction? Want to send us free beer? Found a typo? Here's how:</p>
                  <div class="contact-info animate-on-scroll delay-1">
-                     <p><i class="fas fa-envelope fa-fw"></i> Email: <a href="mailto:hey@kooziesports.com" class="contact-link">hey@kooziesports.com</a></p>
-                     <p><i class="fab fa-x-twitter fa-fw"></i> X/Twitter: <a href="https://x.com/koozie_sports" target="_blank" rel="noopener noreferrer" class="contact-link">@koozie_sports</a></p> <!-- Updated Twitter icon -->
+                     <p><i class="fas fa-envelope fa-fw"></i> Email: <a href="mailto:nick@kooziesports.com" class="contact-link">nick@kooziesports.com</a></p>
+                     <p><i class="fab fa-x-twitter fa-fw"></i> X/Twitter: <a href="https://x.com/koozie_sports" target="_blank" rel="noopener noreferrer" class="contact-link">@koozie_sports</a></p>
                      <p><i class="fab fa-instagram fa-fw"></i> Instagram: <a href="https://www.instagram.com/koozie_sports/" target="_blank" rel="noopener noreferrer" class="contact-link">@koozie_sports</a></p>
-                     <p><i class="fa-brands fa-tiktok fa-fw"></i> TikTok: <a href="https://www.tiktok.com/@koozie_sports" target="_blank" rel="noopener noreferrer" class="contact-link">@koozie_sports</a> (Why not?)</p> <!-- Added TikTok -->
+                     <p><i class="fa-brands fa-tiktok fa-fw"></i> TikTok: <a href="https://www.tiktok.com/@koozie_sports" target="_blank" rel="noopener noreferrer" class="contact-link">@koozie_sports</a> (Why not?)</p>
+                     <p><i class="fab fa-youtube fa-fw"></i> YouTube: <a href="https://www.youtube.com/@koozie_sports" target="_blank" rel="noopener noreferrer" class="contact-link">@koozie_sports</a></p> <!-- Added YouTube Link -->
                      <p class="handwritten-note marker-text animate-on-scroll delay-2">Response times may vary depending on game schedules, beverage levels, and if Mercury is in retrograde.</p>
                  </div>
                  <!-- Simple Form Placeholder -->
                  <div class="contact-form-placeholder animate-on-scroll delay-3">
                      <h3 class="marker-text">Or Send a Quick Heckle:</h3>
-                     <form action="#" method="post"> <!-- Add actual form action later -->
+                     <form action="#" method="post">
                         <div class="form-group">
                             <label for="heckle-name" class="visually-hidden">Your Name</label>
                             <input type="text" id="heckle-name" name="name" placeholder="Your Name (Optional, Coward)">
@@ -218,27 +273,31 @@
         <div class="container footer-content">
             <div class="footer-left">
                 <p>© <span id="current-year"></span> Koozie Sports. All Rights Reserved... probably.</p>
-                <p class="footer-tagline">"Stay thirsty, my friends... for sports!"</p> <!-- Updated tagline -->
+                <p class="footer-tagline">"Stay thirsty, my friends... for sports!"</p>
             </div>
             <div class="footer-right">
                 <div class="social-links">
                     <a href="https://x.com/koozie_sports" target="_blank" rel="noopener noreferrer" aria-label="X/Twitter" title="X/Twitter"><i class="fab fa-x-twitter"></i></a>
                     <a href="https://www.instagram.com/koozie_sports/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" title="Instagram"><i class="fab fa-instagram"></i></a>
                     <a href="https://www.tiktok.com/@koozie_sports" target="_blank" rel="noopener noreferrer" aria-label="TikTok" title="TikTok"><i class="fa-brands fa-tiktok"></i></a>
-                    <a href="#" aria-label="Facebook" title="Facebook (If you must)"><i class="fab fa-facebook-f"></i></a>
+                    <a href="https://www.youtube.com/@koozie_sports" target="_blank" rel="noopener noreferrer" aria-label="YouTube" title="YouTube"><i class="fab fa-youtube"></i></a> <!-- Added YouTube Icon -->
+                    <!-- <a href="#" aria-label="Facebook" title="Facebook (If you must)"><i class="fab fa-facebook-f"></i></a> --> <!-- Removed FB for now -->
                 </div>
-                 <a href="#page-top" class="back-to-top" title="Back to Top"><i class="fas fa-angles-up"></i></a> <!-- Changed icon -->
+                 <a href="#page-top" class="back-to-top" title="Back to Top"><i class="fas fa-angles-up"></i></a>
             </div>
         </div>
     </footer>
 
     <!-- Drunk Mode Effects Overlay -->
     <div id="bubble-overlay" aria-hidden="true"></div>
-    <!-- Removed beer spill overlay, combined effects into bubble overlay -->
 
-    <!-- Lightbox Placeholder (Requires JS Library like Lightbox2 or custom JS) -->
-    <!-- <link rel="stylesheet" href="path/to/lightbox.min.css"> -->
-    <!-- <script src="path/to/lightbox.min.js"></script> -->
+Optional: Sound effect for Drunk Mode -->
+<audio id="drunk-mode-sound" src="audio/beer.mp3" preload="auto"></audio> -->
+
+    <!-- NOTE: If using a specific Carousel library (like Swiper.js or Slick), link its JS here -->
+    <!-- e.g., <script src="path/to/swiper-bundle.min.js"></script> -->
+    <!-- NOTE: If using Lightbox2, link its JS here -->
+    <!-- e.g., <script src="path/to/lightbox-plus-jquery.min.js"></script> -->
 
     <!-- Site Script -->
     <script src="script.js"></script>
