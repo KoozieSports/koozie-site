@@ -1,0 +1,785 @@
+/* style.css for Koozie Sports */
+
+/* --- 0. Global Settings & Variables --- */
+@import url('https://fonts.googleapis.com/css2?family=Architects+Daughter&family=Roboto:wght@400;700&display=swap');
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css'); /* Ensure Font Awesome is linked */
+
+:root {
+    /* Colors */
+    --notepad-bg: #fdfaef; /* Creamy off-white paper */
+    --notepad-lines: #aaccff; /* Light blue lines */
+    --notepad-margin-line: #f08080; /* Light red/pink for margin line */
+    --text-color: #333;
+    --heading-color: #1a2a4a; /* Dark blue */
+    --accent-red: #e63946; /* Strong red */
+    --accent-blue: #457b9d; /* Medium blue */
+    --white: #ffffff;
+    --footer-bg: #e8e4d8; /* Slightly darker beige for footer */
+
+    /* Fonts */
+    --font-body: 'Roboto', sans-serif;
+    --font-handwritten: 'Architects Daughter', cursive;
+    --font-heading: 'Roboto', sans-serif; /* Or maybe a bolder serif? */
+
+    /* Layout */
+    --container-width: 1140px;
+    --header-height: 90px;
+    --header-shrink-height: 65px;
+    --base-spacing: 1rem; /* 16px */
+
+    /* Transitions */
+    --transition-speed: 0.3s;
+}
+
+/* Basic Reset */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    scroll-behavior: smooth;
+    font-size: 100%; /* Typically 16px */
+}
+
+body {
+    font-family: var(--font-body);
+    color: var(--text-color);
+    background-color: var(--notepad-bg);
+    line-height: 1.6;
+    overflow-x: hidden; /* Prevent horizontal scroll */
+    /* Add subtle notepad lines to the whole page */
+    background-image: linear-gradient(var(--notepad-lines) 1px, transparent 1px);
+    background-size: 100% 2.2em; /* Adjust line spacing */
+    background-attachment: local; /* Lines scroll with content */
+    position: relative; /* Needed for potential absolute positioned elements like overlays */
+}
+
+/* Add vertical margin line */
+body::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 35px; /* Adjust position */
+    width: 1px;
+    height: 100%;
+    background-color: var(--notepad-margin-line);
+    z-index: -1; /* Behind content */
+}
+
+/* --- 1. Layout & Container --- */
+.container {
+    width: 90%;
+    max-width: var(--container-width);
+    margin: 0 auto;
+    padding: 0 var(--base-spacing);
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+a {
+    color: var(--accent-blue);
+    text-decoration: none;
+    transition: color var(--transition-speed) ease;
+}
+
+a:hover, a:focus {
+    color: var(--accent-red);
+    text-decoration: underline;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+    color: var(--heading-color);
+    line-height: 1.2;
+    margin-bottom: calc(var(--base-spacing) * 0.75);
+    font-weight: 700;
+}
+
+h1 { font-size: 2.8rem; }
+h2 { font-size: 2.2rem; margin-top: calc(var(--base-spacing) * 2); } /* Section titles */
+h3 { font-size: 1.5rem; color: var(--accent-blue); }
+
+section {
+    padding: calc(var(--base-spacing) * 3) 0;
+    position: relative; /* For pseudo-elements like lines if needed per section */
+}
+
+.alt-bg {
+    background-color: rgba(230, 230, 240, 0.3); /* Very light blueish overlay */
+    /* Or use a slightly different paper texture/color */
+    /* background-color: #f9f5e9; */
+}
+
+.section-title {
+    text-align: center;
+    margin-bottom: calc(var(--base-spacing) * 2);
+    position: relative;
+    padding-bottom: var(--base-spacing);
+}
+
+/* Underline effect for section titles */
+.section-title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 3px;
+    background-color: var(--accent-red);
+}
+
+.section-subtitle {
+    text-align: center;
+    margin-top: calc(var(--base-spacing) * -1.5);
+    margin-bottom: calc(var(--base-spacing) * 2);
+    color: #666;
+    font-size: 1.1rem;
+}
+
+/* --- 2. Header & Navigation --- */
+#main-header {
+    background-color: var(--white);
+    padding: 0; /* Remove padding, handled by container height */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    height: var(--header-height);
+    transition: height var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+    border-bottom: 3px solid var(--accent-blue); /* Patriotic touch */
+}
+
+#main-header.scrolled {
+    height: var(--header-shrink-height);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 100%; /* Make container fill header height */
+}
+
+#logo-link {
+    display: inline-block; /* Allows height setting */
+    height: 100%; /* Make link fill vertical space */
+    padding: 5px 0; /* Vertical padding for logo */
+    transition: padding var(--transition-speed) ease;
+}
+#logo-link:hover, #logo-link:focus {
+    text-decoration: none; /* Remove underline from logo */
+}
+
+#logo-img {
+    height: 100%; /* Make logo fill link height */
+    width: auto;
+    object-fit: contain; /* Prevents distortion */
+    transition: height var(--transition-speed) ease;
+}
+
+/* #main-header.scrolled #logo-link {
+    padding: 2px 0;
+} */
+/* Logo height naturally adjusts with header height */
+
+
+#main-nav {
+    display: flex;
+    align-items: center;
+}
+
+#nav-links {
+    list-style: none;
+    display: flex;
+    margin: 0;
+    padding: 0;
+}
+
+#nav-links li {
+    margin-left: calc(var(--base-spacing) * 1.5);
+}
+
+#nav-links a {
+    font-weight: 700;
+    color: var(--heading-color);
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    padding: 5px 0;
+    position: relative;
+    text-decoration: none;
+    transition: color var(--transition-speed) ease;
+}
+
+#nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: var(--accent-red);
+    transition: width var(--transition-speed) ease;
+}
+
+#nav-links a:hover,
+#nav-links a:focus,
+#nav-links a.active {
+    color: var(--accent-red);
+}
+
+#nav-links a:hover::after,
+#nav-links a:focus::after,
+#nav-links a.active::after {
+    width: 100%;
+}
+
+/* Hamburger Menu */
+#hamburger-menu {
+    display: none; /* Hidden on desktop */
+    background: none;
+    border: none;
+    font-size: 1.8rem;
+    color: var(--heading-color);
+    cursor: pointer;
+    padding: 5px;
+    margin-left: var(--base-spacing); /* Space between nav and hamburger */
+}
+
+/* Drunk Mode Toggle Button */
+#drunk-mode-toggle {
+    background: none;
+    border: 1px solid var(--accent-blue);
+    border-radius: 5px;
+    color: var(--accent-blue);
+    font-size: 1.2rem; /* Adjust icon size */
+    cursor: pointer;
+    padding: 5px 10px;
+    margin-left: var(--base-spacing);
+    transition: all var(--transition-speed) ease;
+    line-height: 1; /* Align icon better */
+}
+
+#drunk-mode-toggle:hover,
+#drunk-mode-toggle:focus {
+    background-color: var(--accent-blue);
+    color: var(--white);
+}
+
+/* Specific body class will toggle icon */
+.drunk-mode-active #drunk-mode-toggle i::before {
+    content: "\f0fc"; /* Font Awesome beer mug full icon - check class */
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+}
+
+
+/* --- 3. Main Content Sections --- */
+
+/* Adjust main content padding for fixed header */
+main {
+    padding-top: var(--header-height);
+    transition: padding-top var(--transition-speed) ease;
+}
+body.header-scrolled main {
+    padding-top: var(--header-shrink-height);
+}
+
+
+/* Hero Section */
+#hero {
+    background-color: var(--accent-blue); /* Placeholder, replace with image if desired */
+    /* background: url('images/hero-bg.jpg') no-repeat center center/cover; */
+    color: var(--white);
+    text-align: center;
+    padding: calc(var(--base-spacing) * 5) 0;
+    position: relative;
+    /* Remove notepad lines for this section if it has a dark bg */
+    background-image: none;
+}
+#hero::before { display: none; } /* Hide vertical margin line */
+
+#hero h1 {
+    color: var(--white);
+    font-size: 3.5rem;
+    font-weight: 700;
+    margin-bottom: var(--base-spacing);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+#hero .tagline {
+    font-family: var(--font-handwritten);
+    font-size: 1.8rem;
+    margin-bottom: calc(var(--base-spacing) * 2);
+    color: rgba(255, 255, 255, 0.9);
+}
+
+/* Buttons */
+.cta-button {
+    background-color: var(--accent-red);
+    color: var(--white);
+    padding: calc(var(--base-spacing) * 0.8) calc(var(--base-spacing) * 1.8);
+    border-radius: 5px;
+    text-transform: uppercase;
+    font-weight: 700;
+    display: inline-block;
+    text-decoration: none;
+    transition: background-color var(--transition-speed) ease, transform var(--transition-speed) ease;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+}
+
+.cta-button:hover, .cta-button:focus {
+    background-color: darken(var(--accent-red), 10%);
+    color: var(--white);
+    text-decoration: none;
+    transform: translateY(-2px);
+    box-shadow: 4px 4px 8px rgba(0,0,0,0.3);
+}
+
+.cta-button.secondary {
+    background-color: transparent;
+    color: var(--accent-blue);
+    border: 2px solid var(--accent-blue);
+    box-shadow: none;
+}
+
+.cta-button.secondary:hover, .cta-button.secondary:focus {
+    background-color: var(--accent-blue);
+    color: var(--white);
+    transform: none;
+     box-shadow: none;
+}
+
+/* About Section */
+.about-content.layout-two-column {
+    display: flex;
+    flex-wrap: wrap;
+    gap: calc(var(--base-spacing) * 2);
+    align-items: center;
+}
+
+.layout-two-column > div {
+    flex: 1;
+    min-width: 300px; /* Prevent excessive shrinking */
+}
+
+.about-content .text-content p {
+    margin-bottom: var(--base-spacing);
+}
+
+.handwritten-emphasis {
+    font-family: var(--font-handwritten);
+    font-size: 1.2em; /* Slightly larger */
+    color: var(--accent-red);
+}
+
+.framed-image {
+    border: 8px solid var(--white);
+    box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.2);
+    /* Slight random rotation possibility (could be enhanced with JS) */
+    /* transform: rotate(-2deg); */
+}
+
+.caption.handwritten-caption {
+    font-family: var(--font-handwritten);
+    text-align: center;
+    margin-top: var(--base-spacing);
+    color: #555;
+    font-size: 1.1rem;
+}
+
+/* Featured League / Featured Blog / Gallery Grids */
+.league-grid,
+.featured-grid,
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: calc(var(--base-spacing) * 2);
+    margin-bottom: calc(var(--base-spacing) * 2);
+}
+
+.league-card,
+.featured-item,
+.gallery-item {
+    background-color: var(--white);
+    padding: var(--base-spacing);
+    border-radius: 5px;
+    box-shadow: 1px 1px 4px rgba(0,0,0,0.1);
+    transition: transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+    /* Add a subtle 'torn paper' edge maybe? */
+     border: 1px solid #eee;
+}
+
+.league-card:hover,
+.featured-item:hover,
+.gallery-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 4px 4px 10px rgba(0,0,0,0.15);
+}
+
+.league-card img,
+.featured-item img {
+    margin-bottom: var(--base-spacing);
+    border-bottom: 1px solid #eee; /* Separator */
+    padding-bottom: var(--base-spacing);
+}
+
+.league-card h3,
+.featured-item h3 {
+    margin-bottom: calc(var(--base-spacing) * 0.5);
+    font-size: 1.3rem;
+}
+.league-card h3 a,
+.featured-item h3 a {
+    color: inherit; /* Take color from h3 */
+    text-decoration: none;
+}
+.league-card h3 a:hover,
+.featured-item h3 a:hover {
+    color: var(--accent-red);
+    text-decoration: underline;
+}
+
+.league-card p,
+.featured-item p {
+    margin-bottom: calc(var(--base-spacing) * 0.75);
+    font-size: 0.95rem;
+    color: #555;
+}
+
+.read-more {
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: var(--accent-blue);
+    text-decoration: none;
+}
+.read-more:hover {
+    color: var(--accent-red);
+    text-decoration: underline;
+}
+
+.item-date {
+    display: block;
+    font-size: 0.85rem;
+    color: #777;
+    margin-top: var(--base-spacing);
+    font-family: var(--font-handwritten); /* Make dates handwritten */
+}
+
+.gallery-item .framed-image {
+    margin-bottom: var(--base-spacing);
+}
+
+/* Contact Section */
+#contact .contact-info p {
+    margin-bottom: calc(var(--base-spacing) * 0.5);
+    font-size: 1.1rem;
+}
+#contact .contact-info i {
+    margin-right: 10px;
+    color: var(--accent-blue);
+    width: 20px; /* Align icons */
+    text-align: center;
+}
+
+.contact-link {
+    font-weight: 700;
+}
+
+.handwritten-note {
+    font-family: var(--font-handwritten);
+    font-size: 1.2rem;
+    color: var(--accent-red);
+    margin-top: var(--base-spacing);
+    text-align: center;
+    border: 1px dashed var(--notepad-margin-line);
+    padding: calc(var(--base-spacing) * 0.5);
+    display: inline-block; /* Fit content */
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* --- 4. Footer --- */
+#main-footer {
+    background-color: var(--footer-bg);
+    padding: calc(var(--base-spacing) * 1.5) 0;
+    margin-top: calc(var(--base-spacing) * 3);
+    border-top: 3px solid var(--accent-red); /* Patriotic touch */
+    color: #555;
+    font-size: 0.9rem;
+    /* Remove main body lines from footer area */
+    background-image: none;
+}
+#main-footer::before { display: none; } /* Hide vertical margin line */
+
+
+.footer-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--base-spacing);
+}
+
+.footer-left p {
+    margin-bottom: 5px;
+}
+
+.footer-tagline {
+    font-family: var(--font-handwritten);
+    font-size: 1rem;
+    color: #777;
+}
+
+.footer-right {
+    display: flex;
+    align-items: center;
+    gap: var(--base-spacing);
+}
+
+.social-links a {
+    color: var(--heading-color);
+    font-size: 1.5rem;
+    margin-left: var(--base-spacing);
+    text-decoration: none;
+    transition: color var(--transition-speed) ease, transform var(--transition-speed);
+    display: inline-block; /* Allow transform */
+}
+
+.social-links a:hover, .social-links a:focus {
+    color: var(--accent-red);
+    transform: scale(1.1);
+}
+
+.back-to-top {
+    color: var(--accent-blue);
+    font-size: 1.5rem;
+    text-decoration: none;
+    transition: color var(--transition-speed) ease, transform var(--transition-speed);
+    display: inline-block; /* Allow transform */
+}
+.back-to-top:hover, .back-to-top:focus {
+    color: var(--accent-red);
+     transform: translateY(-3px);
+}
+
+
+/* --- 5. Helper Classes (Animations, Drunk Mode Prep) --- */
+
+/* Basic Scroll Animation Placeholders (JS will add 'visible' class) */
+.animate-on-scroll {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+.animate-on-scroll.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+/* Add delays */
+.delay-1 { transition-delay: 0.1s; }
+.delay-2 { transition-delay: 0.2s; }
+.delay-3 { transition-delay: 0.3s; }
+/* Add more as needed */
+
+
+/* "Drunk Mode" Styling - Activated by adding .drunk-mode-active to <body> */
+body.drunk-mode-active {
+    /* Example: slightly skew the whole page? Use cautiously. */
+    /* transform: rotate(0.5deg); */
+    /* Maybe make lines wavy? Harder with gradients, easier with SVG */
+    /* background-image: url('wavy-lines.svg'); */
+    cursor: crosshair; /* Fun cursor */
+}
+
+.drunk-mode-active .tilt-element {
+    transition: transform 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55); /* Bouncy transition */
+    /* Random subtle tilt */
+    transform: rotate(calc( ( var(--random-tilt, 0.5) - 0.5 ) * 6deg )); /* Use JS to set --random-tilt */
+}
+
+.drunk-mode-active .wobble-on-hover:hover {
+    animation: wobble 0.8s ease-in-out;
+}
+
+/* Define wobble animation */
+@keyframes wobble {
+  0%, 100% { transform: translateX(0%); }
+  15% { transform: translateX(-10px) rotate(-3deg); }
+  30% { transform: translateX(8px) rotate(2deg); }
+  45% { transform: translateX(-6px) rotate(-1deg); }
+  60% { transform: translateX(4px) rotate(1deg); }
+  75% { transform: translateX(-2px) rotate(-0.5deg); }
+}
+
+/* Beer Spill Overlay */
+#beer-spill-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('images/beer-spill.png') no-repeat bottom right; /* Placeholder - needs a transparent PNG */
+    background-size: contain; /* Or maybe cover, depending on image */
+    opacity: 0;
+    visibility: hidden;
+    z-index: 1001; /* Above content, below modals if any */
+    pointer-events: none; /* Allows clicks through */
+    transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+
+.drunk-mode-active #beer-spill-overlay {
+    opacity: 0.4; /* Adjust transparency */
+    visibility: visible;
+}
+
+
+/* --- 6. Responsiveness --- */
+
+/* Medium Devices (Tablets, smaller desktops) */
+@media (max-width: 992px) {
+    :root {
+        --header-height: 80px;
+        --header-shrink-height: 60px;
+    }
+    h1 { font-size: 2.5rem; }
+    #hero h1 { font-size: 3rem; }
+    h2 { font-size: 2rem; }
+
+    .container { width: 95%; }
+
+    body::before { left: 25px; } /* Adjust margin line */
+}
+
+/* Small Devices (Landscape Phones, Large Portrait Phones) */
+@media (max-width: 768px) {
+    :root {
+        --header-height: 70px;
+        --header-shrink-height: 55px;
+    }
+    h1 { font-size: 2.2rem; }
+    #hero h1 { font-size: 2.5rem; }
+    #hero .tagline { font-size: 1.5rem; }
+    h2 { font-size: 1.8rem; }
+
+    /* Make two-column layouts stack */
+    .layout-two-column {
+        flex-direction: column;
+    }
+    .layout-two-column > div {
+        min-width: 100%; /* Take full width when stacked */
+    }
+    /* Reverse image/text order if needed visually */
+    /* .about-content.layout-two-column { flex-direction: column-reverse; } */
+
+    /* Hamburger Menu Activation */
+    #hamburger-menu {
+        display: block; /* Show hamburger */
+        z-index: 1003; /* Above overlay */
+    }
+
+    #main-nav {
+        /* Adjust layout to accommodate hamburger and toggle */
+        order: 1; /* Move nav container (ul + hamburger) after logo */
+        margin-left: auto; /* Push it right */
+        display: contents; /* Allow direct flex alignment of button and toggle */
+    }
+
+
+    #nav-links {
+        position: fixed;
+        top: 0;
+        right: -100%; /* Start off-screen */
+        width: 70%;
+        max-width: 300px;
+        height: 100vh;
+        background-color: var(--white);
+        flex-direction: column;
+        padding: calc(var(--header-height) + var(--base-spacing) * 2) var(--base-spacing);
+        box-shadow: -3px 0 10px rgba(0,0,0,0.2);
+        transition: right var(--transition-speed) ease-in-out;
+        z-index: 1002; /* Below hamburger, above content */
+        /* Add notepad lines inside mobile menu */
+        background-image: linear-gradient(var(--notepad-lines) 1px, transparent 1px);
+        background-size: 100% 2.2em;
+        background-position: 0 var(--header-height); /* Align lines below header space */
+    }
+
+    #nav-links.nav-open {
+        right: 0; /* Slide in */
+    }
+
+    #nav-links li {
+        margin: 0;
+        width: 100%;
+    }
+
+    #nav-links a {
+        display: block;
+        padding: var(--base-spacing) 0;
+        border-bottom: 1px solid var(--notepad-lines);
+        font-size: 1.1rem;
+    }
+    #nav-links a::after { display: none; } /* Remove underline effect */
+    #nav-links a:hover, #nav-links a:focus, #nav-links a.active {
+        background-color: rgba(230, 230, 240, 0.3); /* Light hover bg */
+    }
+
+    #drunk-mode-toggle {
+         order: 2; /* Place after hamburger */
+         margin-left: 10px; /* Spacing from hamburger */
+         /* Ensure it's clickable when menu is open? Maybe adjust z-index if needed */
+    }
+
+    .footer-content {
+        flex-direction: column;
+        text-align: center;
+    }
+    .footer-right {
+        justify-content: center;
+    }
+    .social-links a:first-child { margin-left: 0; }
+
+    body::before { left: 15px; } /* Adjust margin line */
+}
+
+
+/* Extra Small Devices (Portrait Phones) */
+@media (max-width: 576px) {
+    :root {
+        --base-spacing: 0.8rem; /* Slightly reduce base spacing */
+        --header-height: 60px;
+        --header-shrink-height: 50px;
+    }
+    body { background-size: 100% 2em; } /* Adjust line spacing */
+    h1 { font-size: 2rem; }
+    #hero { padding: calc(var(--base-spacing) * 4) 0; }
+    #hero h1 { font-size: 2.2rem; }
+    #hero .tagline { font-size: 1.3rem; }
+    h2 { font-size: 1.6rem; }
+    h3 { font-size: 1.2rem; }
+
+    .cta-button {
+        padding: calc(var(--base-spacing) * 0.7) calc(var(--base-spacing) * 1.5);
+        font-size: 0.9rem;
+    }
+
+    section { padding: calc(var(--base-spacing) * 2) 0; }
+    .section-title { margin-bottom: var(--base-spacing); }
+    .section-subtitle { margin-bottom: var(--base-spacing); font-size: 1rem;}
+
+    #main-footer { padding: var(--base-spacing) 0; }
+
+    body::before { display: none; } /* Hide margin line on very small screens */
+}
