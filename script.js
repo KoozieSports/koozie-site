@@ -1,17 +1,16 @@
 /**
  * script.js for Koozie Sports
  * Handles header shrinking, mobile navigation, drunk mode toggle,
- * scroll animations, and dynamic year update.
+ * scroll animations, dynamic year update, and smooth scrolling.
  */
 
 document.addEventListener('DOMContentLoaded', () => {
-    console.log("Koozie Sports Script Loaded!"); // Confirmation message
-
     // --- Cache DOM Elements ---
     const mainHeader = document.getElementById('main-header');
     const hamburgerMenu = document.getElementById('hamburger-menu');
     const navLinks = document.getElementById('nav-links');
     const drunkModeToggle = document.getElementById('drunk-mode-toggle');
+    const drunkModeTooltip = drunkModeToggle ? drunkModeToggle.querySelector('.tooltip-text') : null; // Get tooltip span
     const bodyElement = document.body;
     const currentYearSpan = document.getElementById('current-year');
     const scrollAnimateElements = document.querySelectorAll('.animate-on-scroll');
@@ -19,16 +18,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- State Variables ---
     let isMenuOpen = false;
-    let isDrunkMode = false;
+    let isDrunkMode = false; // Initialize based on class potentially set server-side or localStorage
+    if (bodyElement.classList.contains('drunk-mode-active')) {
+        isDrunkMode = true;
+    }
+
 
     // --- Function: Header Shrink on Scroll ---
     const handleHeaderScroll = () => {
-        if (!mainHeader) return; // Exit if header doesn't exist
-
-        const scrollThreshold = 50; // Pixels scrolled down to trigger shrink
+        if (!mainHeader) return;
+        const scrollThreshold = 50;
         if (window.scrollY > scrollThreshold) {
             mainHeader.classList.add('scrolled');
-            bodyElement.classList.add('header-scrolled'); // For main padding adjustment
+            bodyElement.classList.add('header-scrolled'); // Used by CSS for scroll-padding-top adjustment on html
         } else {
             mainHeader.classList.remove('scrolled');
             bodyElement.classList.remove('header-scrolled');
@@ -37,47 +39,55 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Function: Toggle Mobile Navigation ---
     const toggleMobileNav = () => {
-        if (!navLinks || !hamburgerMenu) return; // Exit if elements missing
+        if (!navLinks || !hamburgerMenu) return;
 
         isMenuOpen = !isMenuOpen;
         navLinks.classList.toggle('nav-open', isMenuOpen);
         hamburgerMenu.setAttribute('aria-expanded', isMenuOpen);
-        bodyElement.classList.toggle('body-menu-open', isMenuOpen); // Optional: prevents body scroll
+        bodyElement.classList.toggle('body-menu-open', isMenuOpen); // Optional: lock body scroll
 
-        // Change hamburger icon (optional visual cue)
         const icon = hamburgerMenu.querySelector('i');
         if (icon) {
             icon.classList.toggle('fa-bars', !isMenuOpen);
-            icon.classList.toggle('fa-times', isMenuOpen); // 'X' icon when open
+            icon.classList.toggle('fa-times', isMenuOpen);
+            // Add a slight rotation animation for effect
+            icon.style.transform = isMenuOpen ? 'rotate(90deg)' : 'rotate(0deg)';
         }
     };
 
     // --- Function: Toggle Drunk Mode ---
     const toggleDrunkMode = () => {
-        if (!bodyElement) return;
+        if (!bodyElement || !drunkModeToggle) return;
 
         isDrunkMode = !isDrunkMode;
         bodyElement.classList.toggle('drunk-mode-active', isDrunkMode);
 
-        // Apply random tilt to elements if drunk mode is active
+        // Update button title and tooltip text
+        const newTitle = isDrunkMode ? 'Deactivate "Fun" Mode' : 'Activate "Fun" Mode';
+        drunkModeToggle.setAttribute('title', newTitle);
+        if (drunkModeTooltip) {
+            drunkModeTooltip.textContent = newTitle;
+        }
+
+        // Apply/Remove random tilt only when activating/deactivating
+        const tiltElements = document.querySelectorAll('.tilt-element');
         if (isDrunkMode) {
-            const tiltElements = document.querySelectorAll('.tilt-element');
+             console.log("🍻 Koozie Sports: Fun Mode Activated! Things might get wobbly.");
             tiltElements.forEach(el => {
-                // Set a random CSS variable for tilt degree variation
                 const randomTiltValue = Math.random(); // Value between 0 and 1
                 el.style.setProperty('--random-tilt', randomTiltValue);
             });
+            // Optional: Play a sound?
+            // const bubbleSound = document.getElementById('bubble-sound'); // Needs <audio id="bubble-sound" src="path/to/sound.mp3"></audio>
+            // if(bubbleSound) bubbleSound.play().catch(e => console.error("Audio play failed:", e));
         } else {
-            // Optional: Reset tilt by removing the variable (or let CSS handle default)
-            // const tiltElements = document.querySelectorAll('.tilt-element');
-            // tiltElements.forEach(el => el.style.removeProperty('--random-tilt'));
+             console.log("🍺 Koozie Sports: Fun Mode Deactivated. Back to boring reality.");
+            // Optional: Explicitly remove tilt or let CSS defaults handle it
+             tiltElements.forEach(el => el.style.removeProperty('--random-tilt'));
         }
 
-        console.log(`Drunk Mode: ${isDrunkMode ? 'Activated!' : 'Deactivated.'}`);
-        // You could also update the toggle button's title attribute here
-        if (drunkModeToggle) {
-            drunkModeToggle.setAttribute('title', isDrunkMode ? 'Deactivate "Fun" Mode' : 'Activate "Fun" Mode');
-        }
+        // Persist choice in localStorage (optional)
+        // localStorage.setItem('koozieDrunkMode', isDrunkMode);
     };
 
     // --- Function: Update Copyright Year ---
@@ -89,80 +99,122 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Function: Handle Scroll Animations (Intersection Observer) ---
     const handleScrollAnimations = () => {
-        if (!scrollAnimateElements || scrollAnimateElements.length === 0) return;
+        if (!('IntersectionObserver' in window)) {
+            console.warn("IntersectionObserver not supported, scroll animations disabled.");
+            // Fallback: Make all elements visible immediately if IO is not supported
+            scrollAnimateElements.forEach(el => el.classList.add('visible'));
+            return;
+        }
 
         const observerOptions = {
-            root: null, // relative to document viewport
+            root: null,
             rootMargin: '0px',
-            threshold: 0.1 // Trigger when 10% of the element is visible
+            threshold: 0.15 // Trigger when 15% visible
         };
 
         const observerCallback = (entries, observer) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.classList.add('visible');
-                    observer.unobserve(entry.target); // Stop observing once visible
+                    observer.unobserve(entry.target);
                 }
             });
         };
 
         const observer = new IntersectionObserver(observerCallback, observerOptions);
-
         scrollAnimateElements.forEach(el => observer.observe(el));
     };
 
     // --- Function: Smooth Scrolling for Internal Links ---
     const handleSmoothScroll = (event) => {
-        const link = event.target.closest('a[href^="#"]'); // Ensure we get the link itself
+        const link = event.target.closest('a[href^="#"]');
         if (!link) return;
 
         const targetId = link.getAttribute('href');
-        // Ensure it's not just a "#" link (like placeholder links)
-        if (targetId === '#' || targetId.length < 2) return;
+        // Allow link to #page-top or actual IDs, ignore href="#"
+        if (targetId === '#') return;
 
-        const targetElement = document.querySelector(targetId);
-
-        if (targetElement) {
-            event.preventDefault(); // Prevent default jump
-
-            // Calculate offset if header is fixed (CSS `scroll-padding-top` is often preferred)
-            let headerOffset = 0;
-            if (mainHeader) {
-                headerOffset = mainHeader.offsetHeight;
-                // Or use the computed style if height transitions:
-                // headerOffset = parseFloat(window.getComputedStyle(mainHeader).height);
-            }
-
-            const elementPosition = targetElement.getBoundingClientRect().top;
-            const offsetPosition = elementPosition + window.scrollY - headerOffset;
-
-
-            // Close mobile menu if open and a link is clicked
-            if (isMenuOpen && navLinks && navLinks.contains(link)) {
+        // For #page-top, just scroll to top smoothly
+        if (targetId === '#page-top') {
+             event.preventDefault();
+             window.scrollTo({ top: 0, behavior: 'smooth' });
+             // Close mobile menu if open
+             if (isMenuOpen && navLinks && navLinks.contains(link)) {
                  toggleMobileNav();
-            }
+             }
+             return;
+        }
 
-            // Use native smooth scrolling
-            window.scrollTo({
-                top: offsetPosition,
-                behavior: "smooth"
-            });
+        // For other internal links
+        try {
+             const targetElement = document.querySelector(targetId);
+             if (targetElement) {
+                 event.preventDefault(); // Prevent default jump only if target exists
 
-            // Alternative: Use element.scrollIntoView (less control over offset)
-            // targetElement.scrollIntoView({
-            //     behavior: 'smooth',
-            //     block: 'start' // 'start', 'center', 'end', or 'nearest'
-            // });
+                 // Close mobile menu if open and a nav link is clicked
+                 if (isMenuOpen && navLinks && navLinks.contains(link)) {
+                      toggleMobileNav();
+                 }
+
+                 // Use scrollIntoView, respects scroll-padding-top set in CSS
+                 targetElement.scrollIntoView({
+                     behavior: 'smooth',
+                     block: 'start' // Align to top, considering scroll-padding
+                 });
+
+                 // Optional: Update focus for accessibility
+                 // setTimeout(() => { targetElement.focus(); }, 500); // Delay focus slightly after scroll
+             }
+        } catch (e) {
+            console.error(`Smooth scroll target element not found for selector: ${targetId}`, e);
         }
     };
 
-    // --- Initialize Functionality ---
+    // --- Function: Update Dynamic Content (Example) ---
+    const updateDynamicContent = () => {
+        const leagueNameEl = document.querySelector('.dynamic-league-name');
+        const weekNumberEl = document.querySelector('.dynamic-week');
+
+        if (leagueNameEl) {
+            // In a real scenario, this might come from an API or config
+            // leagueNameEl.textContent = "Flag Football Fury";
+        }
+        if (weekNumberEl) {
+            // weekNumberEl.textContent = "12";
+        }
+    };
+
+     // --- Function: Initialize Lightbox (Example Placeholder) ---
+     const initializeLightbox = () => {
+        // If using a library like Lightbox2, it often initializes itself.
+        // If using a custom solution or another library, initialize it here.
+        // Example for Lightbox2 (usually just needs the script included):
+        // if (typeof lightbox !== 'undefined') {
+        //     lightbox.option({
+        //       'resizeDuration': 200,
+        //       'wrapAround': true
+        //     });
+        //     console.log("Lightbox initialized.");
+        // } else {
+        //     console.warn("Lightbox script not found.");
+        // }
+     }
+
+
+    // --- Initialize Functionality on Page Load ---
+
+    // 0. Check for saved drunk mode preference (optional)
+    // if (localStorage.getItem('koozieDrunkMode') === 'true') {
+    //    if (!isDrunkMode) toggleDrunkMode(); // Ensure state matches if loaded differently
+    // } else {
+    //    if (isDrunkMode) toggleDrunkMode(); // Turn off if saved preference is false/null
+    // }
+
 
     // 1. Header Scroll Listener
     if (mainHeader) {
         window.addEventListener('scroll', handleHeaderScroll, { passive: true });
-        // Initial check in case the page loads already scrolled
-        handleHeaderScroll();
+        handleHeaderScroll(); // Initial check
     }
 
     // 2. Mobile Nav Toggle Listener
@@ -173,6 +225,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // 3. Drunk Mode Toggle Listener
     if (drunkModeToggle) {
         drunkModeToggle.addEventListener('click', toggleDrunkMode);
+        // Initial tooltip text update in case it loaded active
+        const initialTitle = isDrunkMode ? 'Deactivate "Fun" Mode' : 'Activate "Fun" Mode';
+        drunkModeToggle.setAttribute('title', initialTitle);
+        if (drunkModeTooltip) {
+             drunkModeTooltip.textContent = initialTitle;
+        }
     }
 
     // 4. Update Copyright Year
@@ -186,14 +244,23 @@ document.addEventListener('DOMContentLoaded', () => {
         link.addEventListener('click', handleSmoothScroll);
     });
 
+    // 7. Initialize Dynamic Content (Example)
+    updateDynamicContent();
+
+    // 8. Initialize Lightbox (Placeholder)
+    initializeLightbox();
+
+
     // --- Optional: Close mobile menu if clicking outside ---
     document.addEventListener('click', (event) => {
         if (isMenuOpen && navLinks && hamburgerMenu) {
-            // Check if the click was outside the navLinks and not on the hamburger button
+            // Ensure click is not the hamburger itself or inside the nav menu
             if (!navLinks.contains(event.target) && !hamburgerMenu.contains(event.target)) {
                 toggleMobileNav();
             }
         }
     });
+
+    console.log("Koozie Sports Script Initialized Successfully!");
 
 }); // End DOMContentLoaded
