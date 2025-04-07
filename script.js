@@ -1,27 +1,38 @@
 /**
  * script.js for Koozie Sports
  * Handles header shrinking, mobile navigation, drunk mode toggle,
- * scroll animations, dynamic year update, and smooth scrolling.
+ * scroll animations, dynamic year update, smooth scrolling,
+ * and fetching YouTube videos.
  */
 
 document.addEventListener('DOMContentLoaded', () => {
+    // --- Configuration ---
+    const YOUTUBE_API_KEY = 'YOUR_YOUTUBE_API_KEY'; // PASTE YOUR YOUTUBE DATA API KEY HERE
+    const YOUTUBE_CHANNEL_ID = 'UC4z4LOrBPikXVbuSg705g7w'; // Koozie Sports Channel ID
+    const MAX_YOUTUBE_VIDEOS = 6; // How many latest videos to show
+
     // --- Cache DOM Elements ---
     const mainHeader = document.getElementById('main-header');
     const hamburgerMenu = document.getElementById('hamburger-menu');
     const navLinks = document.getElementById('nav-links');
     const drunkModeToggle = document.getElementById('drunk-mode-toggle');
-    const drunkModeTooltip = drunkModeToggle ? drunkModeToggle.querySelector('.tooltip-text') : null; // Get tooltip span
+    const drunkModeTooltip = drunkModeToggle ? drunkModeToggle.querySelector('.tooltip-text') : null;
     const bodyElement = document.body;
     const currentYearSpan = document.getElementById('current-year');
     const scrollAnimateElements = document.querySelectorAll('.animate-on-scroll');
-    const internalLinks = document.querySelectorAll('a[href^="#"]'); // For smooth scroll
+    const internalLinks = document.querySelectorAll('a[href^="#"]');
+    // YouTube specific elements
+    const youtubeVideosContainer = document.getElementById('youtube-video-items');
+    const youtubeLoadingMessage = document.querySelector('.youtube-carousel-placeholder p:first-of-type');
+    const youtubeErrorMessage = document.getElementById('youtube-error-message');
+    const youtubeFallbackMessage = document.getElementById('youtube-fallback-message');
+    // Drunk mode sound (optional)
+    const drunkModeSound = document.getElementById('drunk-mode-sound');
+
 
     // --- State Variables ---
     let isMenuOpen = false;
-    let isDrunkMode = false; // Initialize based on class potentially set server-side or localStorage
-    if (bodyElement.classList.contains('drunk-mode-active')) {
-        isDrunkMode = true;
-    }
+    let isDrunkMode = bodyElement.classList.contains('drunk-mode-active'); // Initialize based on current class
 
 
     // --- Function: Header Shrink on Scroll ---
@@ -30,7 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const scrollThreshold = 50;
         if (window.scrollY > scrollThreshold) {
             mainHeader.classList.add('scrolled');
-            bodyElement.classList.add('header-scrolled'); // Used by CSS for scroll-padding-top adjustment on html
+            bodyElement.classList.add('header-scrolled');
         } else {
             mainHeader.classList.remove('scrolled');
             bodyElement.classList.remove('header-scrolled');
@@ -38,19 +49,24 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     // --- Function: Toggle Mobile Navigation ---
-    const toggleMobileNav = () => {
+    const toggleMobileNav = (forceClose = false) => {
         if (!navLinks || !hamburgerMenu) return;
 
-        isMenuOpen = !isMenuOpen;
+        if (forceClose) {
+            isMenuOpen = false;
+        } else {
+            isMenuOpen = !isMenuOpen;
+        }
+
         navLinks.classList.toggle('nav-open', isMenuOpen);
         hamburgerMenu.setAttribute('aria-expanded', isMenuOpen);
-        bodyElement.classList.toggle('body-menu-open', isMenuOpen); // Optional: lock body scroll
+        // Toggle class to prevent body scroll when menu is open
+        bodyElement.classList.toggle('body-menu-open', isMenuOpen);
 
         const icon = hamburgerMenu.querySelector('i');
         if (icon) {
             icon.classList.toggle('fa-bars', !isMenuOpen);
             icon.classList.toggle('fa-times', isMenuOpen);
-            // Add a slight rotation animation for effect
             icon.style.transform = isMenuOpen ? 'rotate(90deg)' : 'rotate(0deg)';
         }
     };
@@ -75,19 +91,25 @@ document.addEventListener('DOMContentLoaded', () => {
              console.log("🍻 Koozie Sports: Fun Mode Activated! Things might get wobbly.");
             tiltElements.forEach(el => {
                 const randomTiltValue = Math.random(); // Value between 0 and 1
+                // Use CSS variable defined in style.css
                 el.style.setProperty('--random-tilt', randomTiltValue);
             });
-            // Optional: Play a sound?
-            // const bubbleSound = document.getElementById('bubble-sound'); // Needs <audio id="bubble-sound" src="path/to/sound.mp3"></audio>
-            // if(bubbleSound) bubbleSound.play().catch(e => console.error("Audio play failed:", e));
+            // Optional: Play sound
+            if (drunkModeSound) {
+                drunkModeSound.play().catch(e => console.warn("Drunk mode sound play failed:", e));
+            }
         } else {
              console.log("🍺 Koozie Sports: Fun Mode Deactivated. Back to boring reality.");
-            // Optional: Explicitly remove tilt or let CSS defaults handle it
+            // Remove the CSS variable; styles will revert to non-drunk mode state
              tiltElements.forEach(el => el.style.removeProperty('--random-tilt'));
         }
 
         // Persist choice in localStorage (optional)
-        // localStorage.setItem('koozieDrunkMode', isDrunkMode);
+        try {
+            localStorage.setItem('koozieDrunkMode', isDrunkMode);
+        } catch (e) {
+            console.warn("Could not save drunk mode preference to localStorage:", e);
+        }
     };
 
     // --- Function: Update Copyright Year ---
@@ -101,7 +123,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const handleScrollAnimations = () => {
         if (!('IntersectionObserver' in window)) {
             console.warn("IntersectionObserver not supported, scroll animations disabled.");
-            // Fallback: Make all elements visible immediately if IO is not supported
             scrollAnimateElements.forEach(el => el.classList.add('visible'));
             return;
         }
@@ -109,7 +130,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const observerOptions = {
             root: null,
             rootMargin: '0px',
-            threshold: 0.15 // Trigger when 15% visible
+            threshold: 0.15
         };
 
         const observerCallback = (entries, observer) => {
@@ -131,84 +152,145 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!link) return;
 
         const targetId = link.getAttribute('href');
-        // Allow link to #page-top or actual IDs, ignore href="#"
-        if (targetId === '#') return;
+        if (targetId === '#') return; // Ignore links like href="#"
 
-        // For #page-top, just scroll to top smoothly
+        // Close mobile menu if open and a nav link inside it was clicked
+        if (isMenuOpen && navLinks && navLinks.contains(link)) {
+             toggleMobileNav(true); // Force close
+        }
+
         if (targetId === '#page-top') {
              event.preventDefault();
              window.scrollTo({ top: 0, behavior: 'smooth' });
-             // Close mobile menu if open
-             if (isMenuOpen && navLinks && navLinks.contains(link)) {
-                 toggleMobileNav();
-             }
              return;
         }
 
-        // For other internal links
         try {
              const targetElement = document.querySelector(targetId);
              if (targetElement) {
                  event.preventDefault(); // Prevent default jump only if target exists
 
-                 // Close mobile menu if open and a nav link is clicked
-                 if (isMenuOpen && navLinks && navLinks.contains(link)) {
-                      toggleMobileNav();
-                 }
-
-                 // Use scrollIntoView, respects scroll-padding-top set in CSS
                  targetElement.scrollIntoView({
                      behavior: 'smooth',
-                     block: 'start' // Align to top, considering scroll-padding
+                     block: 'start' // Align to top, respecting scroll-padding-top
                  });
-
-                 // Optional: Update focus for accessibility
-                 // setTimeout(() => { targetElement.focus(); }, 500); // Delay focus slightly after scroll
+             } else {
+                 console.warn(`Smooth scroll target element not found for selector: ${targetId}`);
+                 // Allow default behavior if target not found (e.g., link to another page)
              }
         } catch (e) {
-            console.error(`Smooth scroll target element not found for selector: ${targetId}`, e);
+            // If querySelector fails (e.g., invalid ID), allow default link behavior
+            console.error(`Error finding smooth scroll target: ${targetId}`, e);
         }
     };
 
-    // --- Function: Update Dynamic Content (Example) ---
+    // --- Function: Update Dynamic Content (Example Placeholder) ---
     const updateDynamicContent = () => {
         const leagueNameEl = document.querySelector('.dynamic-league-name');
         const weekNumberEl = document.querySelector('.dynamic-week');
-
-        if (leagueNameEl) {
-            // In a real scenario, this might come from an API or config
-            // leagueNameEl.textContent = "Flag Football Fury";
-        }
-        if (weekNumberEl) {
-            // weekNumberEl.textContent = "12";
-        }
+        // ... Add logic later if needed ...
     };
 
      // --- Function: Initialize Lightbox (Example Placeholder) ---
      const initializeLightbox = () => {
-        // If using a library like Lightbox2, it often initializes itself.
-        // If using a custom solution or another library, initialize it here.
-        // Example for Lightbox2 (usually just needs the script included):
         // if (typeof lightbox !== 'undefined') {
-        //     lightbox.option({
-        //       'resizeDuration': 200,
-        //       'wrapAround': true
-        //     });
-        //     console.log("Lightbox initialized.");
-        // } else {
-        //     console.warn("Lightbox script not found.");
+        //     lightbox.option({ 'resizeDuration': 200, 'wrapAround': true });
         // }
-     }
+     };
+
+     // --- Function: Fetch Latest YouTube Videos ---
+     const fetchYouTubeVideos = async () => {
+        if (!youtubeVideosContainer || !YOUTUBE_API_KEY || YOUTUBE_API_KEY === 'YOUR_YOUTUBE_API_KEY') {
+            console.warn("YouTube API Key or container missing. Skipping video fetch.");
+            if (youtubeLoadingMessage) youtubeLoadingMessage.style.display = 'none';
+            if (youtubeErrorMessage) {
+                 youtubeErrorMessage.textContent = "YouTube API Key not configured.";
+                 youtubeErrorMessage.style.display = 'block';
+            }
+             if(youtubeFallbackMessage) youtubeFallbackMessage.style.display = 'block';
+            return;
+        }
+
+        // Use the 'search' endpoint to find the latest videos for the channel
+        const apiUrl = `https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${YOUTUBE_CHANNEL_ID}&maxResults=${MAX_YOUTUBE_VIDEOS}&order=date&type=video&key=${YOUTUBE_API_KEY}`;
+
+        try {
+            const response = await fetch(apiUrl);
+            if (!response.ok) {
+                // Attempt to parse error message from YouTube API response
+                let errorData;
+                try {
+                     errorData = await response.json();
+                } catch (parseError) {
+                     // If response is not JSON or empty
+                     throw new Error(`HTTP error ${response.status}: ${response.statusText}`);
+                }
+                 const errorMessage = errorData?.error?.message || `API request failed with status ${response.status}`;
+                 console.error("YouTube API Error:", errorData);
+                 throw new Error(errorMessage);
+            }
+
+            const data = await response.json();
+
+            if (data.items && data.items.length > 0) {
+                youtubeVideosContainer.innerHTML = ''; // Clear previous items/loading text
+                if (youtubeLoadingMessage) youtubeLoadingMessage.style.display = 'none';
+                 if(youtubeFallbackMessage) youtubeFallbackMessage.style.display = 'none'; // Hide fallback if successful
+
+                data.items.forEach(item => {
+                    const videoId = item.id.videoId;
+                    const title = item.snippet.title;
+                    // Use high quality thumbnail if available, otherwise default
+                    const thumbnailUrl = item.snippet.thumbnails.high?.url || item.snippet.thumbnails.default?.url;
+                    const videoUrl = `https://www.youtube.com/watch?v=${videoId}`;
+
+                    const videoElement = document.createElement('div');
+                    videoElement.classList.add('youtube-video-item'); // Use class from CSS
+
+                    videoElement.innerHTML = `
+                        <a href="${videoUrl}" target="_blank" rel="noopener noreferrer" title="${title}">
+                            <img src="${thumbnailUrl}" alt="${title}" loading="lazy">
+                        </a>
+                        <p>${title}</p>
+                    `;
+                    youtubeVideosContainer.appendChild(videoElement);
+                });
+            } else {
+                 throw new Error("No video items found in API response.");
+            }
+
+        } catch (error) {
+            console.error('Failed to fetch YouTube videos:', error);
+            if (youtubeLoadingMessage) youtubeLoadingMessage.style.display = 'none';
+            if (youtubeErrorMessage) {
+                 // Display a user-friendly message, potentially masking specific API errors
+                 youtubeErrorMessage.textContent = `Could not load videos. (${error.message || 'Check console for details'})`;
+                 youtubeErrorMessage.style.display = 'block';
+            }
+             if(youtubeFallbackMessage) youtubeFallbackMessage.style.display = 'block'; // Show fallback on error
+        }
+     };
 
 
     // --- Initialize Functionality on Page Load ---
 
-    // 0. Check for saved drunk mode preference (optional)
-    // if (localStorage.getItem('koozieDrunkMode') === 'true') {
-    //    if (!isDrunkMode) toggleDrunkMode(); // Ensure state matches if loaded differently
-    // } else {
-    //    if (isDrunkMode) toggleDrunkMode(); // Turn off if saved preference is false/null
-    // }
+    // 0. Check for saved drunk mode preference
+    try {
+        const savedDrunkMode = localStorage.getItem('koozieDrunkMode');
+        if (savedDrunkMode === 'true' && !isDrunkMode) {
+            toggleDrunkMode(); // Activate if saved preference is true and it's not already active
+        } else if (savedDrunkMode === 'false' && isDrunkMode) {
+            toggleDrunkMode(); // Deactivate if saved preference is false and it is currently active
+        }
+    } catch (e) {
+         console.warn("Could not read drunk mode preference from localStorage:", e);
+    }
+    // Initial tooltip update after potentially loading from localStorage
+     if (drunkModeToggle && drunkModeTooltip) {
+         const initialTitle = isDrunkMode ? 'Deactivate "Fun" Mode' : 'Activate "Fun" Mode';
+         drunkModeToggle.setAttribute('title', initialTitle);
+         drunkModeTooltip.textContent = initialTitle;
+     }
 
 
     // 1. Header Scroll Listener
@@ -219,18 +301,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 2. Mobile Nav Toggle Listener
     if (hamburgerMenu && navLinks) {
-        hamburgerMenu.addEventListener('click', toggleMobileNav);
+        hamburgerMenu.addEventListener('click', (e) => {
+            e.stopPropagation(); // Prevent click bubbling to the document listener
+            toggleMobileNav();
+        });
     }
 
     // 3. Drunk Mode Toggle Listener
     if (drunkModeToggle) {
         drunkModeToggle.addEventListener('click', toggleDrunkMode);
-        // Initial tooltip text update in case it loaded active
-        const initialTitle = isDrunkMode ? 'Deactivate "Fun" Mode' : 'Activate "Fun" Mode';
-        drunkModeToggle.setAttribute('title', initialTitle);
-        if (drunkModeTooltip) {
-             drunkModeTooltip.textContent = initialTitle;
-        }
     }
 
     // 4. Update Copyright Year
@@ -239,27 +318,36 @@ document.addEventListener('DOMContentLoaded', () => {
     // 5. Initialize Scroll Animations
     handleScrollAnimations();
 
-    // 6. Initialize Smooth Scrolling
-    internalLinks.forEach(link => {
-        link.addEventListener('click', handleSmoothScroll);
-    });
+    // 6. Initialize Smooth Scrolling for all internal links
+    document.addEventListener('click', handleSmoothScroll); // Listen on document for better delegation
 
-    // 7. Initialize Dynamic Content (Example)
+    // 7. Initialize Dynamic Content (Placeholder)
     updateDynamicContent();
 
     // 8. Initialize Lightbox (Placeholder)
     initializeLightbox();
 
+    // 9. Fetch YouTube Videos
+    fetchYouTubeVideos();
+
 
     // --- Optional: Close mobile menu if clicking outside ---
     document.addEventListener('click', (event) => {
         if (isMenuOpen && navLinks && hamburgerMenu) {
-            // Ensure click is not the hamburger itself or inside the nav menu
+            // Check if the click is outside the nav menu AND not on the hamburger button itself
             if (!navLinks.contains(event.target) && !hamburgerMenu.contains(event.target)) {
-                toggleMobileNav();
+                toggleMobileNav(true); // Force close
             }
         }
     });
+
+    // Stop propagation on clicks inside the nav menu itself to prevent immediate closure
+    if (navLinks) {
+        navLinks.addEventListener('click', (event) => {
+            event.stopPropagation();
+        });
+    }
+
 
     console.log("Koozie Sports Script Initialized Successfully!");
 
