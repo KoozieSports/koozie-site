@@ -2,7 +2,6 @@
 
 /* --- 0. Global Settings & Variables --- */
 @import url('https://fonts.googleapis.com/css2?family=Architects+Daughter&family=Roboto:wght@400;700&family=Permanent+Marker&display=swap');
-/* Font Awesome is now linked in HTML */
 
 :root {
     /* Colors - Normal Mode */
@@ -23,9 +22,10 @@
     --footer-text: #555;
     --marker-color: #2a9d8f; /* Teal for marker effect */
     --quote-bg: rgba(var(--accent-blue), 0.05);
+    --error-color: var(--accent-red);
 
     /* Colors - Drunk Mode (will be overridden by body.drunk-mode-active) */
-    --dm-notepad-bg: #fffacd; /* Lemon chiffon - more yellow paper */
+    --dm-notepad-bg: #fffacd; /* Lemon chiffon */
     --dm-notepad-lines: #ffb6c1; /* Light pink lines */
     --dm-text-color: #4b0082; /* Indigo text */
     --dm-heading-color: #8b0000; /* Dark red headings */
@@ -51,6 +51,9 @@
     /* Transitions & Effects */
     --transition-speed: 0.3s;
     --bubble-size: 15px; /* For bubble effect */
+
+    /* NEW: Logo Spin Duration */
+    --logo-spin-duration: 15s;
 }
 
 /* Basic Reset */
@@ -65,7 +68,6 @@
 html {
     scroll-behavior: smooth;
     font-size: 100%;
-    /* Add scroll-padding-top for fixed header offset */
     scroll-padding-top: var(--header-height);
     transition: scroll-padding-top var(--transition-speed) ease;
 }
@@ -73,22 +75,25 @@ body.header-scrolled html {
      scroll-padding-top: var(--header-shrink-height);
 }
 
-
 body {
     font-family: var(--font-body);
     color: var(--text-color);
     background-color: var(--notepad-bg);
     line-height: 1.6;
-    overflow-x: hidden;
+    overflow-x: hidden; /* Prevent horizontal scroll */
     background-image:
         linear-gradient(var(--notepad-margin-line) 0%, var(--notepad-margin-line) 100%) 35px 0 / 1px auto no-repeat, /* Vertical Margin Line */
         linear-gradient(var(--notepad-lines) 1px, transparent 1px); /* Horizontal Lines */
     background-size: 1px auto, 100% 2.2em;
     background-attachment: local;
     position: relative;
-    transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease; /* Transition for drunk mode */
+    transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease;
 }
-/* No need for body::before */
+
+/* NEW: Prevent body scroll when mobile nav is open */
+body.body-menu-open {
+    overflow-y: hidden;
+}
 
 
 /* --- 1. Layout & Container --- */
@@ -122,7 +127,7 @@ h1, h2, h3, h4, h5, h6 {
     line-height: 1.2;
     margin-bottom: calc(var(--base-spacing) * 0.75);
     font-weight: 700;
-    transition: color var(--transition-speed) ease; /* Transition for drunk mode */
+    transition: color var(--transition-speed) ease;
 }
 
 h1 { font-size: 2.8rem; }
@@ -154,7 +159,7 @@ section {
     width: 80px;
     height: 3px;
     background-color: var(--accent-red);
-    transition: background-color var(--transition-speed) ease; /* Transition for drunk mode */
+    transition: background-color var(--transition-speed) ease;
 }
 
 .section-subtitle {
@@ -165,13 +170,12 @@ section {
     font-size: 1.1rem;
 }
 
-/* Visually Hidden Class */
 .visually-hidden {
   position: absolute !important;
   height: 1px; width: 1px;
   overflow: hidden;
   clip: rect(1px, 1px, 1px, 1px);
-  white-space: nowrap; /* Added */
+  white-space: nowrap;
 }
 
 /* --- 2. Header & Navigation --- */
@@ -182,7 +186,7 @@ section {
     top: 0;
     left: 0;
     width: 100%;
-    z-index: 1000;
+    z-index: 1000; /* Below mobile nav overlay */
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     height: var(--header-height);
     transition: height var(--transition-speed) ease, box-shadow var(--transition-speed) ease, background-color var(--transition-speed) ease;
@@ -215,11 +219,23 @@ section {
     transition: height var(--transition-speed) ease;
 }
 
+/* NEW: Logo Spinning Animation */
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+.spinning-logo:hover {
+    animation: spin var(--logo-spin-duration) linear infinite;
+}
+/* Optional: Make it spin constantly? Uncomment below */
+/* .spinning-logo { animation: spin var(--logo-spin-duration) linear infinite; } */
+
+
 #main-nav { display: flex; align-items: center; }
 #nav-links { list-style: none; display: flex; margin: 0; padding: 0; }
 #nav-links li { margin-left: calc(var(--base-spacing) * 1.5); }
 
-#nav-links a.nav-item { /* Changed selector */
+#nav-links a.nav-item {
     font-weight: 700;
     color: var(--heading-color);
     text-transform: uppercase;
@@ -248,7 +264,7 @@ section {
 #nav-links a.nav-item.active::after { width: 100%; }
 
 #hamburger-menu {
-    display: none;
+    display: none; /* Hidden by default, shown via media query */
     background: none;
     border: none;
     font-size: 1.8rem;
@@ -257,8 +273,11 @@ section {
     padding: 5px;
     margin-left: var(--base-spacing);
     transition: color var(--transition-speed) ease;
+    z-index: 1003; /* Above nav links overlay */
+    position: relative; /* Ensure it's properly layered */
 }
-#hamburger-menu i { transition: transform 0.2s ease-in-out; } /* Added transition for icon change */
+#hamburger-menu i { transition: transform 0.2s ease-in-out; }
+
 
 /* Drunk Mode Toggle Button */
 #drunk-mode-toggle {
@@ -280,10 +299,9 @@ section {
     color: var(--white);
 }
 
-/* Tooltip Text */
 #drunk-mode-toggle .tooltip-text {
     position: absolute;
-    bottom: 125%; /* Position above the button */
+    bottom: 125%;
     left: 50%;
     transform: translateX(-50%);
     background-color: rgba(0, 0, 0, 0.75);
@@ -295,7 +313,7 @@ section {
     opacity: 0;
     visibility: hidden;
     transition: opacity var(--transition-speed) ease, visibility var(--transition-speed) ease;
-    pointer-events: none; /* Don't interfere with button clicks */
+    pointer-events: none;
     z-index: 10;
 }
 #drunk-mode-toggle:hover .tooltip-text,
@@ -304,14 +322,6 @@ section {
     visibility: visible;
 }
 
-
-/* Drunk mode active changes icon via body class */
-.drunk-mode-active #drunk-mode-toggle i::before {
-    content: "\e1a2"; /* Font Awesome beer mug full (check FA gallery for exact code if needed) - Using a placeholder code here */
-    font-family: "Font Awesome 6 Free";
-    font-weight: 900;
-}
-/* Specific styling for the filled beer icon if needed */
 .drunk-mode-active #drunk-mode-toggle i.fa-beer-mug-empty::before {
      content: "\f0fc"; /* Actual FA code for full mug */
 }
@@ -319,37 +329,30 @@ section {
 
 /* --- 3. Main Content Sections --- */
 
-/* No padding needed now thanks to scroll-padding-top */
-/* main { padding-top: var(--header-height); transition: padding-top var(--transition-speed) ease; }
-body.header-scrolled main { padding-top: var(--header-shrink-height); } */
-
-
 /* Hero Section */
 #hero {
-    /* Use a background image */
     background: url('images/hero-bg.jpg') no-repeat center center/cover;
     color: var(--white);
     text-align: center;
     padding: calc(var(--base-spacing) * 5) 0;
     position: relative;
-    background-image: none; /* Remove notepad lines */
-    display: flex; /* To center content vertically */
+    background-image: none;
+    display: flex;
     align-items: center;
-    min-height: 60vh; /* Give it some height */
-    overflow: hidden; /* Hide potential overflow from effects */
+    min-height: 60vh;
+    overflow: hidden;
 }
-/* Hero Overlay */
 .hero-overlay {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(26, 42, 74, 0.6); /* Dark blue overlay for contrast */
+    background-color: rgba(26, 42, 74, 0.6);
     z-index: 1;
 }
 .hero-content {
-    position: relative; /* Above overlay */
+    position: relative;
     z-index: 2;
 }
 
@@ -358,7 +361,7 @@ body.header-scrolled main { padding-top: var(--header-shrink-height); } */
     font-size: 3.5rem;
     font-weight: 700;
     margin-bottom: var(--base-spacing);
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Stronger shadow */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 #hero .tagline {
     font-family: var(--font-handwritten);
@@ -380,13 +383,13 @@ body.header-scrolled main { padding-top: var(--header-shrink-height); } */
     text-decoration: none;
     transition: background-color var(--transition-speed) ease, transform var(--transition-speed) ease, box-shadow var(--transition-speed);
     box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
-    border: none; /* Reset border */
+    border: none;
 }
 .cta-button:hover, .cta-button:focus {
-    background-color: #c4303d; /* Darken red */
+    background-color: #c4303d;
     color: var(--white);
     text-decoration: none;
-    transform: translateY(-3px) scale(1.02); /* Lift and slightly grow */
+    transform: translateY(-3px) scale(1.02);
     box-shadow: 4px 6px 10px rgba(0,0,0,0.3);
 }
 .cta-button.secondary {
@@ -399,17 +402,17 @@ body.header-scrolled main { padding-top: var(--header-shrink-height); } */
     background-color: var(--accent-blue);
     color: var(--white);
     transform: none;
-    box-shadow: 2px 2px 5px rgba(0,0,0,0.1); /* Subtle shadow on hover */
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
 }
 
-/* NEW: Quote Section */
+/* Quote Section */
 #quote-of-week {
     background-color: var(--quote-bg);
     padding: calc(var(--base-spacing) * 2) 0;
     text-align: center;
 }
 .quote-text {
-    font-family: var(--font-marker); /* Use marker font */
+    font-family: var(--font-marker);
     font-size: 1.8rem;
     color: var(--heading-color);
     line-height: 1.4;
@@ -420,10 +423,10 @@ body.header-scrolled main { padding-top: var(--header-shrink-height); } */
     font-style: italic;
 }
 .quote-text .handwritten-emphasis {
-    font-family: var(--font-handwritten); /* Use other handwritten font */
+    font-family: var(--font-handwritten);
     font-size: 0.9em;
     color: var(--text-color);
-    display: block; /* Put attribution on new line */
+    display: block;
     margin-top: calc(var(--base-spacing) * 0.5);
     font-style: normal;
 }
@@ -443,10 +446,8 @@ body.header-scrolled main { padding-top: var(--header-shrink-height); } */
 .marker-text {
     font-family: var(--font-marker);
     color: var(--marker-color);
-    /* Optional: Slight background highlight */
-    /* background: linear-gradient(to top, rgba(var(--marker-color), 0.2) 30%, transparent 30%); */
-    padding: 0 0.1em; /* Add minimal padding if using background */
-    transition: color var(--transition-speed) ease; /* Transition for drunk mode */
+    padding: 0 0.1em;
+    transition: color var(--transition-speed) ease;
 }
 
 .handwritten-emphasis { font-family: var(--font-handwritten); font-size: 1.2em; color: var(--accent-red); }
@@ -472,31 +473,31 @@ body.header-scrolled main { padding-top: var(--header-shrink-height); } */
     margin-bottom: calc(var(--base-spacing) * 2);
 }
 
-.card-item { /* Generic card styles */
+.card-item {
     background-color: var(--card-bg);
     padding: var(--base-spacing);
-    border-radius: 8px; /* Slightly rounder */
+    border-radius: 8px;
     box-shadow: 2px 2px 6px var(--card-shadow);
     transition: transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease, background-color var(--transition-speed) ease;
     border: 1px solid #eee;
-    overflow: hidden; /* Ensure content stays within rounded corners */
+    overflow: hidden;
 }
 .card-item:hover {
     transform: translateY(-6px);
     box-shadow: 4px 8px 12px var(--card-shadow);
 }
 
-.card-image { /* Style for images within cards */
-    margin: calc(var(--base-spacing) * -1) calc(var(--base-spacing) * -1) var(--base-spacing); /* Extend to edges */
+.card-image {
+    margin: calc(var(--base-spacing) * -1) calc(var(--base-spacing) * -1) var(--base-spacing);
     border-bottom: 1px solid #eee;
     transition: transform 0.4s ease;
 }
 
 .interactive-image:hover {
-    transform: scale(1.05); /* Zoom effect on hover */
+    transform: scale(1.05);
 }
 .card-item:hover .card-image {
-     transform: scale(1.03); /* Subtle zoom within card hover */
+     transform: scale(1.03);
 }
 
 
@@ -510,14 +511,113 @@ body.header-scrolled main { padding-top: var(--header-shrink-height); } */
 .item-date { display: block; font-size: 0.85rem; color: #777; margin-top: var(--base-spacing); font-family: var(--font-handwritten); }
 
 /* Gallery Items */
-.gallery-item a[data-lightbox] { cursor: zoom-in; display: block; } /* Indicate clickability */
+.gallery-item a[data-lightbox] { cursor: zoom-in; display: block; }
 .gallery-item .framed-image { margin-bottom: var(--base-spacing); }
-.gallery-item .caption { margin-bottom: var(--base-spacing); } /* Add spacing below caption */
+.gallery-item .caption { margin-bottom: var(--base-spacing); }
 
 
-/* Contact Section */
+/* --- NEW: Social Feeds Section --- */
+#social-feeds {
+    /* Background handled by notepad lines or alt-bg if added */
+}
+.social-feeds-grid {
+    display: grid;
+    grid-template-columns: 1fr; /* Default to single column */
+    gap: calc(var(--base-spacing) * 2.5);
+}
+/* Make two columns on wider screens */
+@media (min-width: 768px) {
+    .social-feeds-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+.social-feed-item h3 {
+    text-align: center;
+    margin-bottom: var(--base-spacing);
+    font-size: 1.4rem; /* Slightly smaller than h2 */
+    display: flex; /* Align icon and text */
+    align-items: center;
+    justify-content: center;
+    gap: 0.5em;
+}
+.social-feed-item h3 i {
+    color: var(--marker-color); /* Use marker color for icon */
+    transition: color var(--transition-speed) ease;
+}
+
+.instagram-carousel-placeholder,
+.youtube-carousel-placeholder {
+    /* Inherits .card-item styles */
+    min-height: 300px; /* Give some initial height */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: calc(var(--base-spacing) * 2); /* More padding for placeholder text */
+}
+
+/* Instagram Placeholder/Widget specific */
+.instagram-carousel-placeholder iframe { /* Style the iframe if using widget */
+    max-width: 100%;
+    border: none;
+}
+.instagram-carousel-placeholder .manual-insta-grid { /* If using manual grid */
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: var(--base-spacing);
+    width: 100%;
+}
+.instagram-carousel-placeholder .manual-insta-grid img {
+    aspect-ratio: 1 / 1; /* Square images */
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+
+/* YouTube Placeholder specific */
+.youtube-carousel-placeholder p:first-of-type { /* "Loading..." text */
+    margin-bottom: var(--base-spacing);
+}
+#youtube-video-items.youtube-video-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Adjust minmax for desired item size */
+    gap: var(--base-spacing);
+    width: 100%;
+    margin-bottom: var(--base-spacing);
+}
+.youtube-video-item {
+    /* Styles for individual video items added by JS */
+    text-align: center;
+}
+.youtube-video-item img {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    border: 1px solid #eee;
+    border-radius: 4px;
+    margin-bottom: calc(var(--base-spacing) * 0.5);
+    transition: transform var(--transition-speed) ease;
+}
+.youtube-video-item a:hover img {
+    transform: scale(1.03);
+}
+.youtube-video-item p { /* Video title */
+    font-size: 0.9rem;
+    color: var(--text-color);
+    margin: 0;
+}
+.error-message {
+    color: var(--error-color);
+    font-weight: bold;
+}
+
+
+/* --- Contact Section --- */
+/* #contact is now alt-bg */
 #contact .contact-info p { margin-bottom: calc(var(--base-spacing) * 0.5); font-size: 1.1rem; }
-#contact .contact-info i.fa-fw { /* Fixed width already applied in HTML */
+#contact .contact-info i.fa-fw {
     margin-right: 10px;
     color: var(--accent-blue);
     transition: color var(--transition-speed) ease;
@@ -532,10 +632,9 @@ body.header-scrolled main { padding-top: var(--header-shrink-height); } */
     border: 1px dashed var(--notepad-margin-line);
     padding: calc(var(--base-spacing) * 0.5);
     display: inline-block;
-    max-width: 90%; /* Prevent overflow on small screens */
+    max-width: 90%;
     transition: color var(--transition-speed) ease, border-color var(--transition-speed) ease;
 }
-/* Contact Form Placeholder */
 .contact-form-placeholder {
     margin-top: calc(var(--base-spacing) * 2.5);
     padding: var(--base-spacing) calc(var(--base-spacing) * 1.5);
@@ -578,7 +677,7 @@ body.header-scrolled main { padding-top: var(--header-shrink-height); } */
     border-top: 3px solid var(--accent-red);
     color: var(--footer-text);
     font-size: 0.9rem;
-    background-image: none; /* Remove notepad lines */
+    background-image: none;
     transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease, border-color var(--transition-speed) ease;
 }
 .footer-content { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: var(--base-spacing); }
@@ -593,10 +692,10 @@ body.header-scrolled main { padding-top: var(--header-shrink-height); } */
     transition: color var(--transition-speed) ease, transform var(--transition-speed);
     display: inline-block;
 }
-.social-links a:hover, .social-links a:focus { color: var(--link-hover); transform: scale(1.15) rotate(-5deg); } /* Added rotation */
+.social-links a:hover, .social-links a:focus { color: var(--link-hover); transform: scale(1.15) rotate(-5deg); }
 .back-to-top {
     color: var(--accent-blue);
-    font-size: 1.8rem; /* Made icon larger */
+    font-size: 1.8rem;
     text-decoration: none;
     transition: color var(--transition-speed) ease, transform var(--transition-speed);
     display: inline-block;
@@ -620,15 +719,15 @@ body.header-scrolled main { padding-top: var(--header-shrink-height); } */
     left: 0;
     width: 100%;
     height: 100%;
-    pointer-events: none;
+    pointer-events: none; /* Allows clicks through */
     overflow: hidden;
-    z-index: 1001; /* Above content, below header maybe */
+    z-index: 999; /* Below header, above most content */
     opacity: 0;
     visibility: hidden;
     transition: opacity 0.8s ease, visibility 0.8s ease;
 }
 #bubble-overlay::before,
-#bubble-overlay::after { /* Use pseudo-elements for bubbles */
+#bubble-overlay::after {
     content: '';
     position: absolute;
     width: 100%;
@@ -637,23 +736,22 @@ body.header-scrolled main { padding-top: var(--header-shrink-height); } */
     left: 0;
 }
 #bubble-overlay::before {
-    /* Multiple small radial gradients as bubbles */
-    background-image: radial-gradient(circle at center, rgba(255, 223, 186, 0.5) 0%, rgba(255, 223, 186, 0.5) 30%, transparent 60%), /* Bisque-like color */
+    background-image: radial-gradient(circle at center, rgba(255, 223, 186, 0.5) 0%, rgba(255, 223, 186, 0.5) 30%, transparent 60%),
                       radial-gradient(circle at center, rgba(255, 255, 255, 0.6) 0%, rgba(255, 255, 255, 0.6) 25%, transparent 50%),
                       radial-gradient(circle at center, rgba(255, 223, 186, 0.4) 0%, rgba(255, 223, 186, 0.4) 35%, transparent 70%);
     background-repeat: repeat;
-    background-size: var(--bubble-size) var(--bubble-size), /* Vary sizes */
+    background-size: var(--bubble-size) var(--bubble-size),
                      calc(var(--bubble-size) * 0.7) calc(var(--bubble-size) * 0.7),
                      calc(var(--bubble-size) * 1.3) calc(var(--bubble-size) * 1.3);
-    background-position: 10% 100%, 50% 100%, 80% 100%; /* Start at bottom */
-    animation: bubbles-rise 15s linear infinite;
+    background-position: 10% 100%, 50% 100%, 80% 100%;
+    animation: bubbles-rise 15s linear infinite paused; /* Start paused */
 }
 
 @keyframes bubbles-rise {
     0% { background-position: 10% 100%, 50% 100%, 80% 100%; opacity: 1; }
     50% { background-position: 15% 50%, 55% 50%, 75% 50%; opacity: 0.8; }
     99% { background-position: 20% 0%, 60% 0%, 70% 0%; opacity: 0.2; }
-    100% { background-position: 20% -10%, 60% -10%, 70% -10%; opacity: 0; } /* Move fully off screen */
+    100% { background-position: 20% -10%, 60% -10%, 70% -10%; opacity: 0; }
 }
 
 
@@ -671,40 +769,45 @@ body.drunk-mode-active {
     --card-bg: var(--dm-card-bg);
     --marker-color: var(--dm-marker-color);
 
-    /* Add slight overall rotation and maybe a filter */
-    transform: rotate(0.3deg);
+    /* REMOVED transform: rotate(0.3deg); to prevent mobile nav issues */
     filter: hue-rotate(10deg) saturate(110%);
-    cursor: url('images/beer-cursor.png'), crosshair; /* Custom cursor (needs image) */
+    cursor: url('images/beer-cursor.png'), crosshair; /* Needs image */
 
-    /* Make lines wavy (SVG would be better, approximation with gradient) */
+    /* Wavy lines approximation */
      background-image:
         linear-gradient(var(--notepad-margin-line) 0%, var(--notepad-margin-line) 100%) 35px 0 / 1px auto no-repeat,
         repeating-linear-gradient(
-            45deg,
-            var(--dm-notepad-lines),
-            var(--dm-notepad-lines) 1px,
-            transparent 1px,
-            transparent 2.2em
+            /* Adjust angle and stops for waviness */
+            -1deg, /* Slight angle */
+            var(--dm-notepad-lines) 0, var(--dm-notepad-lines) 1px,
+            transparent 1px, transparent 50%,
+             var(--dm-notepad-lines) 50%, var(--dm-notepad-lines) 51%, /* Mimic slight wave bump */
+             transparent 51%, transparent 100%
         );
-    /* background-size needs adjustment for wavy lines */
-    background-size: 1px auto, 100% 2.2em;
+    background-size: 1px auto, 100% 2.2em; /* Keep line height consistent */
 }
 
-/* Make bubble overlay visible */
+/* Make bubble overlay visible and animate */
 .drunk-mode-active #bubble-overlay {
-    opacity: 0.8; /* Make bubbles more prominent */
+    opacity: 0.8;
     visibility: visible;
+}
+.drunk-mode-active #bubble-overlay::before {
+    animation-play-state: running; /* Start animation */
 }
 
 /* Enhance element tilting */
 .drunk-mode-active .tilt-element {
-    transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); /* Springy transition */
-    transform: rotate(calc( ( var(--random-tilt, 0.5) - 0.5 ) * 8deg )) scale(0.98); /* Stronger tilt + slight shrink */
+    transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+    /* Tilt based on JS-set --random-tilt variable */
+    transform: rotate(calc( ( var(--random-tilt, 0.5) - 0.5 ) * 8deg )) scale(0.98);
 }
+/* Apply tilt on hover *only if* NOT in drunk mode (subtle effect) */
+/* Or keep it simple: tilt-element always tilts in drunk mode */
 
 /* Wobble Animation */
 .drunk-mode-active .wobble-on-hover:hover {
-    animation: wobble 0.9s ease-in-out infinite; /* Loop wobble on hover */
+    animation: wobble 0.9s ease-in-out infinite;
 }
 @keyframes wobble {
   0%, 100% { transform: translateX(0%) rotate(0deg); }
@@ -719,23 +822,21 @@ body.drunk-mode-active {
 .drunk-mode-active h1,
 .drunk-mode-active h2,
 .drunk-mode-active .quote-text {
-     /* Optional: Very subtle text shadow to make it 'swim' a bit */
      text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1);
      animation: text-swim 5s ease-in-out infinite alternate;
 }
-
 @keyframes text-swim {
-    from { letter-spacing: normal; }
-    to { letter-spacing: 1px; }
+    from { letter-spacing: normal; transform: skewX(0deg); }
+    to { letter-spacing: 0.5px; transform: skewX(-1deg); } /* Subtle swim/skew */
 }
 
-/* Override specific element colors if needed */
+/* Override specific element colors in Drunk Mode */
 .drunk-mode-active #main-header {
-     background-color: #fff8dc; /* Cornsilk header */
+     background-color: #fff8dc; /* Cornsilk */
      border-bottom-color: var(--dm-accent-red);
 }
 .drunk-mode-active #main-footer {
-     background-color: #faf0e6; /* Linen footer */
+     background-color: #faf0e6; /* Linen */
      border-top-color: var(--dm-accent-blue);
 }
 .drunk-mode-active .cta-button {
@@ -743,7 +844,7 @@ body.drunk-mode-active {
      color: var(--white);
 }
 .drunk-mode-active .cta-button:hover {
-     background-color: #ff7f50; /* Coral hover */
+     background-color: #ff7f50; /* Coral */
 }
 .drunk-mode-active .cta-button.secondary {
      color: var(--dm-accent-blue);
@@ -752,6 +853,12 @@ body.drunk-mode-active {
 .drunk-mode-active .cta-button.secondary:hover {
      background-color: var(--dm-accent-blue);
      color: var(--white);
+}
+.drunk-mode-active .social-feed-item h3 i {
+    color: var(--dm-marker-color); /* Match marker color */
+}
+.drunk-mode-active .error-message {
+     color: var(--dm-accent-red); /* Use drunk mode accent */
 }
 
 
@@ -762,10 +869,11 @@ body.drunk-mode-active {
     :root { --header-height: 80px; --header-shrink-height: 60px; }
     html { scroll-padding-top: var(--header-height); }
     body.header-scrolled html { scroll-padding-top: var(--header-shrink-height); }
-    body { background-position: 25px 0, 0 0; } /* Adjust margin line */
+    body { background-position: 25px 0, 0 0; }
     h1 { font-size: 2.5rem; } #hero h1 { font-size: 3rem; } h2 { font-size: 2rem; }
     .container { width: 95%; }
     .quote-text { font-size: 1.6rem; }
+    .drunk-mode-active body { background-position: 25px 0, 0 0; } /* Maintain margin line position */
 }
 
 /* Small Devices */
@@ -773,37 +881,74 @@ body.drunk-mode-active {
     :root { --header-height: 70px; --header-shrink-height: 55px; }
     html { scroll-padding-top: var(--header-height); }
     body.header-scrolled html { scroll-padding-top: var(--header-shrink-height); }
-    body { background-position: 15px 0, 0 0; } /* Adjust margin line */
+    body { background-position: 15px 0, 0 0; }
     h1 { font-size: 2.2rem; } #hero h1 { font-size: 2.5rem; } #hero .tagline { font-size: 1.5rem; } h2 { font-size: 1.8rem; }
     .quote-text { font-size: 1.4rem; }
 
     .layout-two-column { flex-direction: column; }
     .layout-two-column > div { min-width: 100%; }
 
-    #hamburger-menu { display: block; z-index: 1003; }
-    #main-nav { order: 1; margin-left: auto; display: contents; }
+    #hamburger-menu { display: block; } /* Show hamburger */
+    #main-nav { order: 1; margin-left: auto; display: contents; } /* Reorder for flex */
 
     #nav-links {
-        position: fixed; top: 0; right: -100%; width: 70%; max-width: 300px; height: 100vh;
-        background-color: var(--white); flex-direction: column;
-        padding: calc(var(--header-height) + var(--base-spacing) * 2) var(--base-spacing);
-        box-shadow: -3px 0 10px rgba(0,0,0,0.2); transition: right var(--transition-speed) ease-in-out; z-index: 1002;
+        position: fixed; /* Changed from absolute to fixed */
+        top: 0;
+        right: -100%; /* Start off-screen */
+        width: 70%;
+        max-width: 300px;
+        height: 100vh; /* Full viewport height */
+        background-color: var(--white);
+        flex-direction: column;
+        padding: calc(var(--header-height) + var(--base-spacing) * 1) var(--base-spacing); /* Adjusted padding */
+        box-shadow: -3px 0 10px rgba(0,0,0,0.2);
+        transition: right var(--transition-speed) ease-in-out;
+        z-index: 1002; /* Above header/content, below hamburger */
         background-image: linear-gradient(var(--notepad-lines) 1px, transparent 1px);
-        background-size: 100% 2.2em; background-position: 0 var(--header-height);
-        overflow-y: auto; /* Allow scrolling if menu is long */
+        background-size: 100% 2.2em;
+        background-position: 0 var(--header-height); /* Start lines below header space */
+        overflow-y: auto;
+        /* Drunk mode adjustment */
+        transition: right var(--transition-speed) ease-in-out, background-color var(--transition-speed) ease;
     }
-    #nav-links.nav-open { right: 0; }
-    #nav-links li { margin: 0; width: 100%; }
-    #nav-links a.nav-item { display: block; padding: var(--base-spacing) 0; border-bottom: 1px solid var(--notepad-lines); font-size: 1.1rem; }
-    #nav-links a.nav-item::after { display: none; }
-    #nav-links a.nav-item:hover, #nav-links a.nav-item:focus, #nav-links a.nav-item.active { background-color: var(--light-grey-bg); }
+    .drunk-mode-active #nav-links {
+        background-color: var(--dm-notepad-bg); /* Match drunk background */
+        background-image: linear-gradient(var(--dm-notepad-lines) 1px, transparent 1px);
+    }
 
-    #drunk-mode-toggle { order: 2; margin-left: 10px; }
+    #nav-links.nav-open { right: 0; } /* Slide in */
+    #nav-links li { margin: 0; width: 100%; }
+    #nav-links a.nav-item {
+        display: block;
+        padding: var(--base-spacing) 0;
+        border-bottom: 1px solid var(--notepad-lines);
+        font-size: 1.1rem;
+    }
+    .drunk-mode-active #nav-links a.nav-item {
+        border-bottom-color: var(--dm-notepad-lines);
+    }
+    #nav-links a.nav-item::after { display: none; } /* No underline needed */
+    #nav-links a.nav-item:hover,
+    #nav-links a.nav-item:focus,
+    #nav-links a.nav-item.active {
+        background-color: var(--light-grey-bg); /* Subtle highlight */
+        color: var(--link-hover); /* Use hover color */
+    }
+    .drunk-mode-active #nav-links a.nav-item:hover,
+    .drunk-mode-active #nav-links a.nav-item:focus,
+    .drunk-mode-active #nav-links a.nav-item.active {
+        background-color: rgba(255,255,255,0.2); /* Lighten drunk bg slightly */
+         color: var(--dm-link-hover);
+    }
+
+    #drunk-mode-toggle { order: 2; margin-left: 10px; } /* Put after nav stuff */
     #drunk-mode-toggle .tooltip-text { display: none; } /* Hide tooltip on mobile */
 
     .footer-content { flex-direction: column; text-align: center; }
     .footer-right { justify-content: center; }
     .social-links a:first-child { margin-left: 0; }
+
+    .drunk-mode-active body { background-position: 15px 0, 0 0; }
 }
 
 /* Extra Small Devices */
@@ -811,9 +956,12 @@ body.drunk-mode-active {
     :root { --base-spacing: 0.8rem; --header-height: 60px; --header-shrink-height: 50px; --bubble-size: 10px;}
     html { scroll-padding-top: var(--header-height); }
     body.header-scrolled html { scroll-padding-top: var(--header-shrink-height); }
-    body { background-image: linear-gradient(var(--notepad-lines) 1px, transparent 1px); background-size: 100% 2em; } /* Hide margin line */
+    body {
+        background-image: linear-gradient(var(--notepad-lines) 1px, transparent 1px);
+        background-size: 100% 2em;
+    }
     .drunk-mode-active body {
-       background-image: repeating-linear-gradient(45deg, var(--dm-notepad-lines), var(--dm-notepad-lines) 1px, transparent 1px, transparent 2em);
+       background-image: repeating-linear-gradient(-1deg, var(--dm-notepad-lines) 0, var(--dm-notepad-lines) 1px, transparent 1px, transparent 50%, var(--dm-notepad-lines) 50%, var(--dm-notepad-lines) 51%, transparent 51%, transparent 100%);
        background-size: 100% 2em;
     }
 
@@ -830,4 +978,5 @@ body.drunk-mode-active {
     .back-to-top { font-size: 1.5rem; }
 
     .contact-form-placeholder { padding: var(--base-spacing); }
+    #nav-links { width: 85%; max-width: none; } /* Make menu wider on very small screens */
 }
