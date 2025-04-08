@@ -7,9 +7,7 @@
 
 document.addEventListener('DOMContentLoaded', () => {
     // --- Configuration ---
-    const YOUTUBE_API_KEY = 'AIzaSyDae1uS8BJ6VRxAEZtD7ZWXHEUuY7zim3M'; // PASTE YOUR YOUTUBE DATA API KEY HERE
-    const YOUTUBE_CHANNEL_ID = 'UCQf5nnIl4ANXzQzftW4Vpfw'; // Koozie Sports Channel ID
-    const MAX_YOUTUBE_VIDEOS = 4; // How many latest videos to show
+    const YOUTUBE_BG_VIDEO_ID = 'ERWsGzRMOEw';
     const SCROLLSPY_OFFSET_PERCENT = 30; // % of viewport height from top to trigger section activation
 
     // --- Dynamic Content Definitions ---
@@ -72,6 +70,7 @@ const dynamicQuotes = [
     const sections = document.querySelectorAll('section[data-id]');
     const currentYearSpan = document.getElementById('current-year');
     const scrollAnimateElements = document.querySelectorAll('.animate-on-scroll');
+    const youtubePlayerEl = document.getElementById('youtube-player');
     // Toggles
     const darkModeToggle = document.getElementById('dark-mode-toggle');
     const darkModeIconMoon = darkModeToggle ? darkModeToggle.querySelector('.fa-moon') : null;
@@ -95,6 +94,61 @@ const dynamicQuotes = [
     let isMenuOpen = false;
     let isDrunkMode = bodyElement.classList.contains('drunk-mode-active');
     let currentTheme = localStorage.getItem('koozieTheme') || 'light'; // Default to light
+    let ytPlayer;
+
+    // --- NEW: YouTube Background Player Functions ---
+    // (Make sure these functions exist: loadYouTubeAPI, onYouTubeIframeAPIReady, onPlayerReady, onPlayerError)
+
+    // Global function called by YouTube API
+    window.onYouTubeIframeAPIReady = function() {
+        if (youtubePlayerEl) {
+             console.log("YouTube API Ready. Creating player...");
+             ytPlayer = new YT.Player('youtube-player', {
+                 // ... (height, width) ...
+                 videoId: YOUTUBE_BG_VIDEO_ID, // Use the variable
+                 playerVars: {
+                     'autoplay': 1, 'mute': 1, 'loop': 1, 'playlist': YOUTUBE_BG_VIDEO_ID, // Playlist needed for loop
+                     'controls': 0, 'showinfo': 0, 'modestbranding': 1, 'playsinline': 1,
+                     'fs': 0, 'iv_load_policy': 3, 'rel': 0
+                 },
+                 events: { 'onReady': onPlayerReady, 'onError': onPlayerError }
+             });
+        } // ... (error handling) ...
+    }
+
+    // Function called when player is ready
+    function onPlayerReady(event) {
+        console.log("YouTube Player Ready. Playing video.");
+        event.target.playVideo();
+        event.target.mute(); // Ensure muted
+    }
+
+    // Function called on player error
+    function onPlayerError(event) {
+        console.error("YouTube Player Error:", event.data);
+    }
+
+    // Function to load the YouTube API script asynchronously
+    function loadYouTubeAPI() {
+        // ... (Code to create and insert the <script> tag for youtube.com/iframe_api) ...
+        // Check if script tag exists already to prevent duplicates
+        if (!document.querySelector('script[src="https://www.youtube.com/iframe_api"]')) {
+             console.log("Loading YouTube IFrame API...");
+             var tag = document.createElement('script');
+             tag.src = "https://www.youtube.com/iframe_api";
+             var firstScriptTag = document.getElementsByTagName('script')[0];
+             firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+        } else if (typeof YT === 'undefined' || typeof YT.Player === 'undefined') {
+            console.log("API script tag found, waiting for YT object...");
+            setTimeout(loadYouTubeAPI, 500);
+        } else {
+             console.log("YouTube API already loaded.");
+             if (typeof window.onYouTubeIframeAPIReady === 'function' && !ytPlayer) {
+                 window.onYouTubeIframeAPIReady();
+             }
+        }
+    }
+
 
 
     // --- Function: Set Theme (Dark/Light) ---
@@ -525,6 +579,10 @@ const dynamicQuotes = [
     // Use a small timeout to ensure layout is stable, especially header height
     setTimeout(initScrollspy, 100);
 
+    // --- Load YouTube API for Background Video ---
+    if (document.getElementById('hero-section') && youtubePlayerEl) {
+        loadYouTubeAPI(); // Call the function to start loading the API
+    }
 
     // --- Optional: Close mobile menu if clicking outside ---
     document.addEventListener('click', (event) => {
