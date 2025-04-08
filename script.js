@@ -15,13 +15,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const DRUNK_MODE_SHAKE_PROBABILITY = 0.3; // Probability (0-1) of shake occurring during check
     const DRUNK_MODE_SHAKE_DURATION = 300; // Duration (ms) of the screen shake animation
 
-    // --- YouTube Data API Config (NEEDS TO BE SET) ---
-    // IMPORTANT: Replace with your actual YouTube API Key and Channel ID
-    // It's recommended to handle API keys securely, not hardcoding directly here in public code.
-    const YOUTUBE_API_KEY = 'YOUR_YOUTUBE_API_KEY'; // <<<< REPLACE THIS
-    const YOUTUBE_CHANNEL_ID = 'YOUR_YOUTUBE_CHANNEL_ID'; // <<<< REPLACE THIS
-    const MAX_YOUTUBE_VIDEOS = 6; // Number of videos to fetch
-
     // --- Cache DOM Elements ---
     const htmlElement = document.documentElement;
     const bodyElement = document.body;
@@ -54,13 +47,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // Dynamic Quote
     const dynamicQuoteTextEl = document.getElementById('dynamic-quote-text');
     const dynamicQuoteAttrEl = document.getElementById('dynamic-quote-attribution');
-
-    // YouTube Video List specific elements (if API is used)
-    const youtubeVideosContainer = document.getElementById('youtube-video-items');
-    const youtubeLoadingMessage = document.querySelector('.youtube-loading-text');
-    const youtubeErrorMessage = document.getElementById('youtube-error-message');
-    const youtubeFallbackMessage = document.getElementById('youtube-fallback-message');
-
 
     // --- State Variables ---
     let isMenuOpen = false;
