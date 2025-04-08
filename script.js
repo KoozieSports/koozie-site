@@ -79,7 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
         bodyElement.classList.toggle('drunk-mode-active', isDrunkMode);
 
         // Update button title and tooltip text
-        const newTitle = isDrunkMode ? 'Deactivate "Fun" Mode' : 'Activate "Fun" Mode';
+        const newTitle = isDrunkMode ? 'Deactivate Koozie Mode' : 'Activate Koozie Mode';
         drunkModeToggle.setAttribute('title', newTitle);
         if (drunkModeTooltip) {
             drunkModeTooltip.textContent = newTitle;
@@ -88,7 +88,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Apply/Remove random tilt only when activating/deactivating
         const tiltElements = document.querySelectorAll('.tilt-element');
         if (isDrunkMode) {
-             console.log("🍻 Koozie Sports: Fun Mode Activated! Things might get wobbly.");
+             console.log("🍻 Koozie Sports: Koozie Mode Activated! Things might get wobbly.");
             tiltElements.forEach(el => {
                 const randomTiltValue = Math.random(); // Value between 0 and 1
                 // Use CSS variable defined in style.css
@@ -99,7 +99,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 drunkModeSound.play().catch(e => console.warn("Drunk mode sound play failed:", e));
             }
         } else {
-             console.log("🍺 Koozie Sports: Fun Mode Deactivated. Back to boring reality.");
+             console.log("🍺 Koozie Sports: Koozie Mode Deactivated. Back to sober reality.");
             // Remove the CSS variable; styles will revert to non-drunk mode state
              tiltElements.forEach(el => el.style.removeProperty('--random-tilt'));
         }
@@ -287,7 +287,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     // Initial tooltip update after potentially loading from localStorage
      if (drunkModeToggle && drunkModeTooltip) {
-         const initialTitle = isDrunkMode ? 'Deactivate "Fun" Mode' : 'Activate "Fun" Mode';
+         const initialTitle = isDrunkMode ? 'Deactivate Koozie Mode' : 'Activate Koozie Mode';
          drunkModeToggle.setAttribute('title', initialTitle);
          drunkModeTooltip.textContent = initialTitle;
      }
