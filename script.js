@@ -7,9 +7,9 @@
 
 document.addEventListener('DOMContentLoaded', () => {
     // --- Configuration ---
-    const YOUTUBE_API_KEY = 'YOUR_YOUTUBE_API_KEY'; // PASTE YOUR YOUTUBE DATA API KEY HERE
-    const YOUTUBE_CHANNEL_ID = 'UC4z4LOrBPikXVbuSg705g7w'; // Koozie Sports Channel ID
-    const MAX_YOUTUBE_VIDEOS = 6; // How many latest videos to show
+    const YOUTUBE_API_KEY = 'AIzaSyDae1uS8BJ6VRxAEZtD7ZWXHEUuY7zim3M'; // PASTE YOUR YOUTUBE DATA API KEY HERE
+    const YOUTUBE_CHANNEL_ID = 'UCQf5nnIl4ANXzQzftW4Vpfw'; // Koozie Sports Channel ID
+    const MAX_YOUTUBE_VIDEOS = 4; // How many latest videos to show
 
     // --- Cache DOM Elements ---
     const mainHeader = document.getElementById('main-header');
