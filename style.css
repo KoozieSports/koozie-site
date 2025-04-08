@@ -1,4 +1,4 @@
-/* style.css for Koozie Sports - Revised */
+/* style.css for Koozie Sports - Revised & Enhanced */
 
 /* --- 0. Global Settings & Variables --- */
 @import url('https://fonts.googleapis.com/css2?family=Architects+Daughter&family=Roboto:wght@400;700&family=Permanent+Marker&display=swap');
@@ -35,6 +35,8 @@
     --dm-link-hover: var(--dm-accent-red);
     --dm-card-bg: #f0e68c; /* Khaki card bg */
     --dm-marker-color: #ff4500; /* OrangeRed marker */
+    --dm-footer-bg: #faf0e6; /* Linen */
+    --dm-header-bg: #fff8dc; /* Cornsilk */
 
     /* Fonts */
     --font-body: 'Roboto', sans-serif;
@@ -52,8 +54,8 @@
     --transition-speed: 0.3s;
     --bubble-size: 15px; /* For bubble effect */
 
-    /* NEW: Logo Spin Duration */
-    --logo-spin-duration: 15s;
+    /* NEW: Logo Flip Duration */
+    --logo-flip-duration: 0.8s; /* Faster than the old spin */
 }
 
 /* Basic Reset */
@@ -87,10 +89,10 @@ body {
     background-size: 1px auto, 100% 2.2em;
     background-attachment: local;
     position: relative;
-    transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease;
+    transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease, filter var(--transition-speed) ease; /* Added filter transition */
 }
 
-/* NEW: Prevent body scroll when mobile nav is open */
+/* Prevent body scroll when mobile nav is open */
 body.body-menu-open {
     overflow-y: hidden;
 }
@@ -159,7 +161,7 @@ section {
     width: 80px;
     height: 3px;
     background-color: var(--accent-red);
-    transition: background-color var(--transition-speed) ease;
+    transition: background-color var(--transition-speed) ease, animation 1s; /* Added animation */
 }
 
 .section-subtitle {
@@ -219,16 +221,21 @@ section {
     transition: height var(--transition-speed) ease;
 }
 
-/* NEW: Logo Spinning Animation */
-@keyframes spin {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
+/* NEW: Logo Flipping Animation */
+@keyframes flip-horizontal {
+  0% {
+    transform: perspective(400px) rotateY(0);
+  }
+  100% {
+    transform: perspective(400px) rotateY(360deg); /* Full flip */
+  }
 }
-.spinning-logo:hover {
-    animation: spin var(--logo-spin-duration) linear infinite;
+.flipping-logo:hover {
+    /* Apply animation on hover */
+    animation: flip-horizontal var(--logo-flip-duration) ease-in-out;
+    /* Keep backface visible so it doesn't disappear mid-flip */
+    backface-visibility: visible;
 }
-/* Optional: Make it spin constantly? Uncomment below */
-/* .spinning-logo { animation: spin var(--logo-spin-duration) linear infinite; } */
 
 
 #main-nav { display: flex; align-items: center; }
@@ -243,7 +250,7 @@ section {
     padding: 5px 0;
     position: relative;
     text-decoration: none;
-    transition: color var(--transition-speed) ease;
+    transition: color var(--transition-speed) ease, transform var(--transition-speed) ease; /* Added transform */
 }
 #nav-links a.nav-item::after {
     content: '';
@@ -255,13 +262,17 @@ section {
     background-color: var(--accent-red);
     transition: width var(--transition-speed) ease, background-color var(--transition-speed) ease;
 }
+/* Active state styling (used by scrollspy and initial load) */
 #nav-links a.nav-item:hover,
 #nav-links a.nav-item:focus,
-#nav-links a.nav-item.active { color: var(--link-hover); }
-
+#nav-links a.nav-item.active {
+    color: var(--link-hover);
+}
 #nav-links a.nav-item:hover::after,
 #nav-links a.nav-item:focus::after,
-#nav-links a.nav-item.active::after { width: 100%; }
+#nav-links a.nav-item.active::after {
+    width: 100%;
+}
 
 #hamburger-menu {
     display: none; /* Hidden by default, shown via media query */
@@ -336,11 +347,11 @@ section {
     text-align: center;
     padding: calc(var(--base-spacing) * 5) 0;
     position: relative;
-    background-image: none;
+    background-image: none; /* Clear default notepad lines */
     display: flex;
     align-items: center;
     min-height: 60vh;
-    overflow: hidden;
+    overflow: hidden; /* Hide overflow for overlay */
 }
 .hero-overlay {
     position: absolute;
@@ -384,6 +395,7 @@ section {
     transition: background-color var(--transition-speed) ease, transform var(--transition-speed) ease, box-shadow var(--transition-speed);
     box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
     border: none;
+    cursor: pointer;
 }
 .cta-button:hover, .cta-button:focus {
     background-color: #c4303d;
@@ -480,7 +492,7 @@ section {
     box-shadow: 2px 2px 6px var(--card-shadow);
     transition: transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease, background-color var(--transition-speed) ease;
     border: 1px solid #eee;
-    overflow: hidden;
+    overflow: hidden; /* Important for image scaling effect */
 }
 .card-item:hover {
     transform: translateY(-6px);
@@ -493,11 +505,13 @@ section {
     transition: transform 0.4s ease;
 }
 
-.interactive-image:hover {
-    transform: scale(1.05);
+/* Image scaling in cards - keep this specific to interactive images inside cards */
+.card-item .interactive-image:hover {
+     transform: scale(1.05); /* Scale image inside card on its hover */
 }
+/* Optional: Also scale image slightly when card is hovered (less pronounced) */
 .card-item:hover .card-image {
-     transform: scale(1.03);
+    transform: scale(1.02);
 }
 
 
@@ -516,7 +530,7 @@ section {
 .gallery-item .caption { margin-bottom: var(--base-spacing); }
 
 
-/* --- NEW: Social Feeds Section --- */
+/* --- Social Feeds Section --- */
 #social-feeds {
     /* Background handled by notepad lines or alt-bg if added */
 }
@@ -525,6 +539,15 @@ section {
     grid-template-columns: 1fr; /* Default to single column */
     gap: calc(var(--base-spacing) * 2.5);
 }
+
+/* Adjust grid for wider screens */
+@media (min-width: 768px) {
+    .social-feeds-grid {
+        grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); /* Two columns if space */
+        align-items: start; /* Align items to the top */
+    }
+}
+
 
 .social-feed-item h3 {
     text-align: center;
@@ -546,46 +569,24 @@ section {
     min-height: 300px; /* Give some initial height */
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: center; /* Center content vertically */
     align-items: center;
     text-align: center;
-    padding: calc(var(--base-spacing) * 2); /* More padding for placeholder text */
+    padding: calc(var(--base-spacing) * 1.5); /* Standard card padding */
+    width: 100%; /* Ensure it takes full grid cell width */
 }
 
-/* Instagram Placeholder/Widget specific */
-.instagram-carousel-placeholder iframe { /* Style the iframe if using widget */
-    max-width: 100%;
-    border: none;
+/* Instagram Elfsight Widget */
+.elfsight-app-2201490b-8ef7-46de-bc32-41b3df95e8c9 {
+    margin: 0 auto; /* Center the widget block */
+    max-width: 550px; /* Limit max width */
+    width: 100%; /* Be responsive */
 }
-.instagram-carousel-placeholder .manual-insta-grid { /* If using manual grid */
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-    gap: var(--base-spacing);
-    width: 100%;
-}
-.instagram-carousel-placeholder .manual-insta-grid img {
-    aspect-ratio: 1 / 1; /* Square images */
-    object-fit: cover;
-    border-radius: 4px;
-}
-
-.instagram-carousel-placeholder .elfsight-app-2201490b-8ef7-46de-bc32-41b3df95e8c9 {
-    margin-left: auto;   /* Add automatic left margin */
-    margin-right: auto;  /* Add automatic right margin */
-    max-width: 550px;    /* Adjust this max-width as desired */
-                         /* Controls how wide the widget can get on large screens */
-    width: 100%;         /* Allows it to shrink if container is narrower */
-    /* Elfsight's script will handle the height and internal content */
-}
-
-/* Ensure the placeholder container itself allows centering */
+/* Ensure the container allows centering */
 .instagram-carousel-placeholder {
-    /* The existing card-item styles should be fine, but ensure no
-       text-align: left; or similar property is interfering here.
-       Adding text-align: center here MIGHT help if margin:auto fails,
-       but margin:auto on the block element itself is preferred. */
-    /* text-align: center; */ /* Try uncommenting this only if margin:auto doesn't work */
+     /* Ensure no conflicting text-align or other properties */
 }
+
 
 /* YouTube Placeholder specific */
 .youtube-carousel-placeholder p:first-of-type { /* "Loading..." text */
@@ -599,7 +600,6 @@ section {
     margin-bottom: var(--base-spacing);
 }
 .youtube-video-item {
-    /* Styles for individual video items added by JS */
     text-align: center;
 }
 .youtube-video-item img {
@@ -626,7 +626,6 @@ section {
 
 
 /* --- Contact Section --- */
-/* #contact is now alt-bg */
 #contact .contact-info p { margin-bottom: calc(var(--base-spacing) * 0.5); font-size: 1.1rem; }
 #contact .contact-info i.fa-fw {
     margin-right: 10px;
@@ -642,16 +641,24 @@ section {
     text-align: center;
     border: 1px dashed var(--notepad-margin-line);
     padding: calc(var(--base-spacing) * 0.5);
-    display: inline-block;
+    display: inline-block; /* Allows centering via text-align on parent */
     max-width: 90%;
     transition: color var(--transition-speed) ease, border-color var(--transition-speed) ease;
 }
+/* Center the note if needed */
+.contact-info { text-align: center; }
+.contact-info p { text-align: left; display: inline-block; margin-left: 1em; margin-right: 1em;} /* Reset text align for info lines */
+
+
 .contact-form-placeholder {
     margin-top: calc(var(--base-spacing) * 2.5);
     padding: var(--base-spacing) calc(var(--base-spacing) * 1.5);
     border: 1px solid #ddd;
     border-radius: 5px;
     background-color: rgba(255, 255, 255, 0.5);
+    max-width: 600px; /* Limit form width */
+    margin-left: auto;
+    margin-right: auto;
 }
 .contact-form-placeholder h3 {
     text-align: center;
@@ -669,6 +676,8 @@ section {
     border-radius: 4px;
     font-family: var(--font-body);
     font-size: 1rem;
+    background-color: var(--white); /* Ensure readable background */
+    color: var(--text-color); /* Ensure readable text */
 }
 .contact-form-placeholder textarea {
     min-height: 80px;
@@ -746,7 +755,7 @@ section {
     top: 0;
     left: 0;
 }
-#bubble-overlay::before {
+#bubble-overlay::before { /* Using pseudo element for bubbles */
     background-image: radial-gradient(circle at center, rgba(255, 223, 186, 0.5) 0%, rgba(255, 223, 186, 0.5) 30%, transparent 60%),
                       radial-gradient(circle at center, rgba(255, 255, 255, 0.6) 0%, rgba(255, 255, 255, 0.6) 25%, transparent 50%),
                       radial-gradient(circle at center, rgba(255, 223, 186, 0.4) 0%, rgba(255, 223, 186, 0.4) 35%, transparent 70%);
@@ -766,7 +775,20 @@ section {
 }
 
 
-/* --- 6. Drunk Mode Specific Styles --- */
+/* --- 6. Drunk Mode Specific Styles & ENHANCEMENTS --- */
+
+@keyframes text-shake {
+  0%, 100% { transform: translateX(0) rotate(0); }
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-1px) rotate(-0.2deg); }
+  20%, 40%, 60%, 80% { transform: translateX(1px) rotate(0.2deg); }
+}
+
+@keyframes color-cycle {
+    0% { background-color: var(--dm-accent-red); }
+    50% { background-color: var(--dm-accent-blue); }
+    100% { background-color: var(--dm-accent-red); }
+}
+
 body.drunk-mode-active {
     /* Change main colors */
     --notepad-bg: var(--dm-notepad-bg);
@@ -779,23 +801,24 @@ body.drunk-mode-active {
     --link-hover: var(--dm-link-hover);
     --card-bg: var(--dm-card-bg);
     --marker-color: var(--dm-marker-color);
+    --footer-bg: var(--dm-footer-bg);
+    --header-bg: var(--dm-header-bg); /* Use variable */
 
-    /* REMOVED transform: rotate(0.3deg); to prevent mobile nav issues */
-    filter: hue-rotate(10deg) saturate(110%);
+    /* Visual Effects */
+    filter: hue-rotate(10deg) saturate(110%) blur(0.5px); /* Added subtle blur */
     cursor: url('images/beer-cursor.png'), crosshair; /* Needs image */
 
     /* Wavy lines approximation */
      background-image:
         linear-gradient(var(--notepad-margin-line) 0%, var(--notepad-margin-line) 100%) 35px 0 / 1px auto no-repeat,
         repeating-linear-gradient(
-            /* Adjust angle and stops for waviness */
-            -1deg, /* Slight angle */
+            -1deg,
             var(--dm-notepad-lines) 0, var(--dm-notepad-lines) 1px,
             transparent 1px, transparent 50%,
-             var(--dm-notepad-lines) 50%, var(--dm-notepad-lines) 51%, /* Mimic slight wave bump */
+             var(--dm-notepad-lines) 50%, var(--dm-notepad-lines) 51%,
              transparent 51%, transparent 100%
         );
-    background-size: 1px auto, 100% 2.2em; /* Keep line height consistent */
+    background-size: 1px auto, 100% 2.2em;
 }
 
 /* Make bubble overlay visible and animate */
@@ -804,50 +827,55 @@ body.drunk-mode-active {
     visibility: visible;
 }
 .drunk-mode-active #bubble-overlay::before {
-    animation-play-state: running; /* Start animation */
+    animation-play-state: running;
 }
 
 /* Enhance element tilting */
 .drunk-mode-active .tilt-element {
     transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
-    /* Tilt based on JS-set --random-tilt variable */
     transform: rotate(calc( ( var(--random-tilt, 0.5) - 0.5 ) * 8deg )) scale(0.98);
 }
-/* Apply tilt on hover *only if* NOT in drunk mode (subtle effect) */
-/* Or keep it simple: tilt-element always tilts in drunk mode */
 
 /* Wobble Animation */
 .drunk-mode-active .wobble-on-hover:hover {
-    animation: wobble 0.9s ease-in-out infinite;
+    animation: wobble 0.7s ease-in-out infinite; /* Slightly faster wobble */
 }
 @keyframes wobble {
   0%, 100% { transform: translateX(0%) rotate(0deg); }
-  15% { transform: translateX(-8px) rotate(-4deg); }
-  30% { transform: translateX(6px) rotate(3deg); }
-  45% { transform: translateX(-5px) rotate(-2deg); }
-  60% { transform: translateX(4px) rotate(1.5deg); }
-  75% { transform: translateX(-3px) rotate(-1deg); }
+  15% { transform: translateX(-10px) rotate(-5deg); } /* More pronounced */
+  30% { transform: translateX(8px) rotate(4deg); }
+  45% { transform: translateX(-7px) rotate(-3deg); }
+  60% { transform: translateX(5px) rotate(2deg); }
+  75% { transform: translateX(-4px) rotate(-1.5deg); }
 }
 
 /* Text Effects in Drunk Mode */
 .drunk-mode-active h1,
 .drunk-mode-active h2,
 .drunk-mode-active .quote-text {
-     text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1);
-     animation: text-swim 5s ease-in-out infinite alternate;
+     text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.15);
+     animation: text-swim 4s ease-in-out infinite alternate;
 }
 @keyframes text-swim {
     from { letter-spacing: normal; transform: skewX(0deg); }
-    to { letter-spacing: 0.5px; transform: skewX(-1deg); } /* Subtle swim/skew */
+    to { letter-spacing: 0.5px; transform: skewX(-1.2deg); } /* Slightly more skew */
 }
 
-/* Override specific element colors in Drunk Mode */
+/* Slight shake on interactive elements */
+.drunk-mode-active .cta-button:hover,
+.drunk-mode-active .nav-item:hover,
+.drunk-mode-active .interactive-image:hover {
+    animation: text-shake 0.5s linear infinite alternate;
+}
+
+
+/* Override specific element colors & styles in Drunk Mode */
 .drunk-mode-active #main-header {
-     background-color: #fff8dc; /* Cornsilk */
+     background-color: var(--header-bg); /* Use variable */
      border-bottom-color: var(--dm-accent-red);
 }
 .drunk-mode-active #main-footer {
-     background-color: #faf0e6; /* Linen */
+     background-color: var(--footer-bg); /* Use variable */
      border-top-color: var(--dm-accent-blue);
 }
 .drunk-mode-active .cta-button {
@@ -856,6 +884,7 @@ body.drunk-mode-active {
 }
 .drunk-mode-active .cta-button:hover {
      background-color: #ff7f50; /* Coral */
+     transform: translateY(-2px) scale(1.01); /* Less jump */
 }
 .drunk-mode-active .cta-button.secondary {
      color: var(--dm-accent-blue);
@@ -866,10 +895,46 @@ body.drunk-mode-active {
      color: var(--white);
 }
 .drunk-mode-active .social-feed-item h3 i {
-    color: var(--dm-marker-color); /* Match marker color */
+    color: var(--dm-marker-color);
 }
 .drunk-mode-active .error-message {
-     color: var(--dm-accent-red); /* Use drunk mode accent */
+     color: var(--dm-accent-red);
+}
+.drunk-mode-active .section-title::after {
+    animation: color-cycle 4s linear infinite;
+}
+.drunk-mode-active .framed-image {
+    border-color: #fff5ee; /* Seashell */
+}
+.drunk-mode-active .contact-form-placeholder input,
+.drunk-mode-active .contact-form-placeholder textarea {
+    background-color: rgba(255, 255, 255, 0.8); /* Slightly transparent */
+    color: var(--dm-text-color);
+    border-color: var(--dm-accent-lines);
+}
+
+/* NEW: Drunk Mode Mascot Styles */
+#drunk-mode-mascot {
+    position: fixed;
+    bottom: 20px;
+    right: -100px; /* Start off-screen */
+    font-size: 3rem; /* Adjust size as needed */
+    z-index: 1001; /* Above most content, below modals/nav */
+    pointer-events: none; /* Don't interfere with clicks */
+    opacity: 0;
+    transition: right 1s ease-out, opacity 1s ease-out;
+    animation: mascot-bob 3s ease-in-out infinite alternate;
+}
+
+@keyframes mascot-bob {
+    0% { transform: translateY(0) rotate(-5deg); }
+    50% { transform: translateY(-15px) rotate(5deg); }
+    100% { transform: translateY(0) rotate(-5deg); }
+}
+
+body.drunk-mode-active #drunk-mode-mascot {
+    right: 20px; /* Slide in */
+    opacity: 0.7; /* Semi-transparent */
 }
 
 
@@ -884,7 +949,7 @@ body.drunk-mode-active {
     h1 { font-size: 2.5rem; } #hero h1 { font-size: 3rem; } h2 { font-size: 2rem; }
     .container { width: 95%; }
     .quote-text { font-size: 1.6rem; }
-    .drunk-mode-active body { background-position: 25px 0, 0 0; } /* Maintain margin line position */
+    .drunk-mode-active body { background-position: 25px 0, 0 0; }
 }
 
 /* Small Devices */
@@ -896,38 +961,43 @@ body.drunk-mode-active {
     h1 { font-size: 2.2rem; } #hero h1 { font-size: 2.5rem; } #hero .tagline { font-size: 1.5rem; } h2 { font-size: 1.8rem; }
     .quote-text { font-size: 1.4rem; }
 
+    /* NEW: Add padding-top to Hero on mobile to push content below header */
+    #hero {
+        padding-top: calc(var(--header-height) + var(--base-spacing) * 2); /* Header height + some extra space */
+        padding-bottom: calc(var(--base-spacing) * 3); /* Adjust bottom padding if needed */
+        min-height: 50vh; /* Adjust min height if needed */
+    }
+
     .layout-two-column { flex-direction: column; }
     .layout-two-column > div { min-width: 100%; }
 
-    #hamburger-menu { display: block; } /* Show hamburger */
-    #main-nav { order: 1; margin-left: auto; display: contents; } /* Reorder for flex */
+    #hamburger-menu { display: block; }
+    #main-nav { order: 1; margin-left: auto; display: contents; }
 
     #nav-links {
-        position: fixed; /* Changed from absolute to fixed */
+        position: fixed;
         top: 0;
-        right: -100%; /* Start off-screen */
+        right: -100%;
         width: 70%;
         max-width: 300px;
-        height: 100vh; /* Full viewport height */
+        height: 100vh;
         background-color: var(--white);
         flex-direction: column;
-        padding: calc(var(--header-height) + var(--base-spacing) * 1) var(--base-spacing); /* Adjusted padding */
+        padding: calc(var(--header-height) + var(--base-spacing) * 1) var(--base-spacing);
         box-shadow: -3px 0 10px rgba(0,0,0,0.2);
-        transition: right var(--transition-speed) ease-in-out;
-        z-index: 1002; /* Above header/content, below hamburger */
+        transition: right var(--transition-speed) ease-in-out, background-color var(--transition-speed) ease; /* Added bg transition */
+        z-index: 1002;
         background-image: linear-gradient(var(--notepad-lines) 1px, transparent 1px);
         background-size: 100% 2.2em;
-        background-position: 0 var(--header-height); /* Start lines below header space */
+        background-position: 0 var(--header-height);
         overflow-y: auto;
-        /* Drunk mode adjustment */
-        transition: right var(--transition-speed) ease-in-out, background-color var(--transition-speed) ease;
     }
     .drunk-mode-active #nav-links {
-        background-color: var(--dm-notepad-bg); /* Match drunk background */
+        background-color: var(--dm-notepad-bg);
         background-image: linear-gradient(var(--dm-notepad-lines) 1px, transparent 1px);
     }
 
-    #nav-links.nav-open { right: 0; } /* Slide in */
+    #nav-links.nav-open { right: 0; }
     #nav-links li { margin: 0; width: 100%; }
     #nav-links a.nav-item {
         display: block;
@@ -938,28 +1008,30 @@ body.drunk-mode-active {
     .drunk-mode-active #nav-links a.nav-item {
         border-bottom-color: var(--dm-notepad-lines);
     }
-    #nav-links a.nav-item::after { display: none; } /* No underline needed */
+    #nav-links a.nav-item::after { display: none; } /* No underline needed in mobile menu */
     #nav-links a.nav-item:hover,
     #nav-links a.nav-item:focus,
     #nav-links a.nav-item.active {
         background-color: var(--light-grey-bg); /* Subtle highlight */
-        color: var(--link-hover); /* Use hover color */
+        color: var(--link-hover);
     }
     .drunk-mode-active #nav-links a.nav-item:hover,
     .drunk-mode-active #nav-links a.nav-item:focus,
     .drunk-mode-active #nav-links a.nav-item.active {
-        background-color: rgba(255,255,255,0.2); /* Lighten drunk bg slightly */
+        background-color: rgba(255,255,255,0.2);
          color: var(--dm-link-hover);
     }
 
-    #drunk-mode-toggle { order: 2; margin-left: 10px; } /* Put after nav stuff */
-    #drunk-mode-toggle .tooltip-text { display: none; } /* Hide tooltip on mobile */
+    #drunk-mode-toggle { order: 2; margin-left: 10px; }
+    #drunk-mode-toggle .tooltip-text { display: none; }
 
     .footer-content { flex-direction: column; text-align: center; }
     .footer-right { justify-content: center; }
     .social-links a:first-child { margin-left: 0; }
 
     .drunk-mode-active body { background-position: 15px 0, 0 0; }
+    #drunk-mode-mascot { font-size: 2.5rem; bottom: 15px; right: -80px; } /* Adjust mascot for smaller screens */
+    body.drunk-mode-active #drunk-mode-mascot { right: 15px; }
 }
 
 /* Extra Small Devices */
@@ -970,13 +1042,19 @@ body.drunk-mode-active {
     body {
         background-image: linear-gradient(var(--notepad-lines) 1px, transparent 1px);
         background-size: 100% 2em;
+        background-position: 0 0; /* Remove margin line */
     }
     .drunk-mode-active body {
        background-image: repeating-linear-gradient(-1deg, var(--dm-notepad-lines) 0, var(--dm-notepad-lines) 1px, transparent 1px, transparent 50%, var(--dm-notepad-lines) 50%, var(--dm-notepad-lines) 51%, transparent 51%, transparent 100%);
        background-size: 100% 2em;
+       background-position: 0 0;
     }
 
-    h1 { font-size: 2rem; } #hero { padding: calc(var(--base-spacing) * 4) 0; min-height: 40vh; }
+    h1 { font-size: 2rem; }
+    #hero {
+        padding-top: calc(var(--header-height) + var(--base-spacing) * 1.5); /* Adjust hero padding for smallest header */
+        min-height: 40vh;
+    }
     #hero h1 { font-size: 2.2rem; } #hero .tagline { font-size: 1.3rem; } h2 { font-size: 1.6rem; } h3 { font-size: 1.2rem; }
     .quote-text { font-size: 1.2rem; }
 
@@ -989,5 +1067,7 @@ body.drunk-mode-active {
     .back-to-top { font-size: 1.5rem; }
 
     .contact-form-placeholder { padding: var(--base-spacing); }
-    #nav-links { width: 85%; max-width: none; } /* Make menu wider on very small screens */
+    #nav-links { width: 85%; max-width: none; }
+    #drunk-mode-mascot { font-size: 2rem; bottom: 10px; right: -60px; } /* Further adjust mascot */
+    body.drunk-mode-active #drunk-mode-mascot { right: 10px; }
 }
