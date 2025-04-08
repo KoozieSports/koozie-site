@@ -1,8 +1,8 @@
 /**
- * script.js for Koozie Sports
- * Handles header shrinking, mobile navigation, drunk mode toggle,
- * scroll animations, dynamic year update, smooth scrolling,
- * and fetching YouTube videos.
+ * script.js for Koozie Sports - Enhanced
+ * Handles header shrinking, mobile navigation, dark mode, drunk mode,
+ * scroll animations, scrollspy navbar highlighting, dynamic quote,
+ * dynamic year update, smooth scrolling, and fetching YouTube videos.
  */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -10,20 +10,44 @@ document.addEventListener('DOMContentLoaded', () => {
     const YOUTUBE_API_KEY = 'AIzaSyDae1uS8BJ6VRxAEZtD7ZWXHEUuY7zim3M'; // PASTE YOUR YOUTUBE DATA API KEY HERE
     const YOUTUBE_CHANNEL_ID = 'UCQf5nnIl4ANXzQzftW4Vpfw'; // Koozie Sports Channel ID
     const MAX_YOUTUBE_VIDEOS = 4; // How many latest videos to show
+    const SCROLLSPY_OFFSET_PERCENT = 30; // % of viewport height from top to trigger section activation
+
+    // --- Dynamic Content Definitions ---
+    const dynamicQuotes = [
+        { quote: `"You miss 100% of the shots you don't take. - Wayne Gretzky"`, attribution: "- Michael Scott... probably" },
+        { quote: "Always bet the over. Life's too short to root for defense.", attribution: "- A Wise Koozie Drinker" },
+        { quote: "The best defense is a good offense... and maybe distracting the goalie with a shiny object.", attribution: "- Unofficial Koozie Playbook" },
+        { quote: "Is this heaven? No, it's Iowa... but the tailgate scene is divine.", attribution: "- Field of Dreams (Revised)" },
+        { quote: "Rule #76: No excuses. Play like a champion... or at least look like you know what you're doing.", attribution: "- Koozie Wedding Crashers" },
+        { quote: "My therapist told me to write letters to the people I hate and then burn them. Did that, but now I don't know what to do with the letters.", attribution: "- Relatable Sports Fan" },
+        { quote: "Tip of the Day: Never trust a ref wearing sunglasses indoors.", attribution: "- Koozie Sports Betting 'Advice'" }
+        { quote: "99% of gamblers quit before they win big.", attribution: "- Duck" }
+    ];
+
 
     // --- Cache DOM Elements ---
+    const htmlElement = document.documentElement;
+    const bodyElement = document.body;
     const mainHeader = document.getElementById('main-header');
     const hamburgerMenu = document.getElementById('hamburger-menu');
-    const navLinks = document.getElementById('nav-links');
-    const drunkModeToggle = document.getElementById('drunk-mode-toggle');
-    const drunkModeTooltip = drunkModeToggle ? drunkModeToggle.querySelector('.tooltip-text') : null;
-    const bodyElement = document.body;
+    const navLinksContainer = document.getElementById('nav-links');
+    const navItems = navLinksContainer ? navLinksContainer.querySelectorAll('.nav-item[data-section]') : [];
+    const sections = document.querySelectorAll('section[data-id]');
     const currentYearSpan = document.getElementById('current-year');
     const scrollAnimateElements = document.querySelectorAll('.animate-on-scroll');
-    const internalLinks = document.querySelectorAll('a[href^="#"]');
+    // Toggles
+    const darkModeToggle = document.getElementById('dark-mode-toggle');
+    const darkModeIconMoon = darkModeToggle ? darkModeToggle.querySelector('.fa-moon') : null;
+    const darkModeIconSun = darkModeToggle ? darkModeToggle.querySelector('.fa-sun') : null;
+    const darkModeTooltip = darkModeToggle ? darkModeToggle.querySelector('.tooltip-text') : null;
+    const drunkModeToggle = document.getElementById('drunk-mode-toggle');
+    const drunkModeTooltip = drunkModeToggle ? drunkModeToggle.querySelector('.tooltip-text') : null;
+    // Dynamic Quote
+    const dynamicQuoteTextEl = document.getElementById('dynamic-quote-text');
+    const dynamicQuoteAttrEl = document.getElementById('dynamic-quote-attribution');
     // YouTube specific elements
     const youtubeVideosContainer = document.getElementById('youtube-video-items');
-    const youtubeLoadingMessage = document.querySelector('.youtube-carousel-placeholder p:first-of-type');
+    const youtubeLoadingMessage = document.querySelector('.youtube-loading-text');
     const youtubeErrorMessage = document.getElementById('youtube-error-message');
     const youtubeFallbackMessage = document.getElementById('youtube-fallback-message');
     // Drunk mode sound (optional)
@@ -32,8 +56,75 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- State Variables ---
     let isMenuOpen = false;
-    let isDrunkMode = bodyElement.classList.contains('drunk-mode-active'); // Initialize based on current class
+    let isDrunkMode = bodyElement.classList.contains('drunk-mode-active');
+    let currentTheme = localStorage.getItem('koozieTheme') || 'light'; // Default to light
 
+
+    // --- Function: Set Theme (Dark/Light) ---
+    const setTheme = (theme) => {
+        htmlElement.setAttribute('data-theme', theme);
+        currentTheme = theme;
+        localStorage.setItem('koozieTheme', theme);
+
+        // Update toggle button state
+        if (darkModeToggle && darkModeIconMoon && darkModeIconSun && darkModeTooltip) {
+            const isDark = theme === 'dark';
+            darkModeIconMoon.style.display = isDark ? 'none' : 'inline-block';
+            darkModeIconSun.style.display = isDark ? 'inline-block' : 'none';
+            const newTitle = isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode';
+            darkModeToggle.setAttribute('title', newTitle);
+            darkModeTooltip.textContent = newTitle;
+        }
+
+        // Update meta theme-color (optional, browser support varies)
+        const themeColorMetaLight = document.querySelector('meta[name="theme-color"][media="(prefers-color-scheme: light)"]');
+        const themeColorMetaDark = document.querySelector('meta[name="theme-color"][media="(prefers-color-scheme: dark)"]');
+        if (themeColorMetaLight) themeColorMetaLight.content = theme === 'light' ? '#fdfaef' : '#1a1a1a';
+        if (themeColorMetaDark) themeColorMetaDark.content = theme === 'dark' ? '#1a1a1a' : '#fdfaef';
+
+        console.log(`Koozie Sports: Theme changed to ${theme}`);
+    };
+
+    // --- Function: Initialize Dark Mode ---
+    const initDarkMode = () => {
+        // 1. Check localStorage
+        const savedTheme = localStorage.getItem('koozieTheme');
+        if (savedTheme) {
+            setTheme(savedTheme);
+        } else {
+            // 2. Check system preference if no saved theme
+            const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            setTheme(prefersDark ? 'dark' : 'light');
+        }
+
+        // 3. Add listener to toggle button
+        if (darkModeToggle) {
+            darkModeToggle.addEventListener('click', () => {
+                setTheme(currentTheme === 'light' ? 'dark' : 'light');
+            });
+        }
+
+        // 4. Listen for system preference changes (optional)
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
+            // Only change if no user preference is saved
+            if (!localStorage.getItem('koozieTheme')) {
+                 setTheme(event.matches ? 'dark' : 'light');
+            }
+        });
+    };
+
+    // --- Function: Update Dynamic Quote ---
+    const updateDynamicQuote = () => {
+        if (dynamicQuotes.length > 0 && dynamicQuoteTextEl && dynamicQuoteAttrEl) {
+            const randomIndex = Math.floor(Math.random() * dynamicQuotes.length);
+            const selectedItem = dynamicQuotes[randomIndex];
+            dynamicQuoteTextEl.innerHTML = selectedItem.quote; // Use innerHTML if quote contains HTML like spans
+            dynamicQuoteAttrEl.textContent = selectedItem.attribution;
+        } else if (dynamicQuoteTextEl) {
+            dynamicQuoteTextEl.textContent = "Looks like the quote machine is on a beer run...";
+            if(dynamicQuoteAttrEl) dynamicQuoteAttrEl.textContent = "";
+        }
+    };
 
     // --- Function: Header Shrink on Scroll ---
     const handleHeaderScroll = () => {
@@ -50,17 +141,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Function: Toggle Mobile Navigation ---
     const toggleMobileNav = (forceClose = false) => {
-        if (!navLinks || !hamburgerMenu) return;
+        if (!navLinksContainer || !hamburgerMenu) return;
 
-        if (forceClose) {
-            isMenuOpen = false;
-        } else {
-            isMenuOpen = !isMenuOpen;
-        }
+        isMenuOpen = forceClose ? false : !isMenuOpen;
 
-        navLinks.classList.toggle('nav-open', isMenuOpen);
+        navLinksContainer.classList.toggle('nav-open', isMenuOpen);
         hamburgerMenu.setAttribute('aria-expanded', isMenuOpen);
-        // Toggle class to prevent body scroll when menu is open
         bodyElement.classList.toggle('body-menu-open', isMenuOpen);
 
         const icon = hamburgerMenu.querySelector('i');
@@ -78,33 +164,24 @@ document.addEventListener('DOMContentLoaded', () => {
         isDrunkMode = !isDrunkMode;
         bodyElement.classList.toggle('drunk-mode-active', isDrunkMode);
 
-        // Update button title and tooltip text
         const newTitle = isDrunkMode ? 'Deactivate Koozie Mode' : 'Activate Koozie Mode';
         drunkModeToggle.setAttribute('title', newTitle);
         if (drunkModeTooltip) {
             drunkModeTooltip.textContent = newTitle;
         }
 
-        // Apply/Remove random tilt only when activating/deactivating
         const tiltElements = document.querySelectorAll('.tilt-element');
         if (isDrunkMode) {
              console.log("🍻 Koozie Sports: Koozie Mode Activated! Things might get wobbly.");
             tiltElements.forEach(el => {
-                const randomTiltValue = Math.random(); // Value between 0 and 1
-                // Use CSS variable defined in style.css
-                el.style.setProperty('--random-tilt', randomTiltValue);
+                el.style.setProperty('--random-tilt', Math.random());
             });
-            // Optional: Play sound
-            if (drunkModeSound) {
-                drunkModeSound.play().catch(e => console.warn("Drunk mode sound play failed:", e));
-            }
+            if (drunkModeSound) drunkModeSound.play().catch(e => console.warn("Drunk mode sound play failed:", e));
         } else {
              console.log("🍺 Koozie Sports: Koozie Mode Deactivated. Back to sober reality.");
-            // Remove the CSS variable; styles will revert to non-drunk mode state
              tiltElements.forEach(el => el.style.removeProperty('--random-tilt'));
         }
 
-        // Persist choice in localStorage (optional)
         try {
             localStorage.setItem('koozieDrunkMode', isDrunkMode);
         } catch (e) {
@@ -120,19 +197,16 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     // --- Function: Handle Scroll Animations (Intersection Observer) ---
-    const handleScrollAnimations = () => {
-        if (!('IntersectionObserver' in window)) {
-            console.warn("IntersectionObserver not supported, scroll animations disabled.");
-            scrollAnimateElements.forEach(el => el.classList.add('visible'));
+    const initScrollAnimations = () => {
+        if (!('IntersectionObserver' in window) || scrollAnimateElements.length === 0) {
+            if (scrollAnimateElements.length > 0) {
+                console.warn("IntersectionObserver not supported, scroll animations disabled.");
+                scrollAnimateElements.forEach(el => el.classList.add('visible'));
+            }
             return;
         }
 
-        const observerOptions = {
-            root: null,
-            rootMargin: '0px',
-            threshold: 0.15
-        };
-
+        const observerOptions = { root: null, rootMargin: '0px', threshold: 0.15 };
         const observerCallback = (entries, observer) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -141,7 +215,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
         };
-
         const observer = new IntersectionObserver(observerCallback, observerOptions);
         scrollAnimateElements.forEach(el => observer.observe(el));
     };
@@ -152,140 +225,224 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!link) return;
 
         const targetId = link.getAttribute('href');
-        if (targetId === '#') return; // Ignore links like href="#"
+        // Allow default behavior for empty hash or links not starting with #
+        if (!targetId || targetId === '#' || !targetId.startsWith('#')) return;
 
         // Close mobile menu if open and a nav link inside it was clicked
-        if (isMenuOpen && navLinks && navLinks.contains(link)) {
+        if (isMenuOpen && navLinksContainer && navLinksContainer.contains(link)) {
              toggleMobileNav(true); // Force close
         }
 
         if (targetId === '#page-top') {
              event.preventDefault();
              window.scrollTo({ top: 0, behavior: 'smooth' });
+             // Manually activate home link if needed (scrollspy might handle it)
+             // updateActiveNavLink('page-top');
              return;
         }
 
         try {
              const targetElement = document.querySelector(targetId);
-             if (targetElement) {
+             // Also check if the target has a corresponding data-id for scrollspy sections
+             const targetDataIdElement = targetId.substring(1) ? document.querySelector(`section[data-id="${targetId.substring(1)}"]`) : null;
+
+             if (targetElement || targetDataIdElement) {
                  event.preventDefault(); // Prevent default jump only if target exists
 
-                 targetElement.scrollIntoView({
+                 const elementToScrollTo = targetElement || targetDataIdElement;
+
+                 elementToScrollTo.scrollIntoView({
                      behavior: 'smooth',
-                     block: 'start' // Align to top, respecting scroll-padding-top
+                     block: 'start'
                  });
+                 // Update URL hash after smooth scroll (optional)
+                 // setTimeout(() => { history.pushState(null, null, targetId); }, 500); // Delay slightly
              } else {
                  console.warn(`Smooth scroll target element not found for selector: ${targetId}`);
-                 // Allow default behavior if target not found (e.g., link to another page)
              }
         } catch (e) {
-            // If querySelector fails (e.g., invalid ID), allow default link behavior
             console.error(`Error finding smooth scroll target: ${targetId}`, e);
         }
     };
 
-    // --- Function: Update Dynamic Content (Example Placeholder) ---
-    const updateDynamicContent = () => {
-        const leagueNameEl = document.querySelector('.dynamic-league-name');
-        const weekNumberEl = document.querySelector('.dynamic-week');
-        // ... Add logic later if needed ...
-    };
-
-     // --- Function: Initialize Lightbox (Example Placeholder) ---
-     const initializeLightbox = () => {
-        // if (typeof lightbox !== 'undefined') {
-        //     lightbox.option({ 'resizeDuration': 200, 'wrapAround': true });
-        // }
+     // --- Function: Update Active Nav Link Helper ---
+     const updateActiveNavLink = (activeSectionId) => {
+         navItems.forEach(navLink => {
+             if (navLink.getAttribute('data-section') === activeSectionId) {
+                 navLink.classList.add('active');
+             } else {
+                 navLink.classList.remove('active');
+             }
+         });
      };
 
-     // --- Function: Fetch Latest YouTube Videos ---
-     const fetchYouTubeVideos = async () => {
-        if (!youtubeVideosContainer || !YOUTUBE_API_KEY || YOUTUBE_API_KEY === 'YOUR_YOUTUBE_API_KEY') {
-            console.warn("YouTube API Key or container missing. Skipping video fetch.");
-            if (youtubeLoadingMessage) youtubeLoadingMessage.style.display = 'none';
-            if (youtubeErrorMessage) {
-                 youtubeErrorMessage.textContent = "YouTube API Key not configured.";
-                 youtubeErrorMessage.style.display = 'block';
-            }
-             if(youtubeFallbackMessage) youtubeFallbackMessage.style.display = 'block';
+    // --- Function: Initialize Scrollspy (Navbar Highlighting) ---
+    const initScrollspy = () => {
+        if (!('IntersectionObserver' in window) || sections.length === 0 || navItems.length === 0) {
+            console.warn("Scrollspy prerequisites not met (IntersectionObserver, sections, or navItems).");
             return;
         }
 
-        // Use the 'search' endpoint to find the latest videos for the channel
-        const apiUrl = `https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${YOUTUBE_CHANNEL_ID}&maxResults=${MAX_YOUTUBE_VIDEOS}&order=date&type=video&key=${YOUTUBE_API_KEY}`;
+        // Calculate rootMargin based on current header height
+        // Offset ensures the section is highlighted when it's comfortably in view, not just touching the edge
+        // Negative top margin pulls the trigger point *up*, positive bottom margin pushes it *down*.
+        // We want to trigger slightly *before* the section hits the very top edge below the header.
+        const headerHeight = mainHeader ? mainHeader.offsetHeight : 80; // Use fallback height
+        // Trigger when the top of the section is between the header and X% down the viewport
+        const topMargin = `-${headerHeight + 10}px`; // A bit below the header
+        const bottomMargin = `-${100 - SCROLLSPY_OFFSET_PERCENT}%`; // e.g., -70% means trigger when top 30% is visible
 
-        try {
-            const response = await fetch(apiUrl);
-            if (!response.ok) {
-                // Attempt to parse error message from YouTube API response
-                let errorData;
-                try {
-                     errorData = await response.json();
-                } catch (parseError) {
-                     // If response is not JSON or empty
-                     throw new Error(`HTTP error ${response.status}: ${response.statusText}`);
+        const observerOptions = {
+            root: null, // relative to viewport
+            rootMargin: `${topMargin} 0px ${bottomMargin} 0px`,
+            threshold: 0 // Trigger as soon as the edge crosses the rootMargin boundary
+        };
+
+        let lastActiveSectionId = null;
+
+        const observerCallback = (entries) => {
+            let currentActiveSectionId = null;
+
+            entries.forEach(entry => {
+                const sectionId = entry.target.getAttribute('data-id');
+
+                // Check if entry is intersecting AND is somewhat below the header
+                if (entry.isIntersecting && entry.boundingClientRect.top >= headerHeight) {
+                    currentActiveSectionId = sectionId;
                 }
-                 const errorMessage = errorData?.error?.message || `API request failed with status ${response.status}`;
-                 console.error("YouTube API Error:", errorData);
-                 throw new Error(errorMessage);
+                // Special case: If scrolling up fast, the *last* non-intersecting element above the viewport might be the correct one
+                 else if (!entry.isIntersecting && entry.boundingClientRect.top < headerHeight && entry.boundingClientRect.bottom > headerHeight) {
+                    // If the element is currently straddling the header line (partially visible above)
+                    // It *might* be the active one if nothing below it is intersecting yet
+                    // This helps catch sections when scrolling up quickly
+                    if (!currentActiveSectionId) { // Only set if nothing else below is active
+                        currentActiveSectionId = sectionId;
+                    }
+                 }
+            });
+
+             // Fallback: If no section is actively intersecting in the threshold zone,
+             // check which section is closest to the top below the header.
+             if (!currentActiveSectionId) {
+                 let minDistance = Infinity;
+                 sections.forEach(section => {
+                     const rect = section.getBoundingClientRect();
+                     // Consider sections whose top is below the header
+                     if (rect.top >= headerHeight) {
+                         if (rect.top < minDistance) {
+                             minDistance = rect.top;
+                             currentActiveSectionId = section.getAttribute('data-id');
+                         }
+                     }
+                     // If near the bottom, activate the last section
+                     else if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 50) { // Check if near bottom
+                         const lastSection = sections[sections.length - 1];
+                         currentActiveSectionId = lastSection ? lastSection.getAttribute('data-id') : null;
+                     }
+                 });
+             }
+
+
+            // Only update if the active section has changed
+            if (currentActiveSectionId && currentActiveSectionId !== lastActiveSectionId) {
+                updateActiveNavLink(currentActiveSectionId);
+                lastActiveSectionId = currentActiveSectionId;
+                // console.log("Active section:", currentActiveSectionId); // Debugging
             }
-
-            const data = await response.json();
-
-            if (data.items && data.items.length > 0) {
-                youtubeVideosContainer.innerHTML = ''; // Clear previous items/loading text
-                if (youtubeLoadingMessage) youtubeLoadingMessage.style.display = 'none';
-                 if(youtubeFallbackMessage) youtubeFallbackMessage.style.display = 'none'; // Hide fallback if successful
-
-                data.items.forEach(item => {
-                    const videoId = item.id.videoId;
-                    const title = item.snippet.title;
-                    // Use high quality thumbnail if available, otherwise default
-                    const thumbnailUrl = item.snippet.thumbnails.high?.url || item.snippet.thumbnails.default?.url;
-                    const videoUrl = `https://www.youtube.com/watch?v=${videoId}`;
-
-                    const videoElement = document.createElement('div');
-                    videoElement.classList.add('youtube-video-item'); // Use class from CSS
-
-                    videoElement.innerHTML = `
-                        <a href="${videoUrl}" target="_blank" rel="noopener noreferrer" title="${title}">
-                            <img src="${thumbnailUrl}" alt="${title}" loading="lazy">
-                        </a>
-                        <p>${title}</p>
-                    `;
-                    youtubeVideosContainer.appendChild(videoElement);
-                });
-            } else {
-                 throw new Error("No video items found in API response.");
+            // Handle case when scrolling back to the very top
+            else if (window.scrollY < 100 && lastActiveSectionId !== 'page-top') { // Threshold near top
+                 updateActiveNavLink('page-top');
+                 lastActiveSectionId = 'page-top';
             }
+        };
 
-        } catch (error) {
-            console.error('Failed to fetch YouTube videos:', error);
-            if (youtubeLoadingMessage) youtubeLoadingMessage.style.display = 'none';
-            if (youtubeErrorMessage) {
-                 // Display a user-friendly message, potentially masking specific API errors
-                 youtubeErrorMessage.textContent = `Could not load videos. (${error.message || 'Check console for details'})`;
+        const observer = new IntersectionObserver(observerCallback, observerOptions);
+        sections.forEach(section => observer.observe(section));
+    };
+
+    // --- Function: Fetch Latest YouTube Videos ---
+     const fetchYouTubeVideos = async () => {
+        if (!youtubeVideosContainer || !YOUTUBE_API_KEY || YOUTUBE_API_KEY === 'YOUR_YOUTUBE_API_KEY') { // Ensure API key isn't the placeholder
+             console.warn("YouTube API Key or container missing/invalid. Skipping video fetch.");
+             if (youtubeLoadingMessage) youtubeLoadingMessage.style.display = 'none';
+             if (youtubeErrorMessage) {
+                 youtubeErrorMessage.textContent = "YouTube integration not configured.";
                  youtubeErrorMessage.style.display = 'block';
-            }
-             if(youtubeFallbackMessage) youtubeFallbackMessage.style.display = 'block'; // Show fallback on error
-        }
+             }
+             if(youtubeFallbackMessage) youtubeFallbackMessage.style.display = 'block';
+             return;
+         }
+
+         const apiUrl = `https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${YOUTUBE_CHANNEL_ID}&maxResults=${MAX_YOUTUBE_VIDEOS}&order=date&type=video&key=${YOUTUBE_API_KEY}`;
+
+         try {
+             const response = await fetch(apiUrl);
+             if (!response.ok) {
+                 let errorData;
+                 try { errorData = await response.json(); } catch (e) { /* Ignore parsing error */ }
+                 const errorMessage = errorData?.error?.message || `API request failed: ${response.statusText} (${response.status})`;
+                 console.error("YouTube API Error:", errorData || errorMessage);
+                 throw new Error(errorMessage);
+             }
+
+             const data = await response.json();
+
+             if (data.items && data.items.length > 0) {
+                 if (youtubeLoadingMessage) youtubeLoadingMessage.style.display = 'none';
+                 if (youtubeErrorMessage) youtubeErrorMessage.style.display = 'none';
+                 if (youtubeFallbackMessage) youtubeFallbackMessage.style.display = 'none';
+                 youtubeVideosContainer.innerHTML = ''; // Clear previous items
+
+                 data.items.forEach(item => {
+                     const videoId = item.id.videoId;
+                     const title = item.snippet.title;
+                     const thumbnailUrl = item.snippet.thumbnails.high?.url || item.snippet.thumbnails.default?.url;
+                     const videoUrl = `https://www.youtube.com/watch?v=${videoId}`;
+
+                     const videoElement = document.createElement('div');
+                     videoElement.classList.add('youtube-video-item');
+                     videoElement.innerHTML = `
+                         <a href="${videoUrl}" target="_blank" rel="noopener noreferrer" title="${title}">
+                             <img src="${thumbnailUrl}" alt="${title}" loading="lazy">
+                         </a>
+                         <p>${title}</p>
+                     `;
+                     youtubeVideosContainer.appendChild(videoElement);
+                 });
+             } else {
+                 throw new Error("No videos found for this channel.");
+             }
+
+         } catch (error) {
+             console.error('Failed to fetch YouTube videos:', error);
+             if (youtubeLoadingMessage) youtubeLoadingMessage.style.display = 'none';
+             if (youtubeErrorMessage) {
+                 youtubeErrorMessage.textContent = `Could not load videos. (${error.message || 'Check console'})`;
+                 youtubeErrorMessage.style.display = 'block';
+             }
+             if(youtubeFallbackMessage) youtubeFallbackMessage.style.display = 'block';
+         }
      };
 
 
     // --- Initialize Functionality on Page Load ---
 
-    // 0. Check for saved drunk mode preference
+    // 0. Initialize Dark Mode (reads localStorage/system pref)
+    initDarkMode();
+
+    // 1. Check for saved drunk mode preference
     try {
         const savedDrunkMode = localStorage.getItem('koozieDrunkMode');
+        // Only toggle if the saved state differs from the initial state
         if (savedDrunkMode === 'true' && !isDrunkMode) {
-            toggleDrunkMode(); // Activate if saved preference is true and it's not already active
+            toggleDrunkMode();
         } else if (savedDrunkMode === 'false' && isDrunkMode) {
-            toggleDrunkMode(); // Deactivate if saved preference is false and it is currently active
+            toggleDrunkMode();
         }
     } catch (e) {
          console.warn("Could not read drunk mode preference from localStorage:", e);
     }
-    // Initial tooltip update after potentially loading from localStorage
+    // Initial tooltip update for drunk mode after potentially loading from localStorage
      if (drunkModeToggle && drunkModeTooltip) {
          const initialTitle = isDrunkMode ? 'Deactivate Koozie Mode' : 'Activate Koozie Mode';
          drunkModeToggle.setAttribute('title', initialTitle);
@@ -293,62 +450,77 @@ document.addEventListener('DOMContentLoaded', () => {
      }
 
 
-    // 1. Header Scroll Listener
+    // 2. Header Scroll Listener
     if (mainHeader) {
         window.addEventListener('scroll', handleHeaderScroll, { passive: true });
         handleHeaderScroll(); // Initial check
     }
 
-    // 2. Mobile Nav Toggle Listener
-    if (hamburgerMenu && navLinks) {
+    // 3. Mobile Nav Toggle Listener
+    if (hamburgerMenu && navLinksContainer) {
         hamburgerMenu.addEventListener('click', (e) => {
-            e.stopPropagation(); // Prevent click bubbling to the document listener
+            e.stopPropagation();
             toggleMobileNav();
         });
     }
 
-    // 3. Drunk Mode Toggle Listener
+    // 4. Drunk Mode Toggle Listener
     if (drunkModeToggle) {
         drunkModeToggle.addEventListener('click', toggleDrunkMode);
     }
 
-    // 4. Update Copyright Year
+    // 5. Update Copyright Year
     updateCopyrightYear();
 
-    // 5. Initialize Scroll Animations
-    handleScrollAnimations();
+    // 6. Initialize Scroll Animations
+    initScrollAnimations();
 
-    // 6. Initialize Smooth Scrolling for all internal links
-    document.addEventListener('click', handleSmoothScroll); // Listen on document for better delegation
+    // 7. Initialize Smooth Scrolling for all internal links
+    document.addEventListener('click', handleSmoothScroll);
 
-    // 7. Initialize Dynamic Content (Placeholder)
-    updateDynamicContent();
-
-    // 8. Initialize Lightbox (Placeholder)
-    initializeLightbox();
+    // 8. Update Dynamic Quote
+    updateDynamicQuote();
 
     // 9. Fetch YouTube Videos
     fetchYouTubeVideos();
 
+    // 10. Initialize Scrollspy (after other elements are potentially loaded/sized)
+    // Use a small timeout to ensure layout is stable, especially header height
+    setTimeout(initScrollspy, 100);
+
 
     // --- Optional: Close mobile menu if clicking outside ---
     document.addEventListener('click', (event) => {
-        if (isMenuOpen && navLinks && hamburgerMenu) {
-            // Check if the click is outside the nav menu AND not on the hamburger button itself
-            if (!navLinks.contains(event.target) && !hamburgerMenu.contains(event.target)) {
+        if (isMenuOpen && navLinksContainer && hamburgerMenu) {
+            if (!navLinksContainer.contains(event.target) && !hamburgerMenu.contains(event.target)) {
                 toggleMobileNav(true); // Force close
             }
         }
     });
-
-    // Stop propagation on clicks inside the nav menu itself to prevent immediate closure
-    if (navLinks) {
-        navLinks.addEventListener('click', (event) => {
-            event.stopPropagation();
+    // Stop propagation on clicks inside the nav menu itself
+    if (navLinksContainer) {
+        navLinksContainer.addEventListener('click', (event) => {
+            // Allow clicks on links inside the nav to bubble up to the document
+            // ONLY stop propagation if the click wasn't on an actual link
+             if (!event.target.closest('a')) {
+                event.stopPropagation();
+             }
         });
     }
 
+    // --- Optional: Re-calculate scrollspy margins on resize ---
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+            // Re-initialize scrollspy to potentially update rootMargin if header height changes drastically
+            // Or, more efficiently, just update the observer's rootMargin if possible (more complex)
+            console.log("Window resized, re-evaluating scrollspy (optional step)");
+            // initScrollspy(); // Uncomment if needed, but might be overkill
+        }, 250); // Debounce resize events
+    });
 
-    console.log("Koozie Sports Script Initialized Successfully!");
+
+    console.log("Koozie Sports Script Initialized Successfully! (Enhanced)");
 
 }); // End DOMContentLoaded
