@@ -1,15 +1,15 @@
 /**
  * script.js for Koozie Sports - Enhanced & Revised
  * Handles header shrinking, mobile navigation, dark mode, drunk mode,
- * scroll animations, scrollspy navbar highlighting, dynamic quote,
- * dynamic year update, smooth scrolling, YouTube integration,
- * scroll progress bar, live scores toggle, back-to-top button, etc.
+ * scroll animations, scrollspy navbar highlighting, live scores popup,
+ * dynamic quote, dynamic year update, smooth scrolling, YouTube BG video,
+ * scroll progress bar, back-to-top button, etc.
  */
 
 document.addEventListener('DOMContentLoaded', () => {
     // --- Configuration ---
     const YOUTUBE_BG_VIDEO_ID = 'ERWsGzRMOEw'; // Background video ID
-    const SCROLLSPY_OFFSET_PERCENT = 35; // % of viewport height from top to trigger section activation (Adjust for better feel)
+    const SCROLLSPY_OFFSET_PERCENT = 30; // % of viewport height from top. Adjust 20-40 for best feel. Line where section becomes active.
     const BACK_TO_TOP_THRESHOLD = 300; // Pixels scrolled before Back-to-Top button appears
     const DRUNK_MODE_SHAKE_INTERVAL = 15000; // Approx. interval (ms) for random screen shake check
     const DRUNK_MODE_SHAKE_PROBABILITY = 0.3; // Probability (0-1) of shake occurring during check
@@ -21,26 +21,27 @@ document.addEventListener('DOMContentLoaded', () => {
     const mainHeader = document.getElementById('main-header');
     const hamburgerMenu = document.getElementById('hamburger-menu');
     const navLinksContainer = document.getElementById('nav-links');
-    const navItems = navLinksContainer ? navLinksContainer.querySelectorAll('.nav-item[data-section]') : [];
-    const sections = document.querySelectorAll('section[data-id]');
+    const navItems = navLinksContainer ? Array.from(navLinksContainer.querySelectorAll('.nav-item[data-section]')) : []; // Use Array.from
+    const sections = Array.from(document.querySelectorAll('section[data-id]')); // Use Array.from
     const currentYearSpan = document.getElementById('current-year');
     const scrollAnimateElements = document.querySelectorAll('.animate-on-scroll');
     const youtubePlayerEl = document.getElementById('youtube-player');
-    const scrollProgressBar = document.getElementById('scroll-progress-bar'); // New
-    const backToTopButton = document.querySelector('.back-to-top'); // New
+    const scrollProgressBar = document.getElementById('scroll-progress-bar');
+    const backToTopButton = document.querySelector('.back-to-top');
 
     // Toggles & Related Elements
     const darkModeToggle = document.getElementById('dark-mode-toggle');
-    const darkModeIconMoon = darkModeToggle ? darkModeToggle.querySelector('.fa-moon') : null;
-    const darkModeIconSun = darkModeToggle ? darkModeToggle.querySelector('.fa-sun') : null;
-    const darkModeTooltip = darkModeToggle ? darkModeToggle.querySelector('.tooltip-text') : null;
+    const darkModeIconMoon = darkModeToggle?.querySelector('.fa-moon'); // Optional chaining
+    const darkModeIconSun = darkModeToggle?.querySelector('.fa-sun');
+    const darkModeTooltip = darkModeToggle?.querySelector('.tooltip-text');
 
-    const liveScoresToggle = document.getElementById('live-scores-toggle'); // New
-    const liveScoresSection = document.getElementById('live-scores'); // New (the whole section)
-    const liveScoresTooltip = liveScoresToggle ? liveScoresToggle.querySelector('.tooltip-text') : null; // New
+    const liveScoresToggle = document.getElementById('live-scores-toggle');
+    const liveScoresPopup = document.getElementById('live-scores-popup'); // The popup itself
+    const liveScoresCloseButton = liveScoresPopup?.querySelector('.popup-close-button');
+    const liveScoresTooltip = liveScoresToggle?.querySelector('.tooltip-text');
 
     const drunkModeToggle = document.getElementById('drunk-mode-toggle');
-    const drunkModeTooltip = drunkModeToggle ? drunkModeToggle.querySelector('.tooltip-text') : null;
+    const drunkModeTooltip = drunkModeToggle?.querySelector('.tooltip-text');
     const drunkModeSound = document.getElementById('drunk-mode-sound');
     const bubbleOverlay = document.getElementById('bubble-overlay');
 
@@ -50,15 +51,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- State Variables ---
     let isMenuOpen = false;
-    let isDrunkMode = bodyElement.classList.contains('drunk-mode-active'); // Initial state from HTML/CSS potentially
-    let areLiveScoresVisible = bodyElement.classList.contains('live-scores-visible'); // Initial state
-    let currentTheme = localStorage.getItem('koozieTheme') || 'light'; // Default to light
+    let isDrunkMode = bodyElement.classList.contains('drunk-mode-active');
+    let areLiveScoresOpen = liveScoresPopup ? !liveScoresPopup.hasAttribute('hidden') : false; // Check initial state from HTML
+    let currentTheme = localStorage.getItem('koozieTheme') || 'light';
     let ytPlayer; // YouTube Background Player instance
-    let drunkModeInterval = null; // Interval ID for drunk mode effects
-    let lastActiveSectionId = null; // For scrollspy optimization
-
+    let drunkModeInterval = null;
+    let lastActiveSectionId = null; // Track the currently highlighted nav item's section
+    let scrollspyObserver = null; // To potentially disconnect/reconnect later
+    let lastScrollTop = 0; // For scroll direction detection in scrollspy
 
     // --- Dynamic Content Definitions ---
+    // Revision: Restored the full quotes list
     const dynamicQuotes = [
         { quote: `"You miss 100% of the shots you don't take. - Wayne Gretzky"`, attribution: "- Michael Scott... probably" },
         { quote: "Always bet the over. Life's too short to root for defense.", attribution: "- A Wise Koozie Drinker" },
@@ -109,15 +112,12 @@ document.addEventListener('DOMContentLoaded', () => {
     ];
 
     // --- YouTube Background Player Functions ---
-    // Global function called by YouTube API
     window.onYouTubeIframeAPIReady = function() {
-        if (youtubePlayerEl && !ytPlayer) { // Prevent re-initialization
+        if (youtubePlayerEl && !ytPlayer) {
             console.log("YouTube API Ready. Creating background player...");
             try {
                 ytPlayer = new YT.Player('youtube-player', {
-                    height: '360', // These dimensions don't matter much as CSS handles sizing
-                    width: '640',
-                    videoId: YOUTUBE_BG_VIDEO_ID,
+                    height: '360', width: '640', videoId: YOUTUBE_BG_VIDEO_ID,
                     playerVars: {
                         'autoplay': 1, 'mute': 1, 'loop': 1, 'playlist': YOUTUBE_BG_VIDEO_ID, // Required for loop
                         'controls': 0, 'showinfo': 0, 'modestbranding': 1, 'playsinline': 1,
@@ -125,33 +125,29 @@ document.addEventListener('DOMContentLoaded', () => {
                     },
                     events: { 'onReady': onPlayerReady, 'onError': onPlayerError }
                 });
-            } catch (e) {
-                console.error("Failed to create YouTube player:", e);
-            }
+            } catch (e) { console.error("Failed to create YouTube player:", e); }
         } else if (!youtubePlayerEl) {
-            console.warn("YouTube player element (#youtube-player) not found. Cannot initialize background video.");
+            // Only log warning if the element is expected (e.g., on index.html)
+             if (document.getElementById('hero-section')) {
+                console.warn("YouTube player element (#youtube-player) not found on a page where it might be expected.");
+             }
         }
     }
-
     function onPlayerReady(event) {
-        console.log("YouTube Background Player Ready.");
-        event.target.playVideo();
-        event.target.mute(); // Ensure muted
+        console.log("YouTube Background Player Ready."); event.target.playVideo(); event.target.mute(); // Ensure muted
     }
-
     function onPlayerError(event) {
         console.error("YouTube Background Player Error:", event.data);
         // Maybe hide the player wrapper or show a static background as fallback
-        if (youtubePlayerEl && youtubePlayerEl.parentElement) {
-             youtubePlayerEl.parentElement.style.backgroundColor = '#1a2a4a'; // Fallback bg color
-        }
+        if (youtubePlayerEl?.parentElement) youtubePlayerEl.parentElement.style.backgroundColor = '#1a2a4a'; // Fallback bg color
     }
-
     function loadYouTubeAPI() {
+        // Only load if the player element exists on the current page
+        if (!youtubePlayerEl) return;
+
         if (!document.querySelector('script[src="https://www.youtube.com/iframe_api"]')) {
             console.log("Loading YouTube IFrame API...");
-            const tag = document.createElement('script');
-            tag.src = "https://www.youtube.com/iframe_api";
+            const tag = document.createElement('script'); tag.src = "https://www.youtube.com/iframe_api";
             const firstScriptTag = document.getElementsByTagName('script')[0];
             firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
         } else if (typeof YT === 'undefined' || typeof YT.Player === 'undefined') {
@@ -167,15 +163,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-
     // --- Function: Set Theme (Dark/Light) ---
     const setTheme = (theme) => {
         if (theme !== 'light' && theme !== 'dark') theme = 'light'; // Sanitize
         htmlElement.setAttribute('data-theme', theme);
         currentTheme = theme;
-        try {
-            localStorage.setItem('koozieTheme', theme);
-        } catch (e) { console.warn("Could not save theme preference to localStorage:", e); }
+        try { localStorage.setItem('koozieTheme', theme); }
+        catch (e) { console.warn("Could not save theme preference to localStorage:", e); }
 
         // Update toggle button state
         if (darkModeToggle && darkModeIconMoon && darkModeIconSun && darkModeTooltip) {
@@ -184,15 +178,13 @@ document.addEventListener('DOMContentLoaded', () => {
             darkModeIconSun.style.display = isDark ? 'inline-block' : 'none';
             const newTitle = isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode';
             darkModeToggle.setAttribute('title', newTitle);
-            darkModeToggle.setAttribute('aria-pressed', isDark ? 'true' : 'false');
+            darkModeToggle.setAttribute('aria-pressed', String(isDark));
             darkModeTooltip.textContent = newTitle;
         }
 
-        // Update meta theme-color
-        const themeColorMetaLight = document.querySelector('meta[name="theme-color"][media="(prefers-color-scheme: light)"]');
-        const themeColorMetaDark = document.querySelector('meta[name="theme-color"][media="(prefers-color-scheme: dark)"]');
-        if (themeColorMetaLight) themeColorMetaLight.content = theme === 'light' ? '#fdfaef' : '#1a1a1a';
-        if (themeColorMetaDark) themeColorMetaDark.content = theme === 'dark' ? '#1a1a1a' : '#fdfaef';
+        // Update meta theme-color (optional, but good practice)
+        document.querySelector('meta[name="theme-color"][media="(prefers-color-scheme: light)"]')?.setAttribute('content', theme === 'light' ? '#fdfaef' : '#1a1a1a');
+        document.querySelector('meta[name="theme-color"][media="(prefers-color-scheme: dark)"]')?.setAttribute('content', theme === 'dark' ? '#1a1a1a' : '#fdfaef');
 
         console.log(`Koozie Sports: Theme changed to ${theme}`);
     };
@@ -202,9 +194,10 @@ document.addEventListener('DOMContentLoaded', () => {
         let initialTheme = 'light';
         try {
             const savedTheme = localStorage.getItem('koozieTheme');
-            if (savedTheme && (savedTheme === 'dark' || savedTheme === 'light')) {
+            if (savedTheme === 'dark' || savedTheme === 'light') {
                 initialTheme = savedTheme;
             } else {
+                // Use system preference if no saved theme
                 const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
                 initialTheme = prefersDark ? 'dark' : 'light';
             }
@@ -217,16 +210,14 @@ document.addEventListener('DOMContentLoaded', () => {
         setTheme(initialTheme); // Set the theme initially
 
         // Add listener to toggle button
-        if (darkModeToggle) {
-            darkModeToggle.addEventListener('click', () => {
-                setTheme(currentTheme === 'light' ? 'dark' : 'light');
-            });
-        }
+        darkModeToggle?.addEventListener('click', () => {
+            setTheme(currentTheme === 'light' ? 'dark' : 'light');
+        });
 
         // Listen for system preference changes (only affects if no user pref saved)
         try {
             window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
-                if (!localStorage.getItem('koozieTheme')) {
+                if (!localStorage.getItem('koozieTheme')) { // Only update if no user preference is set
                     setTheme(event.matches ? 'dark' : 'light');
                 }
             });
@@ -238,9 +229,10 @@ document.addEventListener('DOMContentLoaded', () => {
         if (dynamicQuotes.length > 0 && dynamicQuoteTextEl && dynamicQuoteAttrEl) {
             const randomIndex = Math.floor(Math.random() * dynamicQuotes.length);
             const selectedItem = dynamicQuotes[randomIndex];
-            dynamicQuoteTextEl.innerHTML = selectedItem.quote; // Use innerHTML for potential formatting
-            dynamicQuoteAttrEl.textContent = ` - ${selectedItem.attribution}`; // Add dash
+            dynamicQuoteTextEl.innerHTML = selectedItem.quote; // Use innerHTML for potential formatting within quote
+            dynamicQuoteAttrEl.textContent = selectedItem.attribution ? ` - ${selectedItem.attribution}` : ''; // Add dash only if attribution exists
         } else if (dynamicQuoteTextEl) {
+            // Only run this if the element exists (i.e., on index.html)
             dynamicQuoteTextEl.textContent = "Looks like the quote machine is on a beer run...";
             if(dynamicQuoteAttrEl) dynamicQuoteAttrEl.textContent = "";
         }
@@ -254,35 +246,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // 1. Header Shrink
         if (mainHeader) {
-            const scrollThreshold = 50;
-            if (scrollPosition > scrollThreshold) {
-                mainHeader.classList.add('scrolled');
-                bodyElement.classList.add('header-scrolled');
-            } else {
-                mainHeader.classList.remove('scrolled');
-                bodyElement.classList.remove('header-scrolled');
-            }
+            const isScrolled = scrollPosition > 50;
+            mainHeader.classList.toggle('scrolled', isScrolled);
+            bodyElement.classList.toggle('header-scrolled', isScrolled);
         }
 
         // 2. Scroll Progress Bar
-        if (scrollProgressBar && (scrollHeight > clientHeight)) { // Avoid division by zero
-            const scrollPercentage = (scrollPosition / (scrollHeight - clientHeight)) * 100;
+        if (scrollProgressBar) {
+            const scrollPercentage = scrollHeight > clientHeight ? (scrollPosition / (scrollHeight - clientHeight)) * 100 : 0;
             scrollProgressBar.style.width = `${Math.min(scrollPercentage, 100)}%`; // Cap at 100%
-        } else if (scrollProgressBar) {
-             scrollProgressBar.style.width = '0%'; // Reset if not scrollable
         }
-
 
         // 3. Back to Top Button Visibility
         if (backToTopButton) {
-            if (scrollPosition > BACK_TO_TOP_THRESHOLD) {
-                backToTopButton.style.opacity = '1';
-                backToTopButton.style.visibility = 'visible';
-            } else {
-                backToTopButton.style.opacity = '0';
-                backToTopButton.style.visibility = 'hidden';
-            }
+            const isVisible = scrollPosition > BACK_TO_TOP_THRESHOLD;
+            backToTopButton.style.opacity = isVisible ? '1' : '0';
+            backToTopButton.style.visibility = isVisible ? 'visible' : 'hidden';
         }
+
+        // 4. Update Scroll Direction for Scrollspy
+        lastScrollTop = scrollPosition <= 0 ? 0 : scrollPosition; // For scroll direction detection
     };
 
     // --- Function: Toggle Mobile Navigation ---
@@ -292,8 +275,8 @@ document.addEventListener('DOMContentLoaded', () => {
         isMenuOpen = forceClose ? false : !isMenuOpen;
 
         navLinksContainer.classList.toggle('nav-open', isMenuOpen);
-        hamburgerMenu.setAttribute('aria-expanded', String(isMenuOpen)); // Use string true/false
-        bodyElement.classList.toggle('body-menu-open', isMenuOpen);
+        hamburgerMenu.setAttribute('aria-expanded', String(isMenuOpen));
+        bodyElement.classList.toggle('body-menu-open', isMenuOpen); // Prevent body scroll
 
         const icon = hamburgerMenu.querySelector('i');
         if (icon) {
@@ -306,7 +289,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Function: Trigger Random Screen Shake (for Drunk Mode) ---
     const triggerScreenShake = () => {
-         if (Math.random() < DRUNK_MODE_SHAKE_PROBABILITY) {
+         if (isDrunkMode && Math.random() < DRUNK_MODE_SHAKE_PROBABILITY) {
             console.log("Drunk Mode: Shake it!");
             bodyElement.classList.add('screen-shake');
             setTimeout(() => {
@@ -314,7 +297,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }, DRUNK_MODE_SHAKE_DURATION);
          }
     };
-
 
     // --- Function: Toggle Drunk Mode ---
     const toggleDrunkMode = () => {
@@ -333,12 +315,11 @@ document.addEventListener('DOMContentLoaded', () => {
         if (isDrunkMode) {
             console.log("🍻 Koozie Sports: Koozie Mode Activated! Things might get wobbly.");
             tiltElements.forEach(el => {
+                // Set a random value for the CSS variable used in the transform
                 el.style.setProperty('--random-tilt', Math.random());
             });
-            if (drunkModeSound) {
-                 drunkModeSound.play().catch(e => console.warn("Drunk mode sound play failed:", e));
-            }
-            if(bubbleOverlay) bubbleOverlay.style.display = 'block'; // Ensure overlay element exists for CSS anim
+            drunkModeSound?.play().catch(e => console.warn("Drunk mode sound play failed:", e));
+            // Bubble overlay visibility is handled by CSS via .drunk-mode-active
 
             // Start random shake interval
             if (drunkModeInterval) clearInterval(drunkModeInterval); // Clear existing interval if any
@@ -346,11 +327,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         } else {
             console.log("🍺 Koozie Sports: Koozie Mode Deactivated. Back to sober reality.");
-            tiltElements.forEach(el => el.style.removeProperty('--random-tilt'));
-            bodyElement.classList.remove('screen-shake'); // Ensure shake class is removed
+            tiltElements.forEach(el => el.style.removeProperty('--random-tilt')); // Remove the tilt override
+            bodyElement.classList.remove('screen-shake'); // Ensure shake class is removed immediately
             if (drunkModeInterval) clearInterval(drunkModeInterval); // Stop interval
             drunkModeInterval = null;
-             if(bubbleOverlay) bubbleOverlay.style.display = 'none'; // Hide overlay element
         }
 
         try {
@@ -360,28 +340,45 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-
-    // --- Function: Toggle Live Scores Visibility ---
-    const toggleLiveScores = () => {
-        if (!bodyElement || !liveScoresToggle || !liveScoresSection) return;
-
-        areLiveScoresVisible = !areLiveScoresVisible;
-        bodyElement.classList.toggle('live-scores-visible', areLiveScoresVisible);
-        liveScoresToggle.setAttribute('aria-pressed', String(areLiveScoresVisible));
-
-        const newTitle = areLiveScoresVisible ? 'Hide Live Scores' : 'Show Live Scores';
-        liveScoresToggle.setAttribute('title', newTitle);
-        if (liveScoresTooltip) liveScoresTooltip.textContent = newTitle;
-
-        console.log(`Koozie Sports: Live scores ${areLiveScoresVisible ? 'shown' : 'hidden'}`);
-
-        try {
-             localStorage.setItem('koozieLiveScoresVisible', String(areLiveScoresVisible));
-        } catch (e) {
-            console.warn("Could not save live scores visibility preference to localStorage:", e);
-        }
+    // --- Functions: Open/Close Live Scores Popup ---
+    const openLiveScoresPopup = () => {
+        if (!liveScoresPopup || areLiveScoresOpen) return;
+        areLiveScoresOpen = true;
+        liveScoresPopup.removeAttribute('hidden');
+        bodyElement.classList.add('live-scores-popup-open'); // For overlay & scroll lock
+        liveScoresToggle?.setAttribute('aria-pressed', 'true');
+        liveScoresCloseButton?.focus(); // Focus the close button for accessibility
+        console.log("Live Scores Popup Opened");
+        // Optional: If the widget needs re-initialization after being revealed
+        // if (window._365Scores) { /* Check if widget API exists */
+        //    window._365Scores.widgetControl('refresh'); // Example, check widget docs
+        // }
     };
 
+    const closeLiveScoresPopup = () => {
+        if (!liveScoresPopup || !areLiveScoresOpen) return;
+        areLiveScoresOpen = false;
+        liveScoresPopup.setAttribute('hidden', '');
+        bodyElement.classList.remove('live-scores-popup-open');
+        liveScoresToggle?.setAttribute('aria-pressed', 'false');
+        liveScoresToggle?.focus(); // Return focus to the toggle button
+        console.log("Live Scores Popup Closed");
+    };
+
+    const toggleLiveScores = () => {
+        if (areLiveScoresOpen) {
+            closeLiveScoresPopup();
+        } else {
+            openLiveScoresPopup();
+        }
+        // Update tooltip (optional, might be better to have separate open/close tooltips)
+        const newTitle = areLiveScoresOpen ? 'Hide Live Scores' : 'Show Live Scores';
+        liveScoresToggle?.setAttribute('title', newTitle);
+        if (liveScoresTooltip) liveScoresTooltip.textContent = newTitle;
+        // Save preference (optional)
+        try { localStorage.setItem('koozieLiveScoresOpen', String(areLiveScoresOpen)); }
+        catch(e) { console.warn("Could not save live scores pref:", e); }
+    };
 
     // --- Function: Update Copyright Year ---
     const updateCopyrightYear = () => {
@@ -395,12 +392,12 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!('IntersectionObserver' in window) || scrollAnimateElements.length === 0) {
             if (scrollAnimateElements.length > 0) {
                 console.warn("IntersectionObserver not supported, scroll animations disabled.");
-                scrollAnimateElements.forEach(el => el.classList.add('visible')); // Show all if no observer
+                scrollAnimateElements.forEach(el => el.classList.add('visible')); // Show all
             }
             return;
         }
 
-        const observerOptions = { root: null, rootMargin: '0px', threshold: 0.15 };
+        const observerOptions = { root: null, rootMargin: '0px', threshold: 0.15 }; // Trigger when 15% visible
         const observerCallback = (entries, observer) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -419,6 +416,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!link) return;
 
         const targetId = link.getAttribute('href');
+        // Ensure it's a valid internal link and not just "#"
         if (!targetId || targetId === '#' || !targetId.startsWith('#')) return;
 
         // Close mobile menu if open and a nav link inside it was clicked
@@ -426,13 +424,14 @@ document.addEventListener('DOMContentLoaded', () => {
             toggleMobileNav(true); // Force close
         }
 
-        // Handle Back to Top separately for clarity
+        // Special case for #page-top
         if (targetId === '#page-top') {
              event.preventDefault();
              window.scrollTo({ top: 0, behavior: 'smooth' });
-             // Manually activate home link if needed and reset URL hash
-             if (history.pushState) history.pushState(null, null, ' ');
-             updateActiveNavLink('page-top'); // Ensure home is active immediately
+             // Optionally remove hash from URL
+             if (history.pushState) history.pushState(null, null, window.location.pathname + window.location.search);
+             // Manually activate home link if scrollspy doesn't catch it immediately
+             updateActiveNavLink('page-top');
              return;
         }
 
@@ -449,13 +448,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     block: 'start' // Align to top (respects scroll-padding-top)
                 });
 
-                // Optionally update URL hash after scroll (can interfere with scrollspy sometimes)
-                // Use setTimeout to allow scroll to finish before updating hash
+                // Optional: Update URL hash after scroll finishes (can sometimes interfere with scrollspy)
                 // setTimeout(() => {
-                //    if (history.pushState) {
-                //        history.pushState(null, null, targetId);
-                //    }
-                // }, 600); // Adjust delay as needed
+                //    if (history.pushState) { history.pushState(null, null, targetId); }
+                // }, 600);
 
             } else {
                 console.warn(`Smooth scroll target element not found for selector: ${targetId}`);
@@ -469,10 +465,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
      // --- Function: Update Active Nav Link Helper ---
      const updateActiveNavLink = (activeSectionId) => {
-         if (!activeSectionId) return; // Don't do anything if no section ID provided
+         // Only update if the active section has changed or if forcing an update
+         if (!activeSectionId || activeSectionId === lastActiveSectionId) {
+            return;
+         }
+
+         // console.log(`Scrollspy: Updating active link from '${lastActiveSectionId}' to '${activeSectionId}'`); // Debugging
 
          navItems.forEach(navLink => {
-             if (navLink.getAttribute('data-section') === activeSectionId) {
+            const section = navLink.getAttribute('data-section');
+             if (section === activeSectionId) {
                  navLink.classList.add('active');
                  navLink.setAttribute('aria-current', 'page'); // Better accessibility
              } else {
@@ -485,205 +487,129 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Function: Initialize Scrollspy (Navbar Highlighting) ---
     const initScrollspy = () => {
+        // Only run scrollspy on pages with sections and nav items to track
         if (!('IntersectionObserver' in window) || sections.length === 0 || navItems.length === 0) {
-            console.warn("Scrollspy prerequisites not met (IntersectionObserver, sections, or navItems).");
-            // Activate 'page-top' by default if nothing else works
-            updateActiveNavLink('page-top');
+            console.warn("Scrollspy prerequisites not met (IntersectionObserver, sections[data-id], or navItems[data-section]). Scrollspy disabled.");
+            // Try activating home link by default if on index page
+            if (document.body.id === 'page-top') updateActiveNavLink('page-top');
             return;
         }
+         if (scrollspyObserver) {
+             scrollspyObserver.disconnect(); // Disconnect previous observer if re-initializing
+             console.log("Scrollspy: Disconnected previous observer.");
+         }
 
-        // rootMargin calculation:
-        // top: Negative value pulls the trigger line UP. We set it slightly below the shrunk header height.
-        // bottom: Negative percentage pushes the trigger line UP from the bottom.
-        // -${100 - SCROLLSPY_OFFSET_PERCENT}% means the section top must pass the point
-        // that is SCROLLSPY_OFFSET_PERCENT down from the top of the viewport to be considered active.
-        // Example: Offset 35%. Top margin is below header. Bottom margin is -65%.
-        // The section becomes active when its top edge is between (header height) and 35% down the viewport.
-        const headerCurrentHeight = mainHeader ? mainHeader.offsetHeight : 80; // Use current height or fallback
-        const topMargin = `-${headerCurrentHeight + 10}px`; // Trigger point starts just below the header
-        const bottomMargin = `-${100 - SCROLLSPY_OFFSET_PERCENT}%`;
+        // Calculate the top offset based on the shrunken header height for the trigger line
+        const headerHeight = mainHeader ? parseInt(getComputedStyle(htmlElement).getPropertyValue('--header-shrink-height'), 10) || 60 : 60;
+        const offsetPx = (window.innerHeight * SCROLLSPY_OFFSET_PERCENT) / 100;
+        // rootMargin: top defines the line below the header. bottom defines how far down the viewport the section needs to reach.
+        // Positive bottom margin means the trigger zone extends *below* the viewport bottom (less useful here).
+        // Negative bottom margin pushes the bottom boundary *up* from the viewport bottom.
+        // We want the section to be active when its top passes the offset line.
+        const rootMarginTop = `-${headerHeight + 1}px`; // Trigger point starts just below the header
+        const rootMarginBottom = `-${window.innerHeight - offsetPx - headerHeight}px`; // Bottom boundary is effectively the offset line
 
         const observerOptions = {
             root: null, // relative to viewport
-            rootMargin: `${topMargin} 0px ${bottomMargin} 0px`,
+            rootMargin: `${rootMarginTop} 0px ${rootMarginBottom} 0px`,
             threshold: 0 // Trigger as soon as any part enters/leaves the intersection defined by rootMargin
         };
 
         const observerCallback = (entries) => {
             let bestVisibleSectionId = null;
+            let intersectingSections = [];
 
             entries.forEach(entry => {
-                const sectionId = entry.target.getAttribute('data-id');
-                // Check if the section is intersecting within our defined margins
                 if (entry.isIntersecting) {
-                    bestVisibleSectionId = sectionId;
-                    // No need to break, the last intersecting one processed will usually be the lowest on screen
+                    intersectingSections.push(entry.target.getAttribute('data-id'));
                 }
             });
 
-             // Fallback 1: If no section is actively intersecting in the threshold zone,
-             // check which section is closest to the top trigger point (below the header).
-             if (!bestVisibleSectionId) {
-                 let minDistance = Infinity;
-                 let closestSectionId = null;
-                 sections.forEach(section => {
-                     const rect = section.getBoundingClientRect();
-                     const distance = rect.top - (headerCurrentHeight + 10); // Distance from the top trigger point
-                     // Consider sections whose top is below the header trigger point
-                     if (distance >= 0 && distance < minDistance) {
-                         minDistance = distance;
-                         closestSectionId = section.getAttribute('data-id');
-                     }
-                 });
-                 if (closestSectionId) bestVisibleSectionId = closestSectionId;
-             }
+            // Determine the most relevant section based on scroll direction
+            if (intersectingSections.length > 0) {
+                // Find the section with the corresponding data-id in the original sections array to get its index
+                const getSectionIndex = (id) => sections.findIndex(sec => sec.getAttribute('data-id') === id);
 
-             // Fallback 2: Handle scrolling back to the very top
-             if (window.scrollY < headerCurrentHeight) { // If scroll position is above header height
-                  bestVisibleSectionId = 'page-top';
-             }
-             // Fallback 3: Handle being at the very bottom of the page
-             else if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 50) { // Check if near bottom
-                 const lastSection = sections[sections.length - 1];
-                 if (lastSection) bestVisibleSectionId = lastSection.getAttribute('data-id');
-             }
-
-
-            // Only update if the active section has truly changed
-            if (bestVisibleSectionId && bestVisibleSectionId !== lastActiveSectionId) {
-                // console.log("Scrollspy updating active link to:", bestVisibleSectionId); // Debugging
-                updateActiveNavLink(bestVisibleSectionId);
-            } else if (!bestVisibleSectionId && lastActiveSectionId) {
-                 // If nothing is deemed active, maybe keep the last one or default to home?
-                 // For now, do nothing, keeping the last active link highlighted.
-                 // console.log("Scrollspy: No best section found, keeping:", lastActiveSectionId); // Debugging
+                if (intersectingSections.length === 1) {
+                    bestVisibleSectionId = intersectingSections[0];
+                } else {
+                    // Sort intersecting sections by their order in the DOM
+                    intersectingSections.sort((a, b) => getSectionIndex(a) - getSectionIndex(b));
+                     // Scrolling Down: Prefer the lowest intersecting section.
+                     // Scrolling Up: Prefer the highest intersecting section.
+                     // (lastScrollTop is updated in handleScroll)
+                    const scrollDown = window.scrollY > lastScrollTop;
+                    bestVisibleSectionId = scrollDown ? intersectingSections[intersectingSections.length - 1] : intersectingSections[0];
+                }
             }
+
+            // --- Edge Case Handling ---
+            // 1. Scrolled to the very top
+            if (window.scrollY < headerHeight) {
+                bestVisibleSectionId = 'page-top';
+            }
+            // 2. Scrolled to the very bottom
+            else if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 50) { // Check if near bottom
+                 // Find the last section in the sections array
+                 const lastSectionElement = sections[sections.length - 1];
+                 if (lastSectionElement) bestVisibleSectionId = lastSectionElement.getAttribute('data-id');
+            }
+            // 3. No section is intersecting (gap between sections, possibly during fast scroll)
+            //    Keep the last active section highlighted in this case, unless at top/bottom.
+            else if (!bestVisibleSectionId && lastActiveSectionId) {
+                 bestVisibleSectionId = lastActiveSectionId; // Maintain highlight
+            }
+
+            // Update the nav link only if the best section has changed
+            updateActiveNavLink(bestVisibleSectionId);
         };
 
-        const observer = new IntersectionObserver(observerCallback, observerOptions);
-        sections.forEach(section => observer.observe(section));
+        scrollspyObserver = new IntersectionObserver(observerCallback, observerOptions);
+        sections.forEach(section => scrollspyObserver.observe(section));
+        console.log(`Scrollspy Initialized. Observing ${sections.length} sections. Offset: ${SCROLLSPY_OFFSET_PERCENT}%, Margin: ${rootMarginTop} 0px ${rootMarginBottom} 0px`);
 
         // Initial check in case the page loads scrolled somewhere
-        handleScroll(); // Ensure header height is correct for margin calc
-        // Manually trigger observer callback logic once after setup
-        observerCallback(observer.takeRecords());
-    };
-
-
-    // --- Function: Fetch Latest YouTube Videos (Data API) ---
-     const fetchYouTubeVideos = async () => {
-        // Check if the container exists AND if API details are provided and NOT placeholders
-        const apiKeyValid = YOUTUBE_API_KEY && YOUTUBE_API_KEY !== 'YOUR_YOUTUBE_API_KEY';
-        const channelIdValid = YOUTUBE_CHANNEL_ID && YOUTUBE_CHANNEL_ID !== 'YOUR_YOUTUBE_CHANNEL_ID';
-
-        if (!youtubeVideosContainer) {
-             // console.log("YouTube video container not found, skipping API fetch.");
-             return; // Silently exit if container isn't on the page
-        }
-        if (!apiKeyValid || !channelIdValid) {
-             console.warn("YouTube API Key or Channel ID missing/invalid. Skipping video fetch. Please configure these in script.js.");
-             if (youtubeLoadingMessage) youtubeLoadingMessage.style.display = 'none';
-             if (youtubeErrorMessage) {
-                 youtubeErrorMessage.textContent = "YouTube video feed not configured.";
-                 youtubeErrorMessage.style.display = 'block';
-             }
-             if (youtubeFallbackMessage) youtubeFallbackMessage.style.display = 'block'; // Show fallback link
-             return;
-         }
-
-         // If config is valid, proceed with fetch
-         if (youtubeLoadingMessage) youtubeLoadingMessage.style.display = 'block'; // Show loading
-         if (youtubeErrorMessage) youtubeErrorMessage.style.display = 'none';
-         if (youtubeFallbackMessage) youtubeFallbackMessage.style.display = 'none';
-
-         const apiUrl = `https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${YOUTUBE_CHANNEL_ID}&maxResults=${MAX_YOUTUBE_VIDEOS}&order=date&type=video&key=${YOUTUBE_API_KEY}`;
-
-         try {
-             const response = await fetch(apiUrl);
-             if (!response.ok) {
-                 let errorData = {};
-                 try { errorData = await response.json(); } catch (e) { /* Ignore parsing error */ }
-                 const errorMessage = errorData?.error?.message || `API Request Failed: ${response.statusText} (${response.status})`;
-                 console.error("YouTube API Error Response:", errorData);
-                 throw new Error(errorMessage);
-             }
-
-             const data = await response.json();
-
-             if (data.items && data.items.length > 0) {
-                 if (youtubeLoadingMessage) youtubeLoadingMessage.style.display = 'none';
-                 youtubeVideosContainer.innerHTML = ''; // Clear previous items/loading
-
-                 data.items.forEach(item => {
-                     if (item.id?.videoId && item.snippet) { // Basic validation
-                         const videoId = item.id.videoId;
-                         const title = item.snippet.title;
-                         // Prefer medium or high quality thumbnail if available
-                         const thumbnailUrl = item.snippet.thumbnails.medium?.url || item.snippet.thumbnails.high?.url || item.snippet.thumbnails.default?.url;
-                         const videoUrl = `https://www.youtube.com/watch?v=${videoId}`;
-
-                         if (thumbnailUrl) { // Only add if thumbnail exists
-                             const videoElement = document.createElement('div');
-                             videoElement.classList.add('youtube-video-item', 'card-item', 'animate-on-scroll'); // Add card styles if desired
-                             videoElement.innerHTML = `
-                                 <a href="${videoUrl}" target="_blank" rel="noopener noreferrer" title="${title}">
-                                     <img src="${thumbnailUrl}" alt="${title}" loading="lazy" class="card-image">
-                                 </a>
-                                 <div class="post-content"> <!-- Wrap text content -->
-                                     <p>${title}</p>
-                                 </div>
-                             `;
-                             youtubeVideosContainer.appendChild(videoElement);
-                         }
-                     }
-                 });
-                 // Re-initialize scroll animations if new elements were added
-                 initScrollAnimations();
+        handleScroll(); // Ensure header height is correct & lastScrollTop is set
+        // Manually trigger observer callback logic once after setup for initial load state
+        setTimeout(() => { // Short delay to ensure layout is stable
+             if (scrollspyObserver) { // Check if observer was successfully created
+                const initialEntries = scrollspyObserver.takeRecords ? scrollspyObserver.takeRecords() : []; // Get current state
+                observerCallback(initialEntries); // Run callback logic
              } else {
-                 console.warn("No videos found for the specified YouTube channel.");
-                 if (youtubeLoadingMessage) youtubeLoadingMessage.textContent = "No recent videos found.";
-                 // Keep loading message displayed, or switch to fallback
-                 // if(youtubeFallbackMessage) youtubeFallbackMessage.style.display = 'block';
+                 // Fallback if observer failed - activate home
+                 if (document.body.id === 'page-top') updateActiveNavLink('page-top');
              }
+        }, 100);
 
-         } catch (error) {
-             console.error('Failed to fetch YouTube videos:', error);
-             if (youtubeLoadingMessage) youtubeLoadingMessage.style.display = 'none';
-             if (youtubeErrorMessage) {
-                 youtubeErrorMessage.textContent = `Could not load videos. Error: ${error.message || 'Check console for details.'}`;
-                 youtubeErrorMessage.style.display = 'block';
-             }
-             if(youtubeFallbackMessage) youtubeFallbackMessage.style.display = 'block'; // Show fallback link on error
-         }
-     };
+    };
 
     // --- Function: Initialize Stored Preferences ---
     const initPreferences = () => {
          // Drunk Mode
          try {
              const savedDrunkMode = localStorage.getItem('koozieDrunkMode') === 'true';
-             if (savedDrunkMode !== isDrunkMode) { // Only toggle if different from initial state
+             // Only toggle if saved state differs from the default class state
+             if (savedDrunkMode !== isDrunkMode) {
                  toggleDrunkMode();
              } else { // Ensure button state matches initial state even if not toggled
-                 if (drunkModeToggle) drunkModeToggle.setAttribute('aria-pressed', String(isDrunkMode));
-                 const initialTitle = isDrunkMode ? 'Deactivate Koozie Mode' : 'Activate Koozie Mode';
-                 if (drunkModeToggle) drunkModeToggle.setAttribute('title', initialTitle);
-                 if (drunkModeTooltip) drunkModeTooltip.textContent = initialTitle;
+                 if (drunkModeToggle) {
+                     drunkModeToggle.setAttribute('aria-pressed', String(isDrunkMode));
+                     const initialTitle = isDrunkMode ? 'Deactivate Koozie Mode' : 'Activate Koozie Mode';
+                     drunkModeToggle.setAttribute('title', initialTitle);
+                     if (drunkModeTooltip) drunkModeTooltip.textContent = initialTitle;
+                 }
              }
          } catch (e) { console.warn("Could not read drunk mode preference from localStorage:", e); }
 
-         // Live Scores Visibility
-          try {
-             const savedScoresVisible = localStorage.getItem('koozieLiveScoresVisible') === 'true';
-              if (savedScoresVisible !== areLiveScoresVisible) { // Only toggle if different
-                  toggleLiveScores();
-              } else { // Ensure button state matches initial state
-                  if (liveScoresToggle) liveScoresToggle.setAttribute('aria-pressed', String(areLiveScoresVisible));
-                  const initialTitle = areLiveScoresVisible ? 'Hide Live Scores' : 'Show Live Scores';
-                  if (liveScoresToggle) liveScoresToggle.setAttribute('title', initialTitle);
-                  if (liveScoresTooltip) liveScoresTooltip.textContent = initialTitle;
-              }
-          } catch (e) { console.warn("Could not read live scores visibility preference from localStorage:", e); }
+         // Live Scores Popup (optional: restore open state on page load?)
+         // Generally better UX to have popups closed by default on load.
+         // If you want to restore:
+         // try {
+         //     const savedScoresOpen = localStorage.getItem('koozieLiveScoresOpen') === 'true';
+         //     if (savedScoresOpen) {
+         //         openLiveScoresPopup();
+         //     }
+         // } catch (e) { console.warn("Could not read live scores pref:", e); }
     };
 
 
@@ -691,43 +617,44 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 1. Core Functionality
     initDarkMode(); // Must run first to set theme variables
-    initPreferences(); // Load stored drunk mode/live scores states
+    initPreferences(); // Load stored drunk mode state
     updateCopyrightYear();
-    updateDynamicQuote();
+    updateDynamicQuote(); // Run only if elements exist
 
     // 2. Event Listeners
     window.addEventListener('scroll', handleScroll, { passive: true });
-    document.addEventListener('click', handleSmoothScroll); // Handles all internal links
+    document.addEventListener('click', handleSmoothScroll); // Handles all internal links, including #page-top
 
-    if (hamburgerMenu && navLinksContainer) {
-        hamburgerMenu.addEventListener('click', (e) => {
-            e.stopPropagation(); // Prevent click from closing menu immediately
-            toggleMobileNav();
-        });
-    }
+    hamburgerMenu?.addEventListener('click', (e) => {
+        e.stopPropagation(); // Prevent click from closing menu immediately via document listener
+        toggleMobileNav();
+    });
 
-    if (drunkModeToggle) {
-        drunkModeToggle.addEventListener('click', toggleDrunkMode);
-    }
+    drunkModeToggle?.addEventListener('click', toggleDrunkMode);
 
-     if (liveScoresToggle) { // Add listener for the new toggle
-         liveScoresToggle.addEventListener('click', toggleLiveScores);
-     }
+    // Live Scores Popup Listeners
+    liveScoresToggle?.addEventListener('click', toggleLiveScores);
+    liveScoresCloseButton?.addEventListener('click', closeLiveScoresPopup);
+
+    // Close popup with Escape key
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && areLiveScoresOpen) {
+            closeLiveScoresPopup();
+        }
+    });
+
+    // Close popup when clicking outside of it (on the overlay)
+    document.addEventListener('click', (event) => {
+         if (areLiveScoresOpen && liveScoresPopup && !liveScoresPopup.contains(event.target) && event.target !== liveScoresToggle && !liveScoresToggle?.contains(event.target)) {
+             closeLiveScoresPopup();
+         }
+     });
+
 
     // 3. Initialize Observers & API Calls
     initScrollAnimations();
-    // Fetch YouTube video list (will check for valid config internally)
-    // Removing Elfsight widgets would typically happen in HTML if switching to API
-    // fetchYouTubeVideos(); // Uncomment this if API key/channel ID are set
-
-    // Load YouTube API for Background Video
-    if (document.getElementById('hero-section') && youtubePlayerEl) {
-        loadYouTubeAPI();
-    }
-
-    // Initialize Scrollspy slightly later to ensure layout stability
-    setTimeout(initScrollspy, 200); // Increased delay slightly
-
+    loadYouTubeAPI(); // Load YouTube BG Video API if element exists
+    initScrollspy(); // Initialize Scrollspy
 
     // --- Optional: Close mobile menu if clicking outside ---
     document.addEventListener('click', (event) => {
@@ -739,13 +666,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
     // Stop propagation on clicks inside the nav menu itself unless it's a link
-    if (navLinksContainer) {
-        navLinksContainer.addEventListener('click', (event) => {
-            if (!event.target.closest('a')) { // Allow link clicks to bubble up (for smooth scroll)
-                event.stopPropagation();
-            }
-        });
-    }
+    navLinksContainer?.addEventListener('click', (event) => {
+        if (!event.target.closest('a')) { // Allow link clicks to bubble up
+            event.stopPropagation();
+        }
+    });
 
     // --- Optional: Re-init scrollspy on resize (debounced) ---
     let resizeTimer;
@@ -753,14 +678,14 @@ document.addEventListener('DOMContentLoaded', () => {
         clearTimeout(resizeTimer);
         resizeTimer = setTimeout(() => {
             console.log("Window resized, re-initializing scrollspy.");
-            // Re-initialize scrollspy to update rootMargin based on potentially new header height
+            // Re-initialize scrollspy to update rootMargin based on potentially new viewport/header height
             initScrollspy();
         }, 250); // Debounce resize events
     });
 
     // --- Final Check ---
-    handleScroll(); // Run scroll handler once on load to set initial states
+    handleScroll(); // Run scroll handler once on load to set initial header/button states
 
-    console.log("Koozie Sports Script Initialized Successfully! (Revised)");
+    console.log("Koozie Sports Script Initialized Successfully! (Revised Complete)");
 
 }); // End DOMContentLoaded
