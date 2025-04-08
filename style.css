@@ -725,6 +725,19 @@ section {
 /* YouTube Placeholder specific */
 .youtube-loading-text { margin-bottom: var(--base-spacing); color: var(--text-secondary); }
 
+/* Elfsight YouTube Widget Specific */
+.elfsight-app-00d9f4d0-3b35-4e2a-80b7-6733dafd1d1d {
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 550px; /* Apply the same max-width */
+    width: 100%;
+    box-sizing: border-box; /* Add for good measure */
+}
+
+[data-theme="dark"] .elfsight-app-00d9f4d0-3b35-4e2a-80b7-6733dafd1d1d {
+    /* Consider widget's own dark theme setting if available */
+}
+
 #youtube-video-items.youtube-video-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
