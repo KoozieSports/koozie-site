@@ -12,6 +12,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Architects+Daughter&family=Roboto:wght@400;700&family=Permanent+Marker&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Favicons and Manifest -->
     <link rel="icon" type="image/png" href="/images/favicon-96x96.png" sizes="96x96" />
     <link rel="icon" type="image/svg+xml" href="/images/favicon.svg" />
     <link rel="shortcut icon" href="/images/favicon.ico" />
@@ -19,6 +20,7 @@
     <link rel="manifest" href="/images/site.webmanifest" />
     <!-- Add external CSS library links here if needed -->
 </head>
+<!-- Revision: Added id="page-top" here as the primary target for 'Home' link and scrollspy -->
 <body id="page-top">
 
     <!-- Scroll Progress Bar -->
@@ -26,6 +28,7 @@
 
     <header id="main-header">
         <div class="container header-container">
+            <!-- Revision: Added title attribute for better accessibility -->
             <a href="#page-top" id="logo-link" title="Koozie Sports Home">
                 <img src="images/logo.jpg" alt="Koozie Sports Logo" id="logo-img" class="flipping-logo" loading="eager">
             </a>
@@ -34,11 +37,13 @@
                 <button id="hamburger-menu" aria-label="Toggle Navigation Menu" aria-expanded="false" aria-controls="nav-links">
                     <i class="fas fa-bars"></i>
                 </button>
-                <!-- REORDERED Nav Links for logical page flow -->
+                <!-- Revision: Reordered Nav Links for logical page flow and scrollspy consistency -->
                 <ul id="nav-links">
+                    <!-- Revision: data-section matches the main body id for the top -->
                     <li><a href="#page-top" class="nav-item active" data-section="page-top">Home</a></li>
                     <li><a href="#about" class="nav-item" data-section="about">About</a></li>
                     <li><a href="#featured-league" class="nav-item" data-section="featured-league">Leagues</a></li>
+                    <!-- Revision: Removed data-section from Blog link as it navigates away -->
                     <li><a href="blog.html" class="nav-item">Blog</a></li>
                     <li><a href="#gallery" class="nav-item" data-section="gallery">Gallery</a></li>
                     <li><a href="#merch" class="nav-item" data-section="merch">Merch</a></li>
@@ -55,7 +60,7 @@
                     <span class="tooltip-text">Toggle Theme</span>
                 </button>
 
-                <!-- Live Scores Toggle (UPDATED Icon & aria-controls) -->
+                <!-- Revision: Live Scores Toggle (Icon & aria-controls updated) -->
                 <button id="live-scores-toggle" title="Show Live Scores" aria-pressed="false" aria-controls="live-scores-popup">
                     <i class="fas fa-baseball-bat-ball"></i> <!-- Baseball Bat/Ball icon -->
                     <span class="tooltip-text">Toggle Live Scores</span>
@@ -78,10 +83,10 @@
         </div>
     </div>
 
-
     <main>
-        <!-- Hero Section -->
-        <section id="hero-section" class="notepad-section hero-bg" data-id="page-top" role="region" aria-labelledby="hero-heading">
+        <!-- Revision: Removed data-id from Hero section as #page-top on body handles 'Home' -->
+        <!-- Revision: Added role="region" and aria-labelledby for semantic structure -->
+        <section id="hero-section" class="notepad-section hero-bg" role="region" aria-labelledby="hero-heading">
             <div class="hero-video-wrapper">
                 <div id="youtube-player"></div>
             </div>
@@ -89,25 +94,27 @@
             <div class="container hero-content">
                 <h1 id="hero-heading" class="hero-title animate-on-scroll">Koozie Sports</h1>
                 <p class="tagline animate-on-scroll delay-1">Just sports, maybe a couple beers.</p>
-                <a href="#featured-league" class="cta-button animate-on-scroll delay-2">See What's Brewin'</a> <!-- Updated link target -->
+                <a href="#featured-league" class="cta-button animate-on-scroll delay-2">See What's Brewin'</a>
             </div>
         </section>
 
         <!-- Quote of the Week Section -->
-        <section id="dynamic-quote-section" class="notepad-section text-center" data-id="dynamic-quote-section" role="region" aria-labelledby="quote-heading">
+        <!-- Revision: data-id might not be needed if not a primary nav target -->
+        <section id="dynamic-quote-section" class="notepad-section text-center" role="region" aria-labelledby="quote-heading">
+            <!-- Revision: Added visually-hidden heading for context -->
             <h2 id="quote-heading" class="visually-hidden">Quote of the Week</h2>
              <div class="container">
                  <blockquote class="quote-text animate-on-scroll" id="dynamic-quote-text">
                      Loading quote...
                  </blockquote>
-                 <p class="quote-attribution handwritten-caption" id="dynamic-quote-attribution">
-                 </p>
+                 <p class="quote-attribution handwritten-caption" id="dynamic-quote-attribution"></p>
             </div>
         </section>
 
-        <!-- Live Scores Section REMOVED from main flow -->
+        <!-- Live Scores Section REMOVED from main flow (Now a popup) -->
 
         <!-- About Us Section -->
+        <!-- Revision: Added data-id matching nav data-section -->
         <section id="about" class="notepad-section" data-id="about" role="region" aria-labelledby="about-heading">
             <div class="container">
                 <h2 id="about-heading" class="section-title animate-on-scroll">Who Let Us Have a Website?</h2>
@@ -118,6 +125,7 @@
                         <p><strong>Our Philosophy:</strong> Keep it fun, use a koozie, and don't spill your drink.</p>
                     </div>
                     <div class="image-content animate-on-scroll delay-1 tilt-element">
+                        <!-- Revision: Added loading="lazy" -->
                         <img src="images/team-photo-placeholder.jpg" alt="The Koozie Sports Crew looking moderately presentable" class="about-image framed-image interactive-image" loading="lazy">
                          <p class="caption handwritten-caption">The Brain(less) Trust</p>
                     </div>
@@ -126,80 +134,84 @@
         </section>
 
         <!-- Featured League/Sport Section -->
+        <!-- Revision: Added data-id matching nav data-section -->
         <section id="featured-league" class="notepad-section alt-bg" data-id="featured-league" role="region" aria-labelledby="featured-league-heading">
             <div class="container">
                 <h2 id="featured-league-heading" class="section-title animate-on-scroll">Currently Obsessed With: <span class="dynamic-league-name marker-text">Pickleball Pandemonium</span></h2>
                  <p class="section-subtitle animate-on-scroll">Deep dives, power rankings that make no sense, and predictions fueled by optimism (and hops).</p>
                 <div class="league-grid">
                     <div class="league-card card-item animate-on-scroll tilt-element">
+                         <!-- Revision: Added loading="lazy" -->
                          <img src="images/league-1.jpg" alt="Pickleball Paddles" class="card-image interactive-image" loading="lazy">
                          <h3>Power Rankings: Week <span class="dynamic-week">7</span></h3>
                          <p>Who's up, who's down, who forgot their non-slip court shoes? Our totally scientific rankings.</p>
                          <a href="blog.html#post-league-1" class="read-more">Read the Rant »</a>
                     </div>
                     <div class="league-card card-item animate-on-scroll delay-1 wobble-on-hover">
+                        <!-- Revision: Added loading="lazy" -->
                         <img src="images/league-2.jpg" alt="Dramatic Game Shot" class="card-image interactive-image" loading="lazy">
                         <h3>Must-Watch Game of the Week</h3>
                         <p>The matchup we're clearing our schedule (and coolers) for. The Dinks vs. The Volleys!</p>
                          <a href="blog.html#post-league-2" class="read-more">Game Preview »</a>
                     </div>
                     <div class="league-card card-item animate-on-scroll delay-2 tilt-element">
+                         <!-- Revision: Added loading="lazy" -->
                          <img src="images/league-3.jpg" alt="Crystal Ball Prediction" class="card-image interactive-image" loading="lazy">
                         <h3>Bold Predictions (Place Your Bets!)</h3>
                         <p>Prepare to be amazed (or mock us relentlessly). Our fearless forecast includes at least one broken paddle.</p>
                          <a href="blog.html#post-league-3" class="read-more">See the Future »</a>
                     </div>
                 </div>
-                 <!-- Removed featured blog posts link from here -->
             </div>
         </section>
 
-        <!-- Featured Blog Posts Section (Removed - Handled by Blog link) -->
-        <!-- Kept Gallery as next section -->
-
          <!-- Gallery Section -->
+         <!-- Revision: Added data-id matching nav data-section -->
          <section id="gallery" class="notepad-section alt-bg" data-id="gallery" role="region" aria-labelledby="gallery-heading">
             <div class="container">
                 <h2 id="gallery-heading" class="section-title animate-on-scroll">Wall of Fame (or Shame?)</h2>
                 <p class="section-subtitle animate-on-scroll">Snapshots from the sidelines, tailgates, and questionable victory dances.</p>
                 <div class="gallery-grid">
                     <div class="gallery-item card-item animate-on-scroll tilt-element">
-                        <a href="images/gallery-1-large.jpg" data-lightbox="koozie-gallery" data-title="Pre-game Rituals: Fuelling up!">
+                        <!-- Revision: Removed lightbox attributes as it wasn't explicitly implemented, simplified to image link placeholder -->
+                        <a href="images/gallery-1-large.jpg" target="_blank" rel="noopener noreferrer" title="View larger image: Pre-game Rituals">
                             <img src="images/gallery-1.jpg" alt="Tailgate Scene" class="framed-image interactive-image" loading="lazy">
                         </a>
                         <p class="caption handwritten-caption">Pre-game Rituals</p>
                     </div>
                     <div class="gallery-item card-item animate-on-scroll delay-1 wobble-on-hover">
-                         <a href="images/gallery-2-large.jpg" data-lightbox="koozie-gallery" data-title="The Big Play! (Or maybe just a lucky shot)">
+                         <a href="images/gallery-2-large.jpg" target="_blank" rel="noopener noreferrer" title="View larger image: The Big Play!">
                              <img src="images/gallery-2.jpg" alt="Action Shot" class="framed-image interactive-image" loading="lazy">
                          </a>
                          <p class="caption handwritten-caption">The Big Play!</p>
                     </div>
                      <div class="gallery-item card-item animate-on-scroll delay-2 tilt-element">
-                         <a href="images/gallery-3-large.jpg" data-lightbox="koozie-gallery" data-title="Pure Agony/Ecstasy - It's hard to tell sometimes.">
+                         <a href="images/gallery-3-large.jpg" target="_blank" rel="noopener noreferrer" title="View larger image: Pure Agony/Ecstasy">
                              <img src="images/gallery-3.jpg" alt="Fan Reaction" class="framed-image interactive-image" loading="lazy">
                          </a>
                          <p class="caption handwritten-caption">Pure Agony/Ecstasy</p>
                     </div>
                      <div class="gallery-item card-item animate-on-scroll delay-3 wobble-on-hover">
-                        <a href="images/gallery-4-large.jpg" data-lightbox="koozie-gallery" data-title="Mascot Mayhem: He seemed friendly enough...">
+                        <a href="images/gallery-4-large.jpg" target="_blank" rel="noopener noreferrer" title="View larger image: Mascot Mayhem">
                             <img src="images/gallery-4.jpg" alt="Mascot Shenanigans" class="framed-image interactive-image" loading="lazy">
                          </a>
                         <p class="caption handwritten-caption">Mascot Mayhem</p>
                     </div>
                 </div>
-                <!-- UPDATED: Removed Lightbox mention -->
-                <p class="handwritten-note animate-on-scroll delay-1">Click images to enlarge.</p>
+                 <!-- Revision: Clarified note -->
+                <p class="handwritten-note animate-on-scroll delay-1">Click images to view larger (opens in new tab).</p>
             </div>
         </section>
 
         <!-- Merch Section -->
+        <!-- Revision: Added data-id matching nav data-section -->
         <section id="merch" class="notepad-section alt-bg" data-id="merch" role="region" aria-labelledby="merch-heading">
             <div class="container">
                 <h2 id="merch-heading" class="section-title animate-on-scroll">Official Koozie Gear (Probably)</h2>
                 <p class="section-subtitle animate-on-scroll">Look marginally cooler while yelling at the TV! Proceeds likely go towards more beer.</p>
                 <div class="merch-grid">
                     <div class="merch-item card-item animate-on-scroll tilt-element">
+                        <!-- Revision: Added loading="lazy" -->
                         <img src="images/merch-koozie-placeholder.jpg" alt="Koozie Sports Official Koozie" class="card-image interactive-image" loading="lazy">
                         <h3 class="merch-title marker-text">The Official Koozie</h3>
                         <p class="merch-description">Keeps your drink cold and your takes hot. Essential equipment.</p>
@@ -207,6 +219,7 @@
                         <a href="#" class="cta-button merch-button" target="_blank" rel="noopener noreferrer">Grab Yours (Link TBD)</a>
                     </div>
                     <div class="merch-item card-item animate-on-scroll delay-1 wobble-on-hover">
+                         <!-- Revision: Added loading="lazy" -->
                         <img src="images/merch-shirt-placeholder.jpg" alt="Koozie Sports T-Shirt" class="card-image interactive-image" loading="lazy">
                         <h3 class="merch-title marker-text">Koozie Classic Tee</h3>
                         <p class="merch-description">Slightly less stained than your current favorite shirt. Maybe.</p>
@@ -214,6 +227,7 @@
                         <a href="#" class="cta-button merch-button" target="_blank" rel="noopener noreferrer">Get Shirt Done (Link TBD)</a>
                     </div>
                     <div class="merch-item card-item animate-on-scroll delay-2 tilt-element">
+                         <!-- Revision: Added loading="lazy" -->
                         <img src="images/merch-hat-placeholder.jpg" alt="Koozie Sports Hat" class="card-image interactive-image" loading="lazy">
                         <h3 class="merch-title marker-text">Questionable Calls Cap</h3>
                         <p class="merch-description">Perfect for shielding your eyes or hiding your shame after a bad bet.</p>
@@ -226,6 +240,7 @@
         </section>
 
         <!-- Social Feeds Section -->
+        <!-- Revision: Added data-id matching nav data-section -->
         <section id="social-feeds" class="notepad-section" data-id="social-feeds" role="region" aria-labelledby="social-feeds-heading">
             <div class="container">
                 <h2 id="social-feeds-heading" class="section-title animate-on-scroll">Straight From The Source</h2>
@@ -235,13 +250,6 @@
                     <div class="social-feed-item animate-on-scroll delay-1">
                         <h3 class="marker-text"><i class="fab fa-instagram fa-fw"></i> Latest Instagram Posts</h3>
                         <!-- START Elfsight Widget -->
-                        <!-- NOTE (Point 6): If this widget isn't loading, check:
-                             1. Your Elfsight account configuration/subscription.
-                             2. Instagram API connection within Elfsight.
-                             3. Browser console (F12) for specific error messages.
-                             4. Ensure the script below is loading correctly.
-                             External widget issues are often outside the site's code.
-                        -->
                         <script src="https://static.elfsight.com/platform/platform.js" data-use-service-core defer></script>
                         <div class="elfsight-app-2201490b-8ef7-46de-bc32-41b3df95e8c9" data-elfsight-app-lazy></div>
                          <!-- END Elfsight Widget -->
@@ -262,6 +270,7 @@
         </section>
 
         <!-- Contact Section -->
+        <!-- Revision: Added data-id matching nav data-section -->
          <section id="contact" class="notepad-section alt-bg" data-id="contact" role="region" aria-labelledby="contact-heading">
              <div class="container">
                  <h2 id="contact-heading" class="section-title animate-on-scroll">Talk to Us (We Might Listen)</h2>
@@ -276,17 +285,20 @@
                  </div>
                  <div class="contact-form-placeholder animate-on-scroll delay-3">
                      <h3 class="marker-text">Or Send a Quick Heckle:</h3>
+                     <!-- Revision: Consider using a proper form submission handler (e.g., Formspree, Netlify Forms) instead of action="#" -->
                      <form action="#" method="post" id="heckle-form">
                         <div class="form-group">
+                            <!-- Revision: Using visually-hidden label for better accessibility -->
                             <label for="heckle-name" class="visually-hidden">Your Name</label>
                             <input type="text" id="heckle-name" name="name" placeholder="Your Name (Optional, Coward)">
                         </div>
                         <div class="form-group">
+                             <!-- Revision: Using visually-hidden label -->
                              <label for="heckle-message" class="visually-hidden">Message</label>
-                            <textarea id="heckle-message" name="message" rows="3" placeholder="Your brilliant take / scathing critique here..." required></textarea>
+                            <textarea id="heckle-message" name="message" rows="3" placeholder="Your brilliant take / scathing critique here..." required aria-required="true"></textarea>
                         </div>
                          <button type="submit" class="cta-button secondary">Send It!</button>
-                         <p id="form-status-message" style="margin-top: 10px; text-align: center;"></p>
+                         <p id="form-status-message" style="margin-top: 10px; text-align: center;" aria-live="polite"></p> <!-- Added aria-live -->
                      </form>
                  </div>
              </div>
@@ -294,18 +306,19 @@
 
     </main>
 
-    <!-- NEW: Live Scores Popup Container (Moved Before Footer) -->
+    <!-- Revision: Live Scores Popup Container -->
+    <!-- Moved outside main, before footer. Added role, aria-modal, aria-labelledby, hidden attribute -->
     <div id="live-scores-popup" class="card-item" role="dialog" aria-modal="true" aria-labelledby="live-scores-popup-heading" hidden>
+         <!-- Revision: Added accessible heading (visually hidden) and close button -->
          <h3 id="live-scores-popup-heading" class="visually-hidden">Live Scores</h3>
-         <!-- Close button for accessibility and usability -->
-         <button class="popup-close-button" aria-label="Close Live Scores">
+         <button class="popup-close-button" aria-label="Close Live Scores" title="Close Live Scores">
              <i class="fas fa-times"></i>
          </button>
          <!-- WIDGET CODE START -->
-         <div data-widget-type="entityScores" data-entity-type="league" data-entity-id="438" data-lang="en" data-widget-id="e25a9351-9375-47e5-b3c9-df981bece258" data-limit-height-display="640"></div>
+         <!-- Revision: Added tabindex="-1" to the widget container to potentially make it focusable -->
+         <div data-widget-type="entityScores" data-entity-type="league" data-entity-id="438" data-lang="en" data-widget-id="e25a9351-9375-47e5-b3c9-df981bece258" data-limit-height-display="640" tabindex="-1"></div>
          <div id="powered-by">Powered by<a id="powered-by-link" href="https://www.365scores.com" target="_blank" rel="noopener noreferrer">365Scores.com</a></div>
-         <!-- This script might need to be re-initialized or loaded differently if inside a dynamic popup -->
-         <!-- Consider loading it only when the popup is first opened -->
+         <!-- This script might need re-initialization in JS if widget doesn't handle being revealed -->
          <script src="https://widgets.365scores.com/main.js" defer></script>
          <!-- WIDGET CODE END -->
     </div>
@@ -320,6 +333,7 @@
                 </p>
             </div>
             <div class="footer-right">
+                 <!-- Revision: Added aria-label to social links container -->
                 <div class="social-links" aria-label="Social Media Links">
                     <a href="https://x.com/koozie_sports" target="_blank" rel="noopener noreferrer" aria-label="X/Twitter" title="X/Twitter"><i class="fab fa-x-twitter"></i></a>
                     <a href="https://www.instagram.com/koozie_sports/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" title="Instagram"><i class="fab fa-instagram"></i></a>
