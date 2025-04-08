@@ -776,6 +776,7 @@ section {
     margin-right: auto;
     max-width: 550px; /* Adjust as needed */
     width: 100%;
+    overflow-x: hidden;
 }
 [data-theme="dark"] .elfsight-app-2201490b-8ef7-46de-bc32-41b3df95e8c9 {
     /* Consider widget's own dark theme setting if available */
@@ -791,6 +792,7 @@ section {
     max-width: 550px; /* Apply the same max-width */
     width: 100%;
     box-sizing: border-box; /* Add for good measure */
+    overflow-x: hidden;
 }
 
 [data-theme="dark"] .elfsight-app-00d9f4d0-3b35-4e2a-80b7-6733dafd1d1d {
