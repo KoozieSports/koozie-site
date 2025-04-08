@@ -530,6 +530,9 @@ section {
     .social-feeds-grid {
         grid-template-columns: repeat(2, 1fr);
     }
+    .social-feed-item {
+        min-width: 0;
+    }
 }
 
 .social-feed-item h3 {
