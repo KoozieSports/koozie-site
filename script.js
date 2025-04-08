@@ -230,7 +230,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const randomIndex = Math.floor(Math.random() * dynamicQuotes.length);
             const selectedItem = dynamicQuotes[randomIndex];
             dynamicQuoteTextEl.innerHTML = selectedItem.quote; // Use innerHTML for potential formatting within quote
-            dynamicQuoteAttrEl.textContent = selectedItem.attribution ? ` - ${selectedItem.attribution}` : ''; // Add dash only if attribution exists
+            dynamicQuoteAttrEl.textContent = selectedItem.attribution ? `${selectedItem.attribution}` : '';
         } else if (dynamicQuoteTextEl) {
             // Only run this if the element exists (i.e., on index.html)
             dynamicQuoteTextEl.textContent = "Looks like the quote machine is on a beer run...";
