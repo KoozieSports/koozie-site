@@ -1243,3 +1243,142 @@ a:focus, button:focus, input:focus, textarea:focus {
     outline-offset: 2px;
     border-radius: 3px; /* Optional: add slight radius to focus outline */
 }
+
+/* --- Blog Page Specific Styles --- */
+
+/* Add padding to main content area below header/marquee */
+.main-content-area {
+    padding-top: calc(var(--header-height) + var(--marquee-height) + var(--base-spacing)); /* Adjust space as needed */
+    min-height: calc(100vh - var(--header-height) - var(--marquee-height)); /* Ensure footer isn't too high */
+}
+/* Adjust padding if header is shrunk */
+body.header-scrolled .main-content-area {
+     padding-top: calc(var(--header-shrink-height) + var(--marquee-height) + var(--base-spacing));
+     transition: padding-top var(--transition-speed) ease;
+}
+
+/* Style the main blog page title */
+.blog-page-title {
+    text-align: center;
+    font-size: 2.5rem; /* Adjust size as needed */
+    margin-bottom: 0; /* Reset bottom margin */
+    margin-top: calc(var(--base-spacing) * 1.5); /* Space above title */
+    /* font-family: var(--font-marker); /* Optional: Use marker font */
+}
+/* Inherit subtitle styles if needed, or style separately */
+#blog-posts .section-subtitle {
+     margin-top: calc(var(--base-spacing) * 0.5);
+     margin-bottom: calc(var(--base-spacing) * 2.5);
+}
+
+/* Layout for the list of blog posts */
+.blog-post-list {
+    display: flex; /* Or grid if preferred */
+    flex-direction: column;
+    gap: calc(var(--base-spacing) * 2); /* Space between posts */
+}
+
+/* Individual blog post article styling (inherits .card-item) */
+.blog-post {
+    /* Add specific styles if .card-item isn't enough */
+     /* Example: Add image styling within post card */
+    /* .blog-post .card-image { max-height: 250px; object-fit: cover; } */
+}
+
+/* Styling for content within the post card */
+.blog-post .post-content {
+    padding: var(--base-spacing) 0; /* Add some padding if image is present */
+}
+.blog-post.card-item:not(:has(.card-image)) .post-content {
+    padding: 0; /* No extra padding if no image */
+}
+
+
+.blog-post .post-title {
+    font-size: 1.6rem; /* Adjust title size */
+    margin-bottom: calc(var(--base-spacing) * 0.5);
+}
+.blog-post .post-title a {
+    color: var(--text-headings); /* Match heading color */
+    text-decoration: none;
+}
+.blog-post .post-title a:hover,
+.blog-post .post-title a:focus {
+    color: var(--link-hover);
+    text-decoration: underline;
+}
+
+.blog-post .post-excerpt {
+    color: var(--text-secondary);
+    margin-bottom: var(--base-spacing);
+    font-size: 1rem;
+}
+
+.blog-post .post-meta {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin-bottom: calc(var(--base-spacing) * 0.75);
+}
+.blog-post .post-meta .post-date {
+    /* Already uses handwritten-caption */
+}
+/* .blog-post .post-meta .post-author { font-weight: bold; } */
+
+.blog-post .read-more-link {
+    display: inline-block;
+    font-weight: bold;
+    color: var(--link-primary);
+    text-decoration: none;
+    transition: color var(--transition-speed) ease;
+}
+.blog-post .read-more-link:hover,
+.blog-post .read-more-link:focus {
+    color: var(--link-hover);
+    text-decoration: underline;
+}
+
+/* Simple Pagination Styles */
+.pagination {
+    text-align: center;
+    margin-top: calc(var(--base-spacing) * 3);
+    padding-top: calc(var(--base-spacing) * 1.5);
+    border-top: 1px dashed var(--border-primary);
+}
+.pagination .page-link {
+    display: inline-block;
+    padding: calc(var(--base-spacing)*0.4) calc(var(--base-spacing)*0.8);
+    margin: 0 3px;
+    border: 1px solid var(--border-secondary);
+    border-radius: 4px;
+    color: var(--link-primary);
+    text-decoration: none;
+    transition: all var(--transition-speed) ease;
+}
+.pagination .page-link:hover,
+.pagination .page-link:focus {
+    background-color: var(--bg-secondary);
+    border-color: var(--link-primary);
+    color: var(--link-hover);
+}
+.pagination .page-link.current {
+    background-color: var(--accent-secondary);
+    color: var(--text-light);
+    border-color: var(--accent-secondary);
+    font-weight: bold;
+}
+.pagination .page-link.disabled {
+    color: var(--text-secondary);
+    opacity: 0.6;
+    pointer-events: none;
+    border-color: var(--border-secondary);
+}
+
+/* Adjust blog styles for mobile if needed */
+@media (max-width: 768px) {
+    .blog-page-title { font-size: 2rem; }
+    .blog-post .post-title { font-size: 1.4rem; }
+    .main-content-area { padding-top: calc(var(--header-height) + var(--marquee-height) + var(--base-spacing) * 0.5); }
+    body.header-scrolled .main-content-area { padding-top: calc(var(--header-shrink-height) + var(--marquee-height) + var(--base-spacing) * 0.5); }
+}
+
+/* --- End Blog Page Styles --- */
