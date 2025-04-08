@@ -4,37 +4,57 @@
 @import url('https://fonts.googleapis.com/css2?family=Architects+Daughter&family=Roboto:wght@400;700&family=Permanent+Marker&display=swap');
 
 :root {
-    /* Colors - Normal Mode */
-    --notepad-bg: #fdfaef;
-    --notepad-lines: #dde4ee; /* Softened blue */
-    --notepad-margin-line: #f0a0a0; /* Softened red */
-    --text-color: #333;
-    --heading-color: #1a2a4a;
-    --accent-red: #e63946;
-    --accent-blue: #457b9d;
-    --link-color: var(--accent-blue);
-    --link-hover: var(--accent-red);
-    --white: #ffffff;
-    --light-grey-bg: rgba(230, 235, 240, 0.4); /* Subtle alt bg */
-    --card-bg: var(--white);
-    --card-shadow: rgba(0, 0, 0, 0.08);
-    --footer-bg: #e8e4d8;
-    --footer-text: #555;
-    --marker-color: #2a9d8f; /* Teal for marker effect */
-    --quote-bg: rgba(var(--accent-blue), 0.05);
-    --error-color: var(--accent-red);
+    /* --- Light Mode (Default) --- */
+    --bg-primary: #fdfaef; /* Notepad paper */
+    --bg-secondary: rgba(230, 235, 240, 0.4); /* Subtle alt bg */
+    --bg-card: #ffffff;
+    --bg-header: #ffffff;
+    --bg-footer: #e8e4d8;
+    --bg-quote: rgba(69, 123, 157, 0.05); /* Light blue bg */
+    --bg-overlay: rgba(26, 42, 74, 0.6); /* Default overlay darkness */
+    --bg-overlay-gradient-start: rgba(230, 57, 70, 0.3); /* Accent Red, transparent */
+    --bg-overlay-gradient-end: rgba(69, 123, 157, 0.4); /* Accent Blue, transparent */
 
-    /* Colors - Drunk Mode (will be overridden by body.drunk-mode-active) */
-    --dm-notepad-bg: #fffacd; /* Lemon chiffon */
-    --dm-notepad-lines: #ffb6c1; /* Light pink lines */
-    --dm-text-color: #4b0082; /* Indigo text */
-    --dm-heading-color: #8b0000; /* Dark red headings */
-    --dm-accent-red: #ff6347; /* Tomato red */
-    --dm-accent-blue: #1e90ff; /* Dodger blue */
-    --dm-link-color: var(--dm-accent-blue);
-    --dm-link-hover: var(--dm-accent-red);
-    --dm-card-bg: #f0e68c; /* Khaki card bg */
-    --dm-marker-color: #ff4500; /* OrangeRed marker */
+    --text-primary: #333333;
+    --text-secondary: #555555;
+    --text-headings: #1a2a4a;
+    --text-light: #ffffff;
+    --text-quote: var(--text-headings);
+    --text-footer: var(--text-secondary);
+    --text-error: #e63946;
+
+    --border-primary: #dde4ee; /* Notepad lines */
+    --border-secondary: #eeeeee; /* Card border */
+    --border-accent: #f0a0a0; /* Notepad margin line */
+    --border-header-bottom: #457b9d; /* Accent Blue */
+    --border-footer-top: #e63946; /* Accent Red */
+    --border-quote: #e63946; /* Accent Red */
+
+    --accent-primary: #e63946; /* Red */
+    --accent-secondary: #457b9d; /* Blue */
+    --accent-marker: #2a9d8f; /* Teal */
+
+    --link-primary: var(--accent-secondary);
+    --link-hover: var(--accent-primary);
+
+    --shadow-card: rgba(0, 0, 0, 0.08);
+    --shadow-header: rgba(0, 0, 0, 0.1);
+    --shadow-header-scrolled: rgba(0, 0, 0, 0.15);
+    --shadow-image: rgba(0, 0, 0, 0.2);
+    --shadow-button: rgba(0,0,0,0.2);
+    --shadow-button-hover: rgba(0,0,0,0.3);
+
+    /* --- Drunk Mode Variables (Overrides) --- */
+    --dm-bg-primary: #fffacd; /* Lemon chiffon */
+    --dm-bg-lines: #ffb6c1; /* Light pink lines */
+    --dm-text-primary: #4b0082; /* Indigo text */
+    --dm-text-headings: #8b0000; /* Dark red headings */
+    --dm-accent-primary: #ff6347; /* Tomato red */
+    --dm-accent-secondary: #1e90ff; /* Dodger blue */
+    --dm-bg-card: #f0e68c; /* Khaki card bg */
+    --dm-accent-marker: #ff4500; /* OrangeRed marker */
+    --dm-bg-header: #fff8dc; /* Cornsilk */
+    --dm-bg-footer: #faf0e6; /* Linen */
 
     /* Fonts */
     --font-body: 'Roboto', sans-serif;
@@ -47,14 +67,57 @@
     --header-height: 90px;
     --header-shrink-height: 65px;
     --base-spacing: 1rem; /* 16px */
+    --marquee-height: 35px;
 
     /* Transitions & Effects */
     --transition-speed: 0.3s;
     --bubble-size: 15px; /* For bubble effect */
-
-    /* NEW: Logo Spin Duration */
-    --logo-spin-duration: 15s;
+    --logo-flip-duration: 0.5s;
+    --marquee-duration: 40s; /* Adjust speed of marquee */
 }
+
+/* --- Dark Mode Theme Variables --- */
+[data-theme="dark"] {
+    --bg-primary: #1a1a1a;
+    --bg-secondary: rgba(45, 45, 45, 0.6);
+    --bg-card: #2a2a2a;
+    --bg-header: #222222;
+    --bg-footer: #1f1f1f;
+    --bg-quote: rgba(168, 218, 220, 0.1); /* Light cyan hint */
+    --bg-overlay: rgba(10, 10, 20, 0.7); /* Darker overlay */
+    --bg-overlay-gradient-start: rgba(100, 30, 40, 0.4); /* Darker red */
+    --bg-overlay-gradient-end: rgba(50, 80, 110, 0.5); /* Darker blue */
+
+    --text-primary: #e0e0e0;
+    --text-secondary: #b0b0b0;
+    --text-headings: #f5f5f5;
+    --text-light: #ffffff; /* Keep white */
+    --text-quote: var(--text-primary);
+    --text-footer: var(--text-secondary);
+    --text-error: #ff6b6b; /* Lighter red for dark bg */
+
+    --border-primary: #444444; /* Darker lines */
+    --border-secondary: #3a3a3a;
+    --border-accent: #a16666; /* Muted red */
+    --border-header-bottom: var(--accent-secondary); /* Keep blue */
+    --border-footer-top: var(--accent-primary); /* Keep red */
+    --border-quote: var(--accent-primary); /* Keep red */
+
+    --accent-primary: #f07167; /* Lighter red */
+    --accent-secondary: #6fc4d8; /* Lighter blue */
+    --accent-marker: #4ecdc4; /* Lighter teal */
+
+    --link-primary: var(--accent-secondary);
+    --link-hover: var(--accent-primary);
+
+    --shadow-card: rgba(0, 0, 0, 0.3);
+    --shadow-header: rgba(0, 0, 0, 0.4);
+    --shadow-header-scrolled: rgba(0, 0, 0, 0.5);
+    --shadow-image: rgba(255, 255, 255, 0.1);
+    --shadow-button: rgba(0,0,0,0.3);
+    --shadow-button-hover: rgba(0,0,0,0.4);
+}
+
 
 /* Basic Reset */
 *,
@@ -77,24 +140,24 @@ body.header-scrolled html {
 
 body {
     font-family: var(--font-body);
-    color: var(--text-color);
-    background-color: var(--notepad-bg);
+    color: var(--text-primary);
+    background-color: var(--bg-primary);
     line-height: 1.6;
     overflow-x: hidden; /* Prevent horizontal scroll */
+    /* Notepad Lines */
     background-image:
-        linear-gradient(var(--notepad-margin-line) 0%, var(--notepad-margin-line) 100%) 35px 0 / 1px auto no-repeat, /* Vertical Margin Line */
-        linear-gradient(var(--notepad-lines) 1px, transparent 1px); /* Horizontal Lines */
+        linear-gradient(var(--border-accent) 0%, var(--border-accent) 100%) 35px 0 / 1px auto no-repeat, /* Vertical Margin Line */
+        linear-gradient(var(--border-primary) 1px, transparent 1px); /* Horizontal Lines */
     background-size: 1px auto, 100% 2.2em;
     background-attachment: local;
     position: relative;
-    transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease;
+    transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease, background-image var(--transition-speed) ease;
 }
 
 /* NEW: Prevent body scroll when mobile nav is open */
 body.body-menu-open {
     overflow-y: hidden;
 }
-
 
 /* --- 1. Layout & Container --- */
 .container {
@@ -111,7 +174,7 @@ img {
 }
 
 a {
-    color: var(--link-color);
+    color: var(--link-primary);
     text-decoration: none;
     transition: color var(--transition-speed) ease;
 }
@@ -123,7 +186,7 @@ a:hover, a:focus {
 
 h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-heading);
-    color: var(--heading-color);
+    color: var(--text-headings);
     line-height: 1.2;
     margin-bottom: calc(var(--base-spacing) * 0.75);
     font-weight: 700;
@@ -132,15 +195,15 @@ h1, h2, h3, h4, h5, h6 {
 
 h1 { font-size: 2.8rem; }
 h2 { font-size: 2.2rem; margin-top: calc(var(--base-spacing) * 2); }
-h3 { font-size: 1.5rem; color: var(--accent-blue); }
+h3 { font-size: 1.5rem; color: var(--accent-secondary); } /* Changed to secondary accent */
 
 section {
     padding: calc(var(--base-spacing) * 3) 0;
-    position: relative;
+    position: relative; /* Needed for scrollspy targeting */
 }
 
 .alt-bg {
-    background-color: var(--light-grey-bg);
+    background-color: var(--bg-secondary);
 }
 
 .section-title {
@@ -158,7 +221,7 @@ section {
     transform: translateX(-50%);
     width: 80px;
     height: 3px;
-    background-color: var(--accent-red);
+    background-color: var(--accent-primary);
     transition: background-color var(--transition-speed) ease;
 }
 
@@ -166,8 +229,9 @@ section {
     text-align: center;
     margin-top: calc(var(--base-spacing) * -1.5);
     margin-bottom: calc(var(--base-spacing) * 2);
-    color: #666;
+    color: var(--text-secondary);
     font-size: 1.1rem;
+    transition: color var(--transition-speed) ease;
 }
 
 .visually-hidden {
@@ -180,21 +244,21 @@ section {
 
 /* --- 2. Header & Navigation --- */
 #main-header {
-    background-color: var(--white);
+    background-color: var(--bg-header);
     padding: 0;
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
-    z-index: 1000; /* Below mobile nav overlay */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    box-shadow: 0 2px 5px var(--shadow-header);
     height: var(--header-height);
     transition: height var(--transition-speed) ease, box-shadow var(--transition-speed) ease, background-color var(--transition-speed) ease;
-    border-bottom: 3px solid var(--accent-blue);
+    border-bottom: 3px solid var(--border-header-bottom);
 }
 #main-header.scrolled {
     height: var(--header-shrink-height);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 4px 8px var(--shadow-header-scrolled);
 }
 
 .header-container {
@@ -219,17 +283,17 @@ section {
     transition: height var(--transition-speed) ease;
 }
 
-/* NEW: Logo Spinning Animation */
-@keyframes spin {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
+/* NEW: Logo Flipping Animation */
+.flipping-logo {
+    transition: transform var(--logo-flip-duration) ease;
+    transform-style: preserve-3d; /* Helps with smooth flip if needed */
 }
-.spinning-logo:hover {
-    animation: spin var(--logo-spin-duration) linear infinite;
+.flipping-logo:hover {
+    transform: scaleX(-1); /* Flip horizontally */
 }
-/* Optional: Make it spin constantly? Uncomment below */
-/* .spinning-logo { animation: spin var(--logo-spin-duration) linear infinite; } */
-
+/* REMOVED spinning animation in favor of flip */
+/* @keyframes spin { ... } */
+/* .spinning-logo:hover { ... } */
 
 #main-nav { display: flex; align-items: center; }
 #nav-links { list-style: none; display: flex; margin: 0; padding: 0; }
@@ -237,7 +301,7 @@ section {
 
 #nav-links a.nav-item {
     font-weight: 700;
-    color: var(--heading-color);
+    color: var(--text-headings); /* Use heading color for nav items */
     text-transform: uppercase;
     font-size: 0.9rem;
     padding: 5px 0;
@@ -252,59 +316,75 @@ section {
     left: 0;
     width: 0;
     height: 2px;
-    background-color: var(--accent-red);
+    background-color: var(--accent-primary);
     transition: width var(--transition-speed) ease, background-color var(--transition-speed) ease;
 }
 #nav-links a.nav-item:hover,
 #nav-links a.nav-item:focus,
-#nav-links a.nav-item.active { color: var(--link-hover); }
+#nav-links a.nav-item.active { /* .active added by scrollspy */
+    color: var(--link-hover); /* Use link hover color for active state */
+}
 
 #nav-links a.nav-item:hover::after,
 #nav-links a.nav-item:focus::after,
-#nav-links a.nav-item.active::after { width: 100%; }
+#nav-links a.nav-item.active::after { /* Underline for active state */
+    width: 100%;
+}
+
 
 #hamburger-menu {
     display: none; /* Hidden by default, shown via media query */
     background: none;
     border: none;
     font-size: 1.8rem;
-    color: var(--heading-color);
+    color: var(--text-headings);
     cursor: pointer;
     padding: 5px;
     margin-left: var(--base-spacing);
     transition: color var(--transition-speed) ease;
     z-index: 1003; /* Above nav links overlay */
-    position: relative; /* Ensure it's properly layered */
+    position: relative;
 }
 #hamburger-menu i { transition: transform 0.2s ease-in-out; }
 
 
-/* Drunk Mode Toggle Button */
-#drunk-mode-toggle {
+/* Header Toggles Container */
+.header-toggles {
+    display: flex;
+    align-items: center;
+    gap: calc(var(--base-spacing) * 0.75); /* Space between buttons */
+}
+
+/* Base Toggle Button Styles */
+.header-toggles button {
     background: none;
-    border: 1px solid var(--accent-blue);
+    border: 1px solid var(--link-primary);
     border-radius: 5px;
-    color: var(--accent-blue);
-    font-size: 1.2rem;
+    color: var(--link-primary);
+    font-size: 1.2rem; /* Slightly smaller for consistency */
     cursor: pointer;
-    padding: 5px 10px;
-    margin-left: var(--base-spacing);
+    padding: 6px 10px; /* Adjusted padding slightly */
     transition: all var(--transition-speed) ease;
     line-height: 1;
     position: relative; /* For tooltip */
+    display: flex; /* Align icon inside */
+    justify-content: center;
+    align-items: center;
 }
-#drunk-mode-toggle:hover,
-#drunk-mode-toggle:focus {
-    background-color: var(--accent-blue);
-    color: var(--white);
+.header-toggles button:hover,
+.header-toggles button:focus {
+    background-color: var(--link-primary);
+    color: var(--bg-header); /* Use header bg for contrast */
+    outline: none;
 }
 
-#drunk-mode-toggle .tooltip-text {
+/* Tooltip Text (Common for both toggles) */
+.header-toggles button .tooltip-text {
     position: absolute;
-    bottom: 125%;
+    bottom: 130%; /* Adjusted position slightly */
     left: 50%;
     transform: translateX(-50%);
-    background-color: rgba(0, 0, 0, 0.75);
+    background-color: rgba(0, 0, 0, 0.8);
     color: #fff;
     padding: 5px 8px;
     border-radius: 4px;
@@ -316,27 +396,82 @@ section {
     pointer-events: none;
     z-index: 10;
 }
-#drunk-mode-toggle:hover .tooltip-text,
-#drunk-mode-toggle:focus .tooltip-text {
+[data-theme="dark"] .header-toggles button .tooltip-text {
+    background-color: rgba(240, 240, 240, 0.85); /* Light tooltip on dark */
+    color: #111;
+}
+
+.header-toggles button:hover .tooltip-text,
+.header-toggles button:focus .tooltip-text {
     opacity: 1;
     visibility: visible;
 }
 
+/* Specific Toggle Styles */
+#dark-mode-toggle i { transition: display 0s; } /* Instant switch */
+
+/* Drunk Mode Toggle Icon Swap */
 .drunk-mode-active #drunk-mode-toggle i.fa-beer-mug-empty::before {
      content: "\f0fc"; /* Actual FA code for full mug */
+}
+/* Style Drunk Mode button distinctively when active (optional) */
+.drunk-mode-active #drunk-mode-toggle {
+    border-color: var(--dm-accent-primary);
+    color: var(--dm-accent-primary);
+}
+.drunk-mode-active #drunk-mode-toggle:hover,
+.drunk-mode-active #drunk-mode-toggle:focus {
+    background-color: var(--dm-accent-primary);
+    color: var(--dm-bg-header);
+}
+
+/* --- 2.5 NEW: Marquee Section --- */
+.marquee-container {
+    width: 100%;
+    overflow: hidden;
+    background-color: var(--accent-secondary);
+    color: var(--bg-header); /* Text color contrast */
+    height: var(--marquee-height);
+    line-height: var(--marquee-height);
+    position: relative; /* Needed if you add controls */
+    z-index: 999; /* Below header */
+    transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.1), inset 0 -2px 4px rgba(0,0,0,0.1);
+}
+.marquee-content {
+    display: inline-block; /* Important for animation */
+    white-space: nowrap;
+    padding-left: 100%; /* Start off-screen */
+    animation: marquee var(--marquee-duration) linear infinite;
+    font-size: 0.9rem;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+.marquee-content span {
+    display: inline-block;
+    padding-right: 50px; /* Space between repeated content */
+}
+
+@keyframes marquee {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-100%); } /* Move one full content width */
+}
+/* Pause on hover */
+.marquee-container:hover .marquee-content {
+    animation-play-state: paused;
 }
 
 
 /* --- 3. Main Content Sections --- */
 
 /* Hero Section */
-#hero {
+#hero-section { /* Updated ID */
     background: url('images/hero-bg.jpg') no-repeat center center/cover;
-    color: var(--white);
+    color: var(--text-light);
     text-align: center;
     padding: calc(var(--base-spacing) * 5) 0;
     position: relative;
-    background-image: none;
+    /* Removed background-image: none; as it's set above */
     display: flex;
     align-items: center;
     min-height: 60vh;
@@ -348,93 +483,103 @@ section {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(26, 42, 74, 0.6);
+    /* NEW: Gradient Overlay */
+    background:
+        linear-gradient(135deg, var(--bg-overlay-gradient-start), var(--bg-overlay-gradient-end)), /* Diagonal Gradient */
+        var(--bg-overlay); /* Fallback solid color */
     z-index: 1;
+    transition: background var(--transition-speed) ease; /* Transition for dark mode */
 }
 .hero-content {
     position: relative;
     z-index: 2;
 }
 
-#hero h1 {
-    color: var(--white);
+#hero-section h1 {
+    color: var(--text-light);
     font-size: 3.5rem;
     font-weight: 700;
     margin-bottom: var(--base-spacing);
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    transition: color var(--transition-speed) ease; /* Still allow color transition */
 }
-#hero .tagline {
+#hero-section .tagline {
     font-family: var(--font-handwritten);
     font-size: 1.8rem;
     margin-bottom: calc(var(--base-spacing) * 2);
     color: rgba(255, 255, 255, 0.9);
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4);
+    transition: color var(--transition-speed) ease;
 }
 
 /* Buttons */
 .cta-button {
-    background-color: var(--accent-red);
-    color: var(--white);
+    background-color: var(--accent-primary);
+    color: var(--text-light);
     padding: calc(var(--base-spacing) * 0.8) calc(var(--base-spacing) * 1.8);
     border-radius: 5px;
     text-transform: uppercase;
     font-weight: 700;
     display: inline-block;
     text-decoration: none;
-    transition: background-color var(--transition-speed) ease, transform var(--transition-speed) ease, box-shadow var(--transition-speed);
-    box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+    transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease, transform var(--transition-speed) ease, box-shadow var(--transition-speed);
+    box-shadow: 2px 2px 5px var(--shadow-button);
     border: none;
 }
 .cta-button:hover, .cta-button:focus {
-    background-color: #c4303d;
-    color: var(--white);
+    background-color: var(--link-hover); /* Use link hover color for consistency */
+    color: var(--text-light);
     text-decoration: none;
     transform: translateY(-3px) scale(1.02);
-    box-shadow: 4px 6px 10px rgba(0,0,0,0.3);
+    box-shadow: 4px 6px 10px var(--shadow-button-hover);
 }
 .cta-button.secondary {
     background-color: transparent;
-    color: var(--accent-blue);
-    border: 2px solid var(--accent-blue);
+    color: var(--link-primary);
+    border: 2px solid var(--link-primary);
     box-shadow: none;
 }
 .cta-button.secondary:hover, .cta-button.secondary:focus {
-    background-color: var(--accent-blue);
-    color: var(--white);
+    background-color: var(--link-primary);
+    color: var(--bg-header); /* Contrast against button bg */
     transform: none;
-    box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+    box-shadow: 2px 2px 5px var(--shadow-card);
 }
 
 /* Quote Section */
-#quote-of-week {
-    background-color: var(--quote-bg);
+#dynamic-quote-section { /* Updated ID */
+    background-color: var(--bg-quote);
     padding: calc(var(--base-spacing) * 2) 0;
     text-align: center;
+    transition: background-color var(--transition-speed) ease;
 }
 .quote-text {
     font-family: var(--font-marker);
     font-size: 1.8rem;
-    color: var(--heading-color);
+    color: var(--text-quote);
     line-height: 1.4;
     max-width: 800px;
     margin: 0 auto;
-    border-left: 5px solid var(--accent-red);
+    border-left: 5px solid var(--border-quote);
     padding-left: var(--base-spacing);
     font-style: italic;
+    transition: color var(--transition-speed) ease, border-color var(--transition-speed) ease;
 }
-.quote-text .handwritten-emphasis {
+.quote-text .handwritten-emphasis { /* Still applies if used in injected content */
     font-family: var(--font-handwritten);
     font-size: 0.9em;
-    color: var(--text-color);
+    color: var(--text-primary);
     display: block;
     margin-top: calc(var(--base-spacing) * 0.5);
     font-style: normal;
+    transition: color var(--transition-speed) ease;
 }
 .quote-attribution {
     font-family: var(--font-handwritten);
     font-size: 1.2rem;
-    color: #777;
+    color: var(--text-secondary);
     margin-top: var(--base-spacing);
+    transition: color var(--transition-speed) ease;
 }
 
 /* About Section */
@@ -445,24 +590,26 @@ section {
 /* Marker Text Style */
 .marker-text {
     font-family: var(--font-marker);
-    color: var(--marker-color);
+    color: var(--accent-marker);
     padding: 0 0.1em;
     transition: color var(--transition-speed) ease;
 }
 
-.handwritten-emphasis { font-family: var(--font-handwritten); font-size: 1.2em; color: var(--accent-red); }
+.handwritten-emphasis { font-family: var(--font-handwritten); font-size: 1.2em; color: var(--accent-primary); transition: color var(--transition-speed) ease;}
 
 .framed-image {
-    border: 8px solid var(--white);
-    box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.2);
+    border: 8px solid var(--bg-header); /* Use header bg for frame */
+    box-shadow: 3px 3px 8px var(--shadow-image);
+    transition: border-color var(--transition-speed) ease;
 }
 
 .caption.handwritten-caption {
     font-family: var(--font-handwritten);
     text-align: center;
     margin-top: var(--base-spacing);
-    color: #555;
+    color: var(--text-secondary);
     font-size: 1.1rem;
+    transition: color var(--transition-speed) ease;
 }
 
 /* Cards (League, Featured, Gallery) */
@@ -474,23 +621,23 @@ section {
 }
 
 .card-item {
-    background-color: var(--card-bg);
+    background-color: var(--bg-card);
     padding: var(--base-spacing);
     border-radius: 8px;
-    box-shadow: 2px 2px 6px var(--card-shadow);
-    transition: transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease, background-color var(--transition-speed) ease;
-    border: 1px solid #eee;
-    overflow: hidden;
+    box-shadow: 2px 2px 6px var(--shadow-card);
+    transition: transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease, background-color var(--transition-speed) ease, border-color var(--transition-speed) ease;
+    border: 1px solid var(--border-secondary);
+    overflow: hidden; /* Keep overflow hidden */
 }
 .card-item:hover {
     transform: translateY(-6px);
-    box-shadow: 4px 8px 12px var(--card-shadow);
+    box-shadow: 4px 8px 12px var(--shadow-card);
 }
 
 .card-image {
     margin: calc(var(--base-spacing) * -1) calc(var(--base-spacing) * -1) var(--base-spacing);
-    border-bottom: 1px solid #eee;
-    transition: transform 0.4s ease;
+    border-bottom: 1px solid var(--border-secondary);
+    transition: transform 0.4s ease, border-color var(--transition-speed) ease;
 }
 
 .interactive-image:hover {
@@ -505,10 +652,11 @@ section {
 .league-card h3, .featured-item h3 { margin-bottom: calc(var(--base-spacing) * 0.5); font-size: 1.3rem; }
 .league-card h3 a, .featured-item h3 a { color: inherit; text-decoration: none; }
 .league-card h3 a:hover, .featured-item h3 a:hover { color: var(--link-hover); text-decoration: underline; }
-.league-card p, .featured-item p { margin-bottom: calc(var(--base-spacing) * 0.75); font-size: 0.95rem; color: #555; }
-.read-more { font-weight: 700; font-size: 0.9rem; color: var(--link-color); text-decoration: none; }
+.league-card p, .featured-item p { margin-bottom: calc(var(--base-spacing) * 0.75); font-size: 0.95rem; color: var(--text-secondary); transition: color var(--transition-speed) ease; }
+.read-more { font-weight: 700; font-size: 0.9rem; color: var(--link-primary); text-decoration: none; }
 .read-more:hover { color: var(--link-hover); text-decoration: underline; }
-.item-date { display: block; font-size: 0.85rem; color: #777; margin-top: var(--base-spacing); font-family: var(--font-handwritten); }
+.item-date { display: block; font-size: 0.85rem; color: #777; margin-top: var(--base-spacing); font-family: var(--font-handwritten); transition: color var(--transition-speed) ease; }
+[data-theme="dark"] .item-date { color: #999; }
 
 /* Gallery Items */
 .gallery-item a[data-lightbox] { cursor: zoom-in; display: block; }
@@ -516,142 +664,128 @@ section {
 .gallery-item .caption { margin-bottom: var(--base-spacing); }
 
 
-/* --- NEW: Social Feeds Section --- */
-#social-feeds {
-    /* Background handled by notepad lines or alt-bg if added */
-}
+/* --- Social Feeds Section --- */
 .social-feeds-grid {
     display: grid;
     grid-template-columns: 1fr; /* Default to single column */
     gap: calc(var(--base-spacing) * 2.5);
 }
+@media (min-width: 768px) { /* Two columns on larger screens */
+    .social-feeds-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
 
 .social-feed-item h3 {
     text-align: center;
     margin-bottom: var(--base-spacing);
-    font-size: 1.4rem; /* Slightly smaller than h2 */
-    display: flex; /* Align icon and text */
+    font-size: 1.4rem;
+    display: flex;
     align-items: center;
     justify-content: center;
     gap: 0.5em;
 }
 .social-feed-item h3 i {
-    color: var(--marker-color); /* Use marker color for icon */
+    color: var(--accent-marker); /* Use marker color for icon */
     transition: color var(--transition-speed) ease;
 }
 
+/* Placeholder/Card Styles for Feeds */
 .instagram-carousel-placeholder,
 .youtube-carousel-placeholder {
     /* Inherits .card-item styles */
-    min-height: 300px; /* Give some initial height */
+    min-height: 300px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     text-align: center;
-    padding: calc(var(--base-spacing) * 2); /* More padding for placeholder text */
+    padding: calc(var(--base-spacing) * 2);
 }
 
-/* Instagram Placeholder/Widget specific */
-.instagram-carousel-placeholder iframe { /* Style the iframe if using widget */
-    max-width: 100%;
-    border: none;
-}
-.instagram-carousel-placeholder .manual-insta-grid { /* If using manual grid */
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-    gap: var(--base-spacing);
+/* Elfsight Instagram Widget Specific */
+.elfsight-app-2201490b-8ef7-46de-bc32-41b3df95e8c9 {
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 550px; /* Adjust as needed */
     width: 100%;
+    /* Dark Mode Elfsight adaptation (might require !important or targeting inner elements if widget doesn't respect theme) */
+    /* Consider widget's own dark theme setting if available */
 }
-.instagram-carousel-placeholder .manual-insta-grid img {
-    aspect-ratio: 1 / 1; /* Square images */
-    object-fit: cover;
-    border-radius: 4px;
-}
-
-.instagram-carousel-placeholder .elfsight-app-2201490b-8ef7-46de-bc32-41b3df95e8c9 {
-    margin-left: auto;   /* Add automatic left margin */
-    margin-right: auto;  /* Add automatic right margin */
-    max-width: 550px;    /* Adjust this max-width as desired */
-                         /* Controls how wide the widget can get on large screens */
-    width: 100%;         /* Allows it to shrink if container is narrower */
-    /* Elfsight's script will handle the height and internal content */
-}
-
-/* Ensure the placeholder container itself allows centering */
-.instagram-carousel-placeholder {
-    /* The existing card-item styles should be fine, but ensure no
-       text-align: left; or similar property is interfering here.
-       Adding text-align: center here MIGHT help if margin:auto fails,
-       but margin:auto on the block element itself is preferred. */
-    /* text-align: center; */ /* Try uncommenting this only if margin:auto doesn't work */
+[data-theme="dark"] .elfsight-app-2201490b-8ef7-46de-bc32-41b3df95e8c9 {
+    /* Basic attempt to influence - may not work perfectly */
+     /* background: transparent !important; */
+     /* color: var(--text-primary) !important; */
 }
 
 /* YouTube Placeholder specific */
-.youtube-carousel-placeholder p:first-of-type { /* "Loading..." text */
-    margin-bottom: var(--base-spacing);
-}
+.youtube-loading-text { margin-bottom: var(--base-spacing); color: var(--text-secondary); }
+
 #youtube-video-items.youtube-video-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Adjust minmax for desired item size */
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: var(--base-spacing);
     width: 100%;
     margin-bottom: var(--base-spacing);
 }
 .youtube-video-item {
-    /* Styles for individual video items added by JS */
     text-align: center;
 }
 .youtube-video-item img {
     width: 100%;
     aspect-ratio: 16 / 9;
     object-fit: cover;
-    border: 1px solid #eee;
+    border: 1px solid var(--border-secondary);
     border-radius: 4px;
     margin-bottom: calc(var(--base-spacing) * 0.5);
-    transition: transform var(--transition-speed) ease;
+    transition: transform var(--transition-speed) ease, border-color var(--transition-speed) ease;
 }
 .youtube-video-item a:hover img {
     transform: scale(1.03);
 }
 .youtube-video-item p { /* Video title */
     font-size: 0.9rem;
-    color: var(--text-color);
+    color: var(--text-primary); /* Use primary text color */
     margin: 0;
+    transition: color var(--transition-speed) ease;
 }
 .error-message {
-    color: var(--error-color);
+    color: var(--text-error);
     font-weight: bold;
+    transition: color var(--transition-speed) ease;
 }
 
 
 /* --- Contact Section --- */
-/* #contact is now alt-bg */
 #contact .contact-info p { margin-bottom: calc(var(--base-spacing) * 0.5); font-size: 1.1rem; }
 #contact .contact-info i.fa-fw {
     margin-right: 10px;
-    color: var(--accent-blue);
+    color: var(--accent-secondary);
     transition: color var(--transition-speed) ease;
 }
-.contact-link { font-weight: 700; }
+.contact-link { font-weight: 700; } /* Already uses link variables */
 .handwritten-note {
     font-family: var(--font-handwritten);
     font-size: 1.2rem;
-    color: var(--accent-red);
+    color: var(--accent-primary); /* Primary accent color */
     margin-top: var(--base-spacing);
     text-align: center;
-    border: 1px dashed var(--notepad-margin-line);
+    border: 1px dashed var(--border-accent); /* Use accent border color */
     padding: calc(var(--base-spacing) * 0.5);
-    display: inline-block;
+    display: inline-block; /* Keeps it contained */
     max-width: 90%;
     transition: color var(--transition-speed) ease, border-color var(--transition-speed) ease;
 }
 .contact-form-placeholder {
     margin-top: calc(var(--base-spacing) * 2.5);
     padding: var(--base-spacing) calc(var(--base-spacing) * 1.5);
-    border: 1px solid #ddd;
+    border: 1px solid var(--border-secondary);
     border-radius: 5px;
-    background-color: rgba(255, 255, 255, 0.5);
+    background-color: rgba(255, 255, 255, 0.5); /* Semi-transparent white */
+    transition: background-color var(--transition-speed) ease, border-color var(--transition-speed) ease;
+}
+[data-theme="dark"] .contact-form-placeholder {
+    background-color: rgba(0, 0, 0, 0.2); /* Semi-transparent black */
 }
 .contact-form-placeholder h3 {
     text-align: center;
@@ -665,10 +799,17 @@ section {
 .contact-form-placeholder textarea {
     width: 100%;
     padding: calc(var(--base-spacing) * 0.6);
-    border: 1px solid #ccc;
+    border: 1px solid #ccc; /* Keep subtle border */
     border-radius: 4px;
     font-family: var(--font-body);
     font-size: 1rem;
+    background-color: var(--bg-card); /* Match card background */
+    color: var(--text-primary);
+    transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease, border-color var(--transition-speed) ease;
+}
+[data-theme="dark"] .contact-form-placeholder input[type="text"],
+[data-theme="dark"] .contact-form-placeholder textarea {
+    border-color: #555;
 }
 .contact-form-placeholder textarea {
     min-height: 80px;
@@ -678,25 +819,35 @@ section {
     display: block;
     margin: var(--base-spacing) auto 0;
 }
+#form-status-message { /* Style for feedback message */
+    font-size: 0.9rem;
+    color: var(--accent-marker); /* Use marker color for success */
+    transition: color var(--transition-speed) ease;
+}
+#form-status-message.error {
+    color: var(--text-error); /* Use error color if needed */
+}
 
 
 /* --- 4. Footer --- */
 #main-footer {
-    background-color: var(--footer-bg);
+    background-color: var(--bg-footer);
     padding: calc(var(--base-spacing) * 1.5) 0;
     margin-top: calc(var(--base-spacing) * 3);
-    border-top: 3px solid var(--accent-red);
-    color: var(--footer-text);
+    border-top: 3px solid var(--border-footer-top);
+    color: var(--text-footer);
     font-size: 0.9rem;
-    background-image: none;
+    background-image: none; /* Remove potential notepad lines */
     transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease, border-color var(--transition-speed) ease;
 }
 .footer-content { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: var(--base-spacing); }
 .footer-left p { margin-bottom: 5px; }
-.footer-tagline { font-family: var(--font-handwritten); font-size: 1rem; color: #777; }
+.footer-tagline { font-family: var(--font-handwritten); font-size: 1rem; color: #777; transition: color var(--transition-speed) ease; }
+[data-theme="dark"] .footer-tagline { color: #999; }
+
 .footer-right { display: flex; align-items: center; gap: var(--base-spacing); }
 .social-links a {
-    color: var(--heading-color);
+    color: var(--text-headings); /* Use heading color */
     font-size: 1.5rem;
     margin-left: var(--base-spacing);
     text-decoration: none;
@@ -705,7 +856,7 @@ section {
 }
 .social-links a:hover, .social-links a:focus { color: var(--link-hover); transform: scale(1.15) rotate(-5deg); }
 .back-to-top {
-    color: var(--accent-blue);
+    color: var(--accent-secondary);
     font-size: 1.8rem;
     text-decoration: none;
     transition: color var(--transition-speed) ease, transform var(--transition-speed);
@@ -723,16 +874,16 @@ section {
 .delay-2 { transition-delay: 0.3s; }
 .delay-3 { transition-delay: 0.45s; }
 
-/* Bubble Overlay Effect */
+/* Bubble Overlay Effect (For Drunk Mode) */
 #bubble-overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    pointer-events: none; /* Allows clicks through */
+    pointer-events: none;
     overflow: hidden;
-    z-index: 999; /* Below header, above most content */
+    z-index: 999;
     opacity: 0;
     visibility: hidden;
     transition: opacity 0.8s ease, visibility 0.8s ease;
@@ -755,10 +906,9 @@ section {
                      calc(var(--bubble-size) * 0.7) calc(var(--bubble-size) * 0.7),
                      calc(var(--bubble-size) * 1.3) calc(var(--bubble-size) * 1.3);
     background-position: 10% 100%, 50% 100%, 80% 100%;
-    animation: bubbles-rise 15s linear infinite paused; /* Start paused */
+    animation: bubbles-rise 15s linear infinite paused;
 }
-
-@keyframes bubbles-rise {
+@keyframes bubbles-rise { /* Remains the same */
     0% { background-position: 10% 100%, 50% 100%, 80% 100%; opacity: 1; }
     50% { background-position: 15% 50%, 55% 50%, 75% 50%; opacity: 0.8; }
     99% { background-position: 20% 0%, 60% 0%, 70% 0%; opacity: 0.2; }
@@ -768,65 +918,53 @@ section {
 
 /* --- 6. Drunk Mode Specific Styles --- */
 body.drunk-mode-active {
-    /* Change main colors */
-    --notepad-bg: var(--dm-notepad-bg);
-    --notepad-lines: var(--dm-notepad-lines);
-    --text-color: var(--dm-text-color);
-    --heading-color: var(--dm-heading-color);
-    --accent-red: var(--dm-accent-red);
-    --accent-blue: var(--dm-accent-blue);
-    --link-color: var(--dm-link-color);
-    --link-hover: var(--dm-link-hover);
-    --card-bg: var(--dm-card-bg);
-    --marker-color: var(--dm-marker-color);
+    /* Override light/dark variables with drunk mode variables */
+    --bg-primary: var(--dm-bg-primary);
+    --border-primary: var(--dm-bg-lines); /* Use pink for lines */
+    --text-primary: var(--dm-text-primary);
+    --text-headings: var(--dm-text-headings);
+    --accent-primary: var(--dm-accent-primary);
+    --accent-secondary: var(--dm-accent-secondary);
+    --link-primary: var(--dm-accent-secondary);
+    --link-hover: var(--dm-accent-primary);
+    --bg-card: var(--dm-bg-card);
+    --accent-marker: var(--dm-accent-marker);
+    --bg-header: var(--dm-bg-header);
+    --bg-footer: var(--dm-bg-footer);
+    /* Keep --border-accent, --border-header-bottom, --border-footer-top etc. */
 
-    /* REMOVED transform: rotate(0.3deg); to prevent mobile nav issues */
+    /* Note: These direct overrides take precedence over dark mode styles */
+
     filter: hue-rotate(10deg) saturate(110%);
-    cursor: url('images/beer-cursor.png'), crosshair; /* Needs image */
+    cursor: url('images/beer-cursor.png'), crosshair;
 
     /* Wavy lines approximation */
      background-image:
-        linear-gradient(var(--notepad-margin-line) 0%, var(--notepad-margin-line) 100%) 35px 0 / 1px auto no-repeat,
+        linear-gradient(var(--border-accent) 0%, var(--border-accent) 100%) 35px 0 / 1px auto no-repeat,
         repeating-linear-gradient(
-            /* Adjust angle and stops for waviness */
-            -1deg, /* Slight angle */
-            var(--dm-notepad-lines) 0, var(--dm-notepad-lines) 1px,
+            -1deg,
+            var(--border-primary) 0, var(--border-primary) 1px, /* Use overridden pink lines */
             transparent 1px, transparent 50%,
-             var(--dm-notepad-lines) 50%, var(--dm-notepad-lines) 51%, /* Mimic slight wave bump */
+             var(--border-primary) 50%, var(--border-primary) 51%,
              transparent 51%, transparent 100%
         );
-    background-size: 1px auto, 100% 2.2em; /* Keep line height consistent */
+    background-size: 1px auto, 100% 2.2em;
 }
 
-/* Make bubble overlay visible and animate */
-.drunk-mode-active #bubble-overlay {
-    opacity: 0.8;
-    visibility: visible;
-}
-.drunk-mode-active #bubble-overlay::before {
-    animation-play-state: running; /* Start animation */
-}
+/* Activate bubbles */
+.drunk-mode-active #bubble-overlay { opacity: 0.8; visibility: visible; }
+.drunk-mode-active #bubble-overlay::before { animation-play-state: running; }
 
-/* Enhance element tilting */
+/* Tilting */
 .drunk-mode-active .tilt-element {
     transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
-    /* Tilt based on JS-set --random-tilt variable */
     transform: rotate(calc( ( var(--random-tilt, 0.5) - 0.5 ) * 8deg )) scale(0.98);
 }
-/* Apply tilt on hover *only if* NOT in drunk mode (subtle effect) */
-/* Or keep it simple: tilt-element always tilts in drunk mode */
 
 /* Wobble Animation */
-.drunk-mode-active .wobble-on-hover:hover {
-    animation: wobble 0.9s ease-in-out infinite;
-}
-@keyframes wobble {
-  0%, 100% { transform: translateX(0%) rotate(0deg); }
-  15% { transform: translateX(-8px) rotate(-4deg); }
-  30% { transform: translateX(6px) rotate(3deg); }
-  45% { transform: translateX(-5px) rotate(-2deg); }
-  60% { transform: translateX(4px) rotate(1.5deg); }
-  75% { transform: translateX(-3px) rotate(-1deg); }
+.drunk-mode-active .wobble-on-hover:hover { animation: wobble 0.9s ease-in-out infinite; }
+@keyframes wobble { /* Remains the same */
+  0%, 100% { transform: translateX(0%) rotate(0deg); } 15% { transform: translateX(-8px) rotate(-4deg); } 30% { transform: translateX(6px) rotate(3deg); } 45% { transform: translateX(-5px) rotate(-2deg); } 60% { transform: translateX(4px) rotate(1.5deg); } 75% { transform: translateX(-3px) rotate(-1deg); }
 }
 
 /* Text Effects in Drunk Mode */
@@ -836,41 +974,21 @@ body.drunk-mode-active {
      text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1);
      animation: text-swim 5s ease-in-out infinite alternate;
 }
-@keyframes text-swim {
+@keyframes text-swim { /* Remains the same */
     from { letter-spacing: normal; transform: skewX(0deg); }
-    to { letter-spacing: 0.5px; transform: skewX(-1deg); } /* Subtle swim/skew */
+    to { letter-spacing: 0.5px; transform: skewX(-1deg); }
 }
 
-/* Override specific element colors in Drunk Mode */
-.drunk-mode-active #main-header {
-     background-color: #fff8dc; /* Cornsilk */
-     border-bottom-color: var(--dm-accent-red);
-}
-.drunk-mode-active #main-footer {
-     background-color: #faf0e6; /* Linen */
-     border-top-color: var(--dm-accent-blue);
-}
-.drunk-mode-active .cta-button {
-     background-color: var(--dm-accent-red);
-     color: var(--white);
-}
-.drunk-mode-active .cta-button:hover {
-     background-color: #ff7f50; /* Coral */
-}
-.drunk-mode-active .cta-button.secondary {
-     color: var(--dm-accent-blue);
-     border-color: var(--dm-accent-blue);
-}
-.drunk-mode-active .cta-button.secondary:hover {
-     background-color: var(--dm-accent-blue);
-     color: var(--white);
-}
-.drunk-mode-active .social-feed-item h3 i {
-    color: var(--dm-marker-color); /* Match marker color */
-}
-.drunk-mode-active .error-message {
-     color: var(--dm-accent-red); /* Use drunk mode accent */
-}
+/* Explicit overrides needed if variables alone aren't enough */
+.drunk-mode-active #main-header { border-bottom-color: var(--accent-primary); }
+.drunk-mode-active #main-footer { border-top-color: var(--accent-secondary); }
+.drunk-mode-active .cta-button { background-color: var(--accent-primary); color: var(--text-light); /* Ensure text contrast */ }
+.drunk-mode-active .cta-button:hover { background-color: var(--link-hover); }
+.drunk-mode-active .cta-button.secondary { color: var(--link-primary); border-color: var(--link-primary); }
+.drunk-mode-active .cta-button.secondary:hover { background-color: var(--link-primary); color: var(--bg-header); }
+.drunk-mode-active .social-feed-item h3 i { color: var(--accent-marker); }
+.drunk-mode-active .error-message { color: var(--accent-primary); }
+.drunk-mode-active .marquee-container { background-color: var(--accent-secondary); color: var(--dm-bg-header); }
 
 
 /* --- 7. Responsiveness --- */
@@ -880,11 +998,11 @@ body.drunk-mode-active {
     :root { --header-height: 80px; --header-shrink-height: 60px; }
     html { scroll-padding-top: var(--header-height); }
     body.header-scrolled html { scroll-padding-top: var(--header-shrink-height); }
-    body { background-position: 25px 0, 0 0; }
-    h1 { font-size: 2.5rem; } #hero h1 { font-size: 3rem; } h2 { font-size: 2rem; }
+    body { background-position: 25px 0, 0 0; background-size: 1px auto, 100% 2.2em; } /* Keep size */
+    h1 { font-size: 2.5rem; } #hero-section h1 { font-size: 3rem; } h2 { font-size: 2rem; }
     .container { width: 95%; }
     .quote-text { font-size: 1.6rem; }
-    .drunk-mode-active body { background-position: 25px 0, 0 0; } /* Maintain margin line position */
+    .drunk-mode-active body { background-position: 25px 0, 0 0; background-size: 1px auto, 100% 2.2em; }
 }
 
 /* Small Devices */
@@ -892,58 +1010,62 @@ body.drunk-mode-active {
     :root { --header-height: 70px; --header-shrink-height: 55px; }
     html { scroll-padding-top: var(--header-height); }
     body.header-scrolled html { scroll-padding-top: var(--header-shrink-height); }
-    body { background-position: 15px 0, 0 0; }
-    h1 { font-size: 2.2rem; } #hero h1 { font-size: 2.5rem; } #hero .tagline { font-size: 1.5rem; } h2 { font-size: 1.8rem; }
+    body { background-position: 15px 0, 0 0; background-size: 1px auto, 100% 2.2em; }
+    h1 { font-size: 2.2rem; } #hero-section h1 { font-size: 2.5rem; } #hero-section .tagline { font-size: 1.5rem; } h2 { font-size: 1.8rem; }
     .quote-text { font-size: 1.4rem; }
 
     .layout-two-column { flex-direction: column; }
     .layout-two-column > div { min-width: 100%; }
 
-    #hamburger-menu { display: block; } /* Show hamburger */
-    #main-nav { order: 1; margin-left: auto; display: contents; } /* Reorder for flex */
+    #hamburger-menu { display: block; }
+    #main-nav { order: 1; margin-left: auto; display: contents; } /* Ensure correct flex ordering */
 
     #nav-links {
-        position: fixed; /* Changed from absolute to fixed */
+        position: fixed;
         top: 0;
-        right: -100%; /* Start off-screen */
+        right: -100%;
         width: 70%;
         max-width: 300px;
-        height: 100vh; /* Full viewport height */
-        background-color: var(--white);
+        height: 100vh;
+        background-color: var(--bg-header); /* Use header bg for consistency */
         flex-direction: column;
-        padding: calc(var(--header-height) + var(--base-spacing) * 1) var(--base-spacing); /* Adjusted padding */
-        box-shadow: -3px 0 10px rgba(0,0,0,0.2);
-        transition: right var(--transition-speed) ease-in-out;
-        z-index: 1002; /* Above header/content, below hamburger */
-        background-image: linear-gradient(var(--notepad-lines) 1px, transparent 1px);
-        background-size: 100% 2.2em;
-        background-position: 0 var(--header-height); /* Start lines below header space */
-        overflow-y: auto;
-        /* Drunk mode adjustment */
+        padding: calc(var(--header-height) + var(--base-spacing) * 1) var(--base-spacing);
+        box-shadow: -3px 0 10px var(--shadow-header);
         transition: right var(--transition-speed) ease-in-out, background-color var(--transition-speed) ease;
+        z-index: 1002;
+        /* Apply notepad lines inside menu */
+        background-image: linear-gradient(var(--border-primary) 1px, transparent 1px);
+        background-size: 100% 2.2em;
+        background-position: 0 var(--header-height);
+        overflow-y: auto;
     }
-    .drunk-mode-active #nav-links {
-        background-color: var(--dm-notepad-bg); /* Match drunk background */
-        background-image: linear-gradient(var(--dm-notepad-lines) 1px, transparent 1px);
+     .drunk-mode-active #nav-links { /* Drunk mode mobile nav */
+        background-color: var(--dm-bg-header);
+        background-image: linear-gradient(var(--dm-bg-lines) 1px, transparent 1px);
+        background-size: 100% 2.2em;
+        background-position: 0 var(--header-height);
     }
 
-    #nav-links.nav-open { right: 0; } /* Slide in */
+
+    #nav-links.nav-open { right: 0; }
     #nav-links li { margin: 0; width: 100%; }
     #nav-links a.nav-item {
         display: block;
         padding: var(--base-spacing) 0;
-        border-bottom: 1px solid var(--notepad-lines);
+        border-bottom: 1px solid var(--border-primary);
         font-size: 1.1rem;
+        transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease, border-color var(--transition-speed) ease;
     }
-    .drunk-mode-active #nav-links a.nav-item {
-        border-bottom-color: var(--dm-notepad-lines);
-    }
+     .drunk-mode-active #nav-links a.nav-item {
+         border-bottom-color: var(--dm-bg-lines);
+     }
+
     #nav-links a.nav-item::after { display: none; } /* No underline needed */
     #nav-links a.nav-item:hover,
     #nav-links a.nav-item:focus,
-    #nav-links a.nav-item.active {
-        background-color: var(--light-grey-bg); /* Subtle highlight */
-        color: var(--link-hover); /* Use hover color */
+    #nav-links a.nav-item.active { /* Mobile active/hover state */
+        background-color: var(--bg-secondary);
+        color: var(--link-hover);
     }
     .drunk-mode-active #nav-links a.nav-item:hover,
     .drunk-mode-active #nav-links a.nav-item:focus,
@@ -952,32 +1074,34 @@ body.drunk-mode-active {
          color: var(--dm-link-hover);
     }
 
-    #drunk-mode-toggle { order: 2; margin-left: 10px; } /* Put after nav stuff */
-    #drunk-mode-toggle .tooltip-text { display: none; } /* Hide tooltip on mobile */
+    .header-toggles { order: 2; margin-left: 10px; } /* Move toggles after nav trigger */
+    .header-toggles button .tooltip-text { display: none; } /* Hide tooltip on mobile */
 
     .footer-content { flex-direction: column; text-align: center; }
     .footer-right { justify-content: center; }
     .social-links a:first-child { margin-left: 0; }
 
-    .drunk-mode-active body { background-position: 15px 0, 0 0; }
+    .drunk-mode-active body { background-position: 15px 0, 0 0; background-size: 1px auto, 100% 2.2em; }
 }
 
 /* Extra Small Devices */
 @media (max-width: 576px) {
-    :root { --base-spacing: 0.8rem; --header-height: 60px; --header-shrink-height: 50px; --bubble-size: 10px;}
+    :root { --base-spacing: 0.8rem; --header-height: 60px; --header-shrink-height: 50px; --bubble-size: 10px; --marquee-height: 30px;}
     html { scroll-padding-top: var(--header-height); }
     body.header-scrolled html { scroll-padding-top: var(--header-shrink-height); }
-    body {
-        background-image: linear-gradient(var(--notepad-lines) 1px, transparent 1px);
+    body { /* Remove vertical line on smallest screens */
+        background-image: linear-gradient(var(--border-primary) 1px, transparent 1px);
         background-size: 100% 2em;
+        background-position: 0 0;
     }
-    .drunk-mode-active body {
-       background-image: repeating-linear-gradient(-1deg, var(--dm-notepad-lines) 0, var(--dm-notepad-lines) 1px, transparent 1px, transparent 50%, var(--dm-notepad-lines) 50%, var(--dm-notepad-lines) 51%, transparent 51%, transparent 100%);
+    .drunk-mode-active body { /* Drunk mode smallest screens */
+       background-image: repeating-linear-gradient(-1deg, var(--border-primary) 0, var(--border-primary) 1px, transparent 1px, transparent 50%, var(--border-primary) 50%, var(--border-primary) 51%, transparent 51%, transparent 100%);
        background-size: 100% 2em;
+       background-position: 0 0;
     }
 
-    h1 { font-size: 2rem; } #hero { padding: calc(var(--base-spacing) * 4) 0; min-height: 40vh; }
-    #hero h1 { font-size: 2.2rem; } #hero .tagline { font-size: 1.3rem; } h2 { font-size: 1.6rem; } h3 { font-size: 1.2rem; }
+    h1 { font-size: 2rem; } #hero-section { padding: calc(var(--base-spacing) * 4) 0; min-height: 40vh; }
+    #hero-section h1 { font-size: 2.2rem; } #hero-section .tagline { font-size: 1.3rem; } h2 { font-size: 1.6rem; } h3 { font-size: 1.2rem; }
     .quote-text { font-size: 1.2rem; }
 
     .cta-button { padding: calc(var(--base-spacing) * 0.7) calc(var(--base-spacing) * 1.5); font-size: 0.9rem; }
@@ -989,5 +1113,24 @@ body.drunk-mode-active {
     .back-to-top { font-size: 1.5rem; }
 
     .contact-form-placeholder { padding: var(--base-spacing); }
-    #nav-links { width: 85%; max-width: none; } /* Make menu wider on very small screens */
+    #nav-links { width: 85%; max-width: none; } /* Make menu wider */
+    .marquee-content { font-size: 0.8rem; }
+}
+
+/* Accessibility: Focus Styles */
+a:focus, button:focus, input:focus, textarea:focus {
+    outline: 2px dashed var(--link-primary);
+    outline-offset: 2px;
+}
+/* Remove default outline when custom styles are applied on hover/focus */
+.header-toggles button:focus,
+.cta-button:focus,
+#nav-links a.nav-item:focus {
+    outline: none; /* Remove outline since bg/color change indicates focus */
+}
+/* Hamburger specific focus */
+#hamburger-menu:focus {
+    outline: 2px dashed var(--link-primary);
+    outline-offset: 2px;
+    border-radius: 3px; /* Optional: add slight radius to focus outline */
 }
