@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light"> <!-- Ensure data-theme matches index.html default -->
+<html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,23 +12,18 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Architects+Daughter&family=Roboto:wght@400;700&family=Permanent+Marker&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <!-- Favicons and Manifest -->
     <link rel="icon" type="image/png" href="/images/favicon-96x96.png" sizes="96x96" />
     <link rel="icon" type="image/svg+xml" href="/images/favicon.svg" />
     <link rel="shortcut icon" href="/images/favicon.ico" />
     <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png" />
     <link rel="manifest" href="/images/site.webmanifest" />
 </head>
-<!-- Revision: Changed ID to blog-page, kept page-top class for consistency but likely not needed for JS on this page -->
-<body id="blog-page" class="page-top">
+<body id="blog-page"> {/* Use specific ID for blog page */}
 
-    <!-- Revision: Added Scroll Progress Bar (Consistent with index.html) -->
     <div id="scroll-progress-bar"></div>
 
-    <!-- Revision: HEADER Synced with index.html -->
     <header id="main-header">
         <div class="container header-container">
-            <!-- Revision: Logo link points to index.html top -->
             <a href="index.html#page-top" id="logo-link" title="Koozie Sports Home">
                 <img src="images/logo.jpg" alt="Koozie Sports Logo" id="logo-img" class="flipping-logo" loading="eager">
             </a>
@@ -38,12 +33,10 @@
                     <i class="fas fa-bars"></i>
                 </button>
                 <ul id="nav-links">
-                    <!-- Revision: Links point back to index.html sections -->
                     <li><a href="index.html#page-top" class="nav-item" data-section="page-top">Home</a></li>
                     <li><a href="index.html#about" class="nav-item" data-section="about">About</a></li>
                     <li><a href="index.html#featured-league" class="nav-item" data-section="featured-league">Leagues</a></li>
-                    <!-- Revision: Highlight Blog link as active on this page -->
-                    <li><a href="blog.html" class="nav-item active" aria-current="page">Blog</a></li>
+                    <li><a href="blog.html" class="nav-item active" aria-current="page">Blog</a></li> {/* Active state for blog */}
                     <li><a href="index.html#gallery" class="nav-item" data-section="gallery">Gallery</a></li>
                     <li><a href="index.html#merch" class="nav-item" data-section="merch">Merch</a></li>
                     <li><a href="index.html#social-feeds" class="nav-item" data-section="social-feeds">Social</a></li>
@@ -52,20 +45,15 @@
             </nav>
 
             <div class="header-toggles">
-                 <!-- Dark Mode Toggle (Consistent) -->
                 <button id="dark-mode-toggle" title="Toggle Dark Mode" aria-pressed="false">
                     <i class="fas fa-moon"></i>
                     <i class="fas fa-sun" style="display: none;"></i>
                     <span class="tooltip-text">Toggle Theme</span>
                 </button>
-
-                <!-- Revision: Live Scores Toggle (Icon & aria-controls updated, consistent) -->
                 <button id="live-scores-toggle" title="Show Live Scores" aria-pressed="false" aria-controls="live-scores-popup">
-                    <i class="fas fa-baseball-bat-ball"></i> <!-- Baseball Bat/Ball icon -->
+                    <i class="fas fa-baseball-bat-ball"></i>
                     <span class="tooltip-text">Toggle Live Scores</span>
                 </button>
-
-                <!-- Koozie Mode Toggle (Consistent) -->
                 <button id="drunk-mode-toggle" title="Activate Koozie Mode" aria-pressed="false">
                     <i class="fas fa-beer-mug-empty"></i>
                     <span class="tooltip-text">Toggle Koozie Mode</span>
@@ -73,9 +61,7 @@
             </div>
         </div>
     </header>
-    <!-- Revision: END Synced HEADER -->
 
-     <!-- Scrolling Marquee Section (Consistent) -->
     <div class="marquee-container" aria-hidden="true">
         <div class="marquee-content">
             <span>Latest Ramblings & Rants... Don't Blame Us If Your Bets Lose... *** Follow @koozie_sports *** </span>
@@ -83,19 +69,30 @@
         </div>
     </div>
 
-    <!-- Main content area with padding -->
     <div class="main-content-area">
         <main id="blog-main">
-             <!-- Revision: Added role and aria-labelledby -->
             <section id="blog-posts" class="notepad-section" role="region" aria-labelledby="blog-heading">
                 <div class="container">
                     <h1 id="blog-heading" class="blog-page-title marker-text">Koozie Sports Blog</h1>
                     <p class="section-subtitle">Grab a beverage, pull up a chair. Here's the latest of our yapping.</p>
 
-                    <div class="blog-post-list">
+                    {/* --- NEW: Blog Search Input --- */}
+                    <div class="blog-controls">
+                         <label for="blog-search-input" class="visually-hidden">Search Blog Posts</label>
+                         <input type="search" id="blog-search-input" placeholder="Search posts by title or content..." aria-controls="blog-post-list">
+                         {/* Optional: Add category filter dropdown later if needed */}
+                    </div>
+                    {/* --- END: Blog Search Input --- */}
 
-                        <!-- Sample Blog Post 1 -->
-                        <!-- Revision: Added loading="lazy" and refined alt text -->
+                    {/* --- NEW: No Results Message --- */}
+                    <div id="no-results-message" class="no-results-message" style="display: none;" aria-live="polite">
+                         <p>Dang. Couldn't find any posts matching that search. Try again?</p>
+                    </div>
+                    {/* --- END: No Results Message --- */}
+
+
+                    <div id="blog-post-list" class="blog-post-list"> {/* Added ID for aria-controls */}
+
                         <article id="post1" class="blog-post card-item animate-on-scroll">
                              <img src="images/featured-1-placeholder.jpg" alt="Stylized graphic representing sports analysis" class="card-image" loading="lazy">
                             <div class="post-content">
@@ -108,9 +105,7 @@
                             </div>
                         </article>
 
-                        <!-- Sample Blog Post 2 -->
                         <article id="post2" class="blog-post card-item animate-on-scroll delay-1">
-                             <!-- No image example -->
                              <div class="post-content">
                                 <h2 class="post-title"><a href="#post2">The Definitive Power Rankings of Stadium Beers</a></h2>
                                 <p class="post-excerpt">We risked our livers and wallets to scientifically rank the best (and worst) brews available at major league venues. Spoiler: Price doesn't equal quality...</p>
@@ -121,8 +116,6 @@
                              </div>
                         </article>
 
-                        <!-- Sample Blog Post 3 -->
-                        <!-- Revision: Added loading="lazy" and refined alt text -->
                          <article id="post3" class="blog-post card-item animate-on-scroll delay-2">
                             <img src="images/featured-3-placeholder.jpg" alt="Pickleball paddle resting on a court with a ball nearby" class="card-image" loading="lazy">
                              <div class="post-content">
@@ -135,11 +128,10 @@
                              </div>
                         </article>
 
-                        <!-- Add more articles as needed -->
+                        {/* Add more articles as needed */}
 
-                    </div> <!-- /.blog-post-list -->
+                    </div>
 
-                    <!-- Basic Pagination Placeholder -->
                     <nav class="pagination animate-on-scroll delay-3" aria-label="Blog Pagination">
                          <a href="#" class="page-link disabled" aria-disabled="true" tabindex="-1">« Previous</a>
                          <span class="page-link current" aria-current="page">1</span>
@@ -147,12 +139,11 @@
                          <a href="#" class="page-link" aria-label="Next Page">Next »</a>
                     </nav>
 
-                </div> <!-- /.container -->
+                </div>
             </section>
         </main>
-    </div> <!-- /.main-content-area -->
+    </div>
 
-     <!-- Revision: Live Scores Popup Container (Consistent with index.html) -->
     <div id="live-scores-popup" class="card-item" role="dialog" aria-modal="true" aria-labelledby="live-scores-popup-heading" hidden>
          <h3 id="live-scores-popup-heading" class="visually-hidden">Live Scores</h3>
          <button class="popup-close-button" aria-label="Close Live Scores" title="Close Live Scores">
@@ -163,7 +154,6 @@
          <script src="https://widgets.365scores.com/main.js" defer></script>
     </div>
 
-    <!-- Revision: FOOTER Synced with index.html -->
     <footer id="main-footer" role="contentinfo">
         <div class="container footer-content">
             <div class="footer-left">
@@ -180,18 +170,14 @@
                     <a href="https://www.tiktok.com/@koozie_sports" target="_blank" rel="noopener noreferrer" aria-label="TikTok" title="TikTok"><i class="fa-brands fa-tiktok"></i></a>
                     <a href="https://www.youtube.com/@koozie_sports" target="_blank" rel="noopener noreferrer" aria-label="YouTube" title="YouTube"><i class="fab fa-youtube"></i></a>
                 </div>
-                 <!-- Revision: Link goes to index.html top -->
-                 <a href="index.html#page-top" class="back-to-top" title="Back to Top" aria-label="Back to Top"><i class="fas fa-angles-up"></i></a>
+                 <a href="index.html#page-top" class="back-to-top" title="Back to Top" aria-label="Back to Top"><i class="fas fa-angles-up"></i></a> {/* Ensure this points to index */}
             </div>
         </div>
     </footer>
-    <!-- Revision: END Synced FOOTER -->
 
-    <!-- Revision: Added Drunk Mode Elements (Consistent with index.html) -->
     <div id="bubble-overlay" aria-hidden="true"></div>
     <audio id="drunk-mode-sound" src="audio/beer.mp3" preload="auto"></audio>
 
-    <!-- Site Script (Uses the same script as index.html) -->
     <script src="script.js" defer></script>
 </body>
 </html>
