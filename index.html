@@ -240,27 +240,34 @@
         </section>
 
         <!-- Social Feeds Section -->
-        <section id="social-feeds" class="notepad-section" data-id="social-feeds">
+        <!-- Revision: Added data-id matching nav data-section -->
+        <section id="social-feeds" class="notepad-section" data-id="social-feeds" role="region" aria-labelledby="social-feeds-heading">
             <div class="container">
-                <h2 class="section-title animate-on-scroll">Straight From The Source</h2>
+                <h2 id="social-feeds-heading" class="section-title animate-on-scroll">Straight From The Source</h2>
                 <p class="section-subtitle animate-on-scroll">Catch the latest nonsense directly from our social channels.</p>
                 <div class="social-feeds-grid">
                     <!-- Instagram Feed -->
                     <div class="social-feed-item animate-on-scroll delay-1">
                         <h3 class="marker-text"><i class="fab fa-instagram fa-fw"></i> Latest Instagram Posts</h3>
+                        <!-- START Elfsight Widget -->
                         <script src="https://static.elfsight.com/platform/platform.js" data-use-service-core defer></script>
                         <div class="elfsight-app-2201490b-8ef7-46de-bc32-41b3df95e8c9" data-elfsight-app-lazy></div>
+                         <!-- END Elfsight Widget -->
                     </div>
                     <!-- YouTube Feed -->
                     <div class="social-feed-item animate-on-scroll delay-2">
                         <h3 class="marker-text"><i class="fab fa-youtube fa-fw"></i> Latest YouTube Uploads</h3>
-                        <script src="https://static.elfsight.com/platform/platform.js" async></script>
-                        <div class="elfsight-app-00d9f4d0-3b35-4e2a-80b7-6733dafd1d1d" data-elfsight-app-lazy></div>
+                         <script src="https://static.elfsight.com/platform/platform.js" data-use-service-core defer></script>
+                         <div class="elfsight-app-00d9f4d0-3b35-4e2a-80b7-6733dafd1d1d" data-elfsight-app-lazy></div>
+                        <!-- Placeholder for API fetched videos (if Elfsight is removed) -->
+                        <!-- <div id="youtube-video-items" class="youtube-video-grid"></div> -->
+                        <!-- <p class="youtube-loading-text">Loading latest videos...</p> -->
+                        <!-- <p id="youtube-error-message" class="error-message" style="display: none;"></p> -->
+                        <!-- <p id="youtube-fallback-message" style="display: none;">Check out our <a href="YOUR_YOUTUBE_CHANNEL_LINK_HERE" target="_blank" rel="noopener noreferrer">YouTube channel</a> directly!</p> -->
                     </div>
                 </div>
             </div>
         </section>
-        <!-- === END Social Feeds Section === -->
 
         <!-- Contact Section -->
         <!-- Revision: Added data-id matching nav data-section -->
