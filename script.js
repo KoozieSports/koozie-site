@@ -54,6 +54,12 @@ const dynamicQuotes = [
         { quote: `"Sir, they can cut the chains off the door, but they can't make us play."`, attribution: "- Jason Lyle" },
         { quote: `"Five foot nothin', a hundred and nothin', and hardly a spec of athletic ability."`, attribution: "- Fortune (Describing Rudy?)" },
         { quote: `"Being told 'no' just means try harder... or maybe get a restraining order."`, attribution: "- Rudy-esque determination" },
+        { quote: `"It is high! It is far! It is gone!"`, attribution: "- John Sterling" },
+        { quote: `"All Rise! Here comes the Judge!"`, attribution: "- John Sterling (on an Aaron Judge HR)" },
+        { quote: `"Ballgame over! Yankees win! Theeeeeeeee Yankees win!"`, attribution: "- John Sterling" },
+        { quote: `"Roger Clemens is in George Steinbrenner's box! And I am not afraid to say it!"`, attribution: "- Suzyn Waldman" },
+        { quote: `"Oh my goodness gracious! Of all the dramatic things I've ever seen..."`, attribution: "- Suzyn Waldman" },
+        { quote: `"Baseball is theatre, and the ballpark is the stage."`, attribution: "- Suzyn Waldman (paraphrased sentiment)" },
     ];
 
     // --- Cache DOM Elements ---
