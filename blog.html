@@ -26,40 +26,50 @@
     <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#1a1a1a">
     <!-- End Links -->
 </head>
-<body id="page-top"> <!-- Assign ID if needed for JS, maybe blog-page? -->
+<body id="blog-page" class="page-top"> <!-- Use blog-page ID, keep page-top class if needed by JS -->
 
-    <!-- >>> HEADER (UPDATED Navigation) <<< -->
+    <!-- NEW: Scroll Progress Bar -->
+    <div id="scroll-progress-bar"></div>
+
+    <!-- >>> HEADER (UPDATED Navigation & Toggles) <<< -->
     <header id="main-header">
         <div class="container header-container">
-            <a href="index.html#page-top" id="logo-link" title="Koozie Sports Home"> <!-- Link to index.html now -->
-                <img src="images/logo.jpg" alt="Koozie Sports Logo" id="logo-img" class="flipping-logo">
+            <a href="index.html#page-top" id="logo-link" title="Koozie Sports Home"> <!-- Link to index.html -->
+                <img src="images/logo.jpg" alt="Koozie Sports Logo" id="logo-img" class="flipping-logo" loading="eager"> <!-- Eager load logo -->
             </a>
-            <nav id="main-nav">
+            <nav id="main-nav" aria-label="Main Navigation">
                 <button id="hamburger-menu" aria-label="Toggle Navigation Menu" aria-expanded="false" aria-controls="nav-links">
                     <i class="fas fa-bars"></i>
                 </button>
-                <!-- === UPDATED Nav Links === -->
                 <ul id="nav-links">
+                    <!-- Links point back to index.html sections -->
                     <li><a href="index.html#page-top" class="nav-item" data-section="page-top">Home</a></li>
                     <li><a href="index.html#about" class="nav-item" data-section="about">About</a></li>
                     <li><a href="index.html#featured-league" class="nav-item" data-section="featured-league">Leagues</a></li>
-                    <!-- Highlight Blog link as active on this page -->
-                    <li><a href="blog.html" class="nav-item active">Blog</a></li>
+                    <!-- Highlight Blog link as active on this page + add aria-current -->
+                    <li><a href="blog.html" class="nav-item active" aria-current="page">Blog</a></li>
                     <li><a href="index.html#gallery" class="nav-item" data-section="gallery">Gallery</a></li>
-                    <!-- Added Merch Link Here -->
                     <li><a href="index.html#merch" class="nav-item" data-section="merch">Merch</a></li>
                     <li><a href="index.html#social-feeds" class="nav-item" data-section="social-feeds">Social</a></li>
                     <li><a href="index.html#contact" class="nav-item" data-section="contact">Contact</a></li>
                 </ul>
-                 <!-- === END UPDATED Nav Links === -->
             </nav>
             <div class="header-toggles">
-                <button id="dark-mode-toggle" title="Toggle Dark Mode">
+                 <!-- Dark Mode Toggle -->
+                <button id="dark-mode-toggle" title="Toggle Dark Mode" aria-pressed="false"> <!-- JS will manage aria-pressed -->
                     <i class="fas fa-moon"></i>
                     <i class="fas fa-sun" style="display: none;"></i>
                     <span class="tooltip-text">Toggle Theme</span>
                 </button>
-                <button id="drunk-mode-toggle" title="Activate Koozie Mode">
+
+                <!-- NEW: Live Scores Toggle (Consistent UI) -->
+                <button id="live-scores-toggle" title="Show Live Scores" aria-pressed="false" aria-controls="live-scores-content"> <!-- Control target doesn't exist here -->
+                    <i class="fas fa-futbol"></i>
+                    <span class="tooltip-text">Toggle Live Scores</span>
+                </button>
+
+                <!-- Koozie Mode Toggle -->
+                <button id="drunk-mode-toggle" title="Activate Koozie Mode" aria-pressed="false"> <!-- JS will manage aria-pressed -->
                     <i class="fas fa-beer-mug-empty"></i>
                     <span class="tooltip-text">Toggle Koozie Mode</span>
                 </button>
@@ -68,32 +78,44 @@
     </header>
     <!-- >>> END HEADER <<< -->
 
-    <!-- Add padding top to main content area to account for fixed header + marquee -->
+     <!-- Scrolling Marquee Section (Optional - include if you want it on blog page too) -->
+    <div class="marquee-container" aria-hidden="true">
+        <div class="marquee-content">
+            <span>Latest Ramblings & Rants... Don't Blame Us If Your Bets Lose... *** Follow @koozie_sports *** </span>
+            <!-- Repeat content for seamless scroll -->
+            <span>Latest Ramblings & Rants... Don't Blame Us If Your Bets Lose... *** Follow @koozie_sports *** </span>
+        </div>
+    </div>
+
+    <!-- Main content area with padding for header/marquee -->
     <div class="main-content-area">
         <main id="blog-main">
-            <section id="blog-posts" class="notepad-section">
+             <!-- Main Blog Section with ARIA region -->
+            <section id="blog-posts" class="notepad-section" role="region" aria-labelledby="blog-heading">
                 <div class="container">
-                    <h1 class="blog-page-title marker-text">Koozie Sports Blog</h1>
+                    <!-- Added ID to H1 for aria-labelledby -->
+                    <h1 id="blog-heading" class="blog-page-title marker-text">Koozie Sports Blog</h1>
                     <p class="section-subtitle">Grab a beverage, pull up a chair. Here's the latest of our yapping.</p>
 
                     <div class="blog-post-list">
 
                         <!-- Sample Blog Post 1 -->
-                        <article class="blog-post card-item animate-on-scroll">
-                             <img src="images/featured-1-placeholder.jpg" alt="Blog Post Image 1" class="card-image"> <!-- Optional Image -->
+                        <article id="post1" class="blog-post card-item animate-on-scroll"> <!-- Added ID for internal linking -->
+                             <img src="images/featured-1-placeholder.jpg" alt="Abstract sports graphic" class="card-image" loading="lazy"> <!-- Added loading lazy, updated alt -->
                             <div class="post-content">
                                 <h2 class="post-title"><a href="#post1">Why Your Favorite Team Probably Won't Win (But Put's Will)</a></h2>
                                 <p class="post-excerpt">A totally unbiased breakdown of the current season, fueled by optimism and cheap lager. Prepare for hot takes that might spontaneously combust...</p>
                                 <div class="post-meta">
                                     <span class="post-date handwritten-caption">July 15, 2024</span>
-                                    <!-- <span class="post-author">by Nick</span> -->
                                 </div>
-                                <a href="#post1" class="read-more-link">Keep Reading »</a>
+                                <!-- Optional: Link to a full post page if implemented -->
+                                <!-- <a href="single-post.html#post1" class="read-more-link">Keep Reading »</a> -->
+                                <p class="handwritten-note">Full post coming soon... maybe.</p> <!-- Example if not linking out -->
                             </div>
                         </article>
 
                         <!-- Sample Blog Post 2 -->
-                        <article class="blog-post card-item animate-on-scroll delay-1">
+                        <article id="post2" class="blog-post card-item animate-on-scroll delay-1"> <!-- Added ID -->
                              <!-- No image example -->
                              <div class="post-content">
                                 <h2 class="post-title"><a href="#post2">The Definitive Power Rankings of Stadium Beers</a></h2>
@@ -101,20 +123,20 @@
                                 <div class="post-meta">
                                     <span class="post-date handwritten-caption">July 10, 2024</span>
                                 </div>
-                                <a href="#post2" class="read-more-link">See the Rankings »</a>
+                                <p class="handwritten-note">Rankings delayed due to... research.</p>
                              </div>
                         </article>
 
                         <!-- Sample Blog Post 3 -->
-                         <article class="blog-post card-item animate-on-scroll delay-2">
-                            <img src="images/featured-3-placeholder.jpg" alt="Blog Post Image 3" class="card-image">
+                         <article id="post3" class="blog-post card-item animate-on-scroll delay-2"> <!-- Added ID -->
+                            <img src="images/featured-3-placeholder.jpg" alt="Pickleball paddle and ball" class="card-image" loading="lazy"> <!-- Added loading lazy, updated alt -->
                              <div class="post-content">
                                 <h2 class="post-title"><a href="#post3">Is Pickleball Taking Over the World? (And Should We Care?)</a></h2>
                                 <p class="post-excerpt">It's noisy, it's trendy, and it's everywhere. We dive into the pandemonium and ask the important questions, like 'Can you drink while playing?'...</p>
                                 <div class="post-meta">
                                      <span class="post-date handwritten-caption">July 5, 2024</span>
                                  </div>
-                                <a href="#post3" class="read-more-link">Read the Rant »</a>
+                                 <p class="handwritten-note">Answer: Yes, carefully.</p>
                              </div>
                         </article>
 
@@ -124,10 +146,10 @@
 
                     <!-- Basic Pagination Placeholder -->
                     <nav class="pagination animate-on-scroll delay-3" aria-label="Blog Pagination">
-                         <a href="#" class="page-link disabled">« Previous</a>
-                         <span class="page-link current">1</span>
+                         <a href="#" class="page-link disabled" aria-disabled="true" tabindex="-1">« Previous</a>
+                         <span class="page-link current" aria-current="page">1</span>
                          <a href="#" class="page-link">2</a>
-                         <a href="#" class="page-link">Next »</a>
+                         <a href="#" class="page-link" aria-label="Next Page">Next »</a>
                     </nav>
 
                 </div> <!-- /.container -->
@@ -145,14 +167,14 @@
                 </p>
             </div>
             <div class="footer-right">
-                <div class="social-links">
+                <div class="social-links" aria-label="Social Media Links"> <!-- Added aria-label -->
                     <a href="https://x.com/koozie_sports" target="_blank" rel="noopener noreferrer" aria-label="X/Twitter" title="X/Twitter"><i class="fab fa-x-twitter"></i></a>
                     <a href="https://www.instagram.com/koozie_sports/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" title="Instagram"><i class="fab fa-instagram"></i></a>
                     <a href="https://www.tiktok.com/@koozie_sports" target="_blank" rel="noopener noreferrer" aria-label="TikTok" title="TikTok"><i class="fa-brands fa-tiktok"></i></a>
                     <a href="https://www.youtube.com/@koozie_sports" target="_blank" rel="noopener noreferrer" aria-label="YouTube" title="YouTube"><i class="fab fa-youtube"></i></a>
                 </div>
-                 <!-- Link goes to index.html top now -->
-                 <a href="index.html#page-top" class="back-to-top" title="Back to Top"><i class="fas fa-angles-up"></i></a>
+                 <!-- Link goes to index.html top -->
+                 <a href="index.html#page-top" class="back-to-top" title="Back to Top" aria-label="Back to Top"><i class="fas fa-angles-up"></i></a>
             </div>
         </div>
     </footer>
@@ -163,6 +185,6 @@
     <audio id="drunk-mode-sound" src="audio/beer.mp3" preload="auto"></audio>
 
     <!-- Site Script (Uses the same script as index.html) -->
-    <script src="script.js"></script>
+    <script src="script.js" defer></script> <!-- Added defer -->
 </body>
 </html>
