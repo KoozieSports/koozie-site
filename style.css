@@ -1,4 +1,4 @@
-/* style.css for Koozie Sports - Revised */
+/* style.css for Koozie Sports - Revised & Fixed */
 
 /* --- 0. Global Settings & Variables --- */
 @import url('https://fonts.googleapis.com/css2?family=Architects+Daughter&family=Roboto:wght@400;700&family=Permanent+Marker&display=swap');
@@ -139,19 +139,30 @@ body.header-scrolled html {
 }
 
 body {
+    /* Base styles */
     font-family: var(--font-body);
     color: var(--text-primary);
-    background-color: var(--bg-primary);
     line-height: 1.6;
     overflow-x: hidden; /* Prevent horizontal scroll */
-    /* Notepad Lines */
-    background-image:
-        linear-gradient(var(--border-accent) 0%, var(--border-accent) 100%) 35px 0 / 1px auto no-repeat, /* Vertical Margin Line */
-        linear-gradient(var(--border-primary) 1px, transparent 1px); /* Horizontal Lines */
-    background-size: 1px auto, 100% 2.2em;
-    background-attachment: local;
     position: relative;
-    transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease, background-image var(--transition-speed) ease;
+    transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease;
+
+    /* --- CORRECTED Background Properties for base body --- */
+    background-color: var(--bg-primary);
+    background-image:
+        linear-gradient(var(--border-accent), var(--border-accent)), /* Vertical line layer */
+        linear-gradient(var(--border-primary) 1px, transparent 1px); /* Horizontal lines layer */
+    background-position:
+        35px 0,    /* Position for vertical line layer */
+        0 0;        /* Position for horizontal lines layer */
+    background-size:
+        1px auto,   /* Size for vertical line layer */
+        100% 2.2em; /* Size for horizontal lines layer */
+    background-repeat:
+        repeat-y,   /* Vertical line only repeats vertically */
+        repeat;     /* Horizontal lines repeat across the whole page */
+    background-attachment: local, local; /* Apply to both layers */
+    /* --- End CORRECTED Background Properties --- */
 }
 
 /* NEW: Prevent body scroll when mobile nav is open */
@@ -204,6 +215,7 @@ section {
 
 .alt-bg {
     background-color: var(--bg-secondary);
+    transition: background-color var(--transition-speed) ease;
 }
 
 .section-title {
@@ -291,9 +303,6 @@ section {
 .flipping-logo:hover {
     transform: scaleX(-1); /* Flip horizontally */
 }
-/* REMOVED spinning animation in favor of flip */
-/* @keyframes spin { ... } */
-/* .spinning-logo:hover { ... } */
 
 #main-nav { display: flex; align-items: center; }
 #nav-links { list-style: none; display: flex; margin: 0; padding: 0; }
@@ -471,7 +480,6 @@ section {
     text-align: center;
     padding: calc(var(--base-spacing) * 5) 0;
     position: relative;
-    /* Removed background-image: none; as it's set above */
     display: flex;
     align-items: center;
     min-height: 60vh;
@@ -501,7 +509,7 @@ section {
     font-weight: 700;
     margin-bottom: var(--base-spacing);
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-    transition: color var(--transition-speed) ease; /* Still allow color transition */
+    transition: color var(--transition-speed) ease;
 }
 #hero-section .tagline {
     font-family: var(--font-handwritten);
@@ -709,13 +717,9 @@ section {
     margin-right: auto;
     max-width: 550px; /* Adjust as needed */
     width: 100%;
-    /* Dark Mode Elfsight adaptation (might require !important or targeting inner elements if widget doesn't respect theme) */
-    /* Consider widget's own dark theme setting if available */
 }
 [data-theme="dark"] .elfsight-app-2201490b-8ef7-46de-bc32-41b3df95e8c9 {
-    /* Basic attempt to influence - may not work perfectly */
-     /* background: transparent !important; */
-     /* color: var(--text-primary) !important; */
+    /* Consider widget's own dark theme setting if available */
 }
 
 /* YouTube Placeholder specific */
@@ -918,9 +922,9 @@ section {
 
 /* --- 6. Drunk Mode Specific Styles --- */
 body.drunk-mode-active {
-    /* Override light/dark variables with drunk mode variables */
+    /* Override light/dark variables */
     --bg-primary: var(--dm-bg-primary);
-    --border-primary: var(--dm-bg-lines); /* Use pink for lines */
+    --border-primary: var(--dm-bg-lines);
     --text-primary: var(--dm-text-primary);
     --text-headings: var(--dm-text-headings);
     --accent-primary: var(--dm-accent-primary);
@@ -931,24 +935,35 @@ body.drunk-mode-active {
     --accent-marker: var(--dm-accent-marker);
     --bg-header: var(--dm-bg-header);
     --bg-footer: var(--dm-bg-footer);
-    /* Keep --border-accent, --border-header-bottom, --border-footer-top etc. */
-
-    /* Note: These direct overrides take precedence over dark mode styles */
 
     filter: hue-rotate(10deg) saturate(110%);
     cursor: url('images/beer-cursor.png'), crosshair;
 
-    /* Wavy lines approximation */
-     background-image:
-        linear-gradient(var(--border-accent) 0%, var(--border-accent) 100%) 35px 0 / 1px auto no-repeat,
-        repeating-linear-gradient(
+    /* --- CORRECTED Background Properties for Drunk Mode body --- */
+    /* Ensure background color is set */
+    background-color: var(--bg-primary); /* Will use --dm-bg-primary */
+    /* Define the image layers */
+    background-image:
+        linear-gradient(var(--border-accent), var(--border-accent)), /* Vertical line layer (uses original accent unless overridden) */
+        repeating-linear-gradient( /* Wavy horizontal lines layer */
             -1deg,
-            var(--border-primary) 0, var(--border-primary) 1px, /* Use overridden pink lines */
+            var(--border-primary) 0, var(--border-primary) 1px, /* Use overridden pink lines (--dm-bg-lines) */
             transparent 1px, transparent 50%,
-             var(--border-primary) 50%, var(--border-primary) 51%,
-             transparent 51%, transparent 100%
+            var(--border-primary) 50%, var(--border-primary) 51%,
+            transparent 51%, transparent 100%
         );
-    background-size: 1px auto, 100% 2.2em;
+    /* Define properties for EACH layer */
+    background-position:
+        35px 0,    /* Position for vertical line layer */
+        0 0;        /* Position for wavy horizontal lines layer */
+    background-size:
+        1px auto,   /* Size for vertical line layer */
+        100% 2.2em; /* Size for wavy horizontal lines layer */
+    background-repeat:
+        repeat-y,   /* Vertical line only repeats vertically */
+        repeat;     /* Wavy horizontal lines repeat across the whole page */
+    background-attachment: local, local; /* Apply to both layers */
+    /* --- End CORRECTED Drunk Mode Background Properties --- */
 }
 
 /* Activate bubbles */
@@ -998,11 +1013,13 @@ body.drunk-mode-active {
     :root { --header-height: 80px; --header-shrink-height: 60px; }
     html { scroll-padding-top: var(--header-height); }
     body.header-scrolled html { scroll-padding-top: var(--header-shrink-height); }
-    body { background-position: 25px 0, 0 0; background-size: 1px auto, 100% 2.2em; } /* Keep size */
+    /* Adjust only position for body */
+    body { background-position: 25px 0, 0 0; }
+    .drunk-mode-active body { background-position: 25px 0, 0 0; }
+
     h1 { font-size: 2.5rem; } #hero-section h1 { font-size: 3rem; } h2 { font-size: 2rem; }
     .container { width: 95%; }
     .quote-text { font-size: 1.6rem; }
-    .drunk-mode-active body { background-position: 25px 0, 0 0; background-size: 1px auto, 100% 2.2em; }
 }
 
 /* Small Devices */
@@ -1010,7 +1027,10 @@ body.drunk-mode-active {
     :root { --header-height: 70px; --header-shrink-height: 55px; }
     html { scroll-padding-top: var(--header-height); }
     body.header-scrolled html { scroll-padding-top: var(--header-shrink-height); }
-    body { background-position: 15px 0, 0 0; background-size: 1px auto, 100% 2.2em; }
+    /* Adjust only position for body */
+    body { background-position: 15px 0, 0 0; }
+    .drunk-mode-active body { background-position: 15px 0, 0 0; }
+
     h1 { font-size: 2.2rem; } #hero-section h1 { font-size: 2.5rem; } #hero-section .tagline { font-size: 1.5rem; } h2 { font-size: 1.8rem; }
     .quote-text { font-size: 1.4rem; }
 
@@ -1037,6 +1057,7 @@ body.drunk-mode-active {
         background-image: linear-gradient(var(--border-primary) 1px, transparent 1px);
         background-size: 100% 2.2em;
         background-position: 0 var(--header-height);
+        background-repeat: repeat;
         overflow-y: auto;
     }
      .drunk-mode-active #nav-links { /* Drunk mode mobile nav */
@@ -1044,6 +1065,7 @@ body.drunk-mode-active {
         background-image: linear-gradient(var(--dm-bg-lines) 1px, transparent 1px);
         background-size: 100% 2.2em;
         background-position: 0 var(--header-height);
+        background-repeat: repeat;
     }
 
 
@@ -1080,8 +1102,6 @@ body.drunk-mode-active {
     .footer-content { flex-direction: column; text-align: center; }
     .footer-right { justify-content: center; }
     .social-links a:first-child { margin-left: 0; }
-
-    .drunk-mode-active body { background-position: 15px 0, 0 0; background-size: 1px auto, 100% 2.2em; }
 }
 
 /* Extra Small Devices */
@@ -1089,15 +1109,20 @@ body.drunk-mode-active {
     :root { --base-spacing: 0.8rem; --header-height: 60px; --header-shrink-height: 50px; --bubble-size: 10px; --marquee-height: 30px;}
     html { scroll-padding-top: var(--header-height); }
     body.header-scrolled html { scroll-padding-top: var(--header-shrink-height); }
-    body { /* Remove vertical line on smallest screens */
-        background-image: linear-gradient(var(--border-primary) 1px, transparent 1px);
-        background-size: 100% 2em;
-        background-position: 0 0;
-    }
-    .drunk-mode-active body { /* Drunk mode smallest screens */
-       background-image: repeating-linear-gradient(-1deg, var(--border-primary) 0, var(--border-primary) 1px, transparent 1px, transparent 50%, var(--border-primary) 50%, var(--border-primary) 51%, transparent 51%, transparent 100%);
-       background-size: 100% 2em;
-       background-position: 0 0;
+    /* Switch to single horizontal line background */
+    body {
+         background-image: linear-gradient(var(--border-primary) 1px, transparent 1px); /* Single layer */
+         background-position: 0 0; /* Single value */
+         background-size: 100% 2em; /* Single value */
+         background-repeat: repeat; /* Single value */
+         background-attachment: local; /* Single value */
+     }
+    .drunk-mode-active body { /* Drunk mode smallest screens - single wavy line */
+       background-image: repeating-linear-gradient(-1deg, var(--border-primary) 0, var(--border-primary) 1px, transparent 1px, transparent 50%, var(--border-primary) 50%, var(--border-primary) 51%, transparent 51%, transparent 100%); /* Single layer */
+       background-size: 100% 2em; /* Single value */
+       background-position: 0 0; /* Single value */
+       background-repeat: repeat; /* Single value */
+       background-attachment: local; /* Single value */
     }
 
     h1 { font-size: 2rem; } #hero-section { padding: calc(var(--base-spacing) * 4) 0; min-height: 40vh; }
