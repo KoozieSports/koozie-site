@@ -1147,7 +1147,11 @@ body.drunk-mode-active {
 .drunk-mode-active .marquee-container { background-color: var(--accent-secondary); color: var(--dm-bg-header); }
 .drunk-mode-active #scroll-progress-bar { background: linear-gradient(90deg, var(--dm-accent-primary), var(--dm-accent-secondary)); }
 .drunk-mode-active #live-scores-popup { background-color: var(--dm-bg-popup); border-color: var(--dm-accent-secondary); }
-
+.drunk-mode-active .carousel-button { background-color: var(--dm-accent-secondary); color: var(--dm-bg-header); }
+.drunk-mode-active .carousel-button:hover, .drunk-mode-active .carousel-button:focus-visible, .drunk-mode-active .carousel-button:focus { background-color: var(--dm-accent-primary); }
+.drunk-mode-active #blog-search-input { border-color: var(--dm-accent-secondary); background-color: var(--dm-bg-card); color: var(--dm-text-primary); }
+.drunk-mode-active #blog-search-input:focus, .drunk-mode-active #blog-search-input:focus-visible { border-color: var(--dm-accent-primary); box-shadow: 0 0 5px rgba(255, 99, 71, 0.5); }
+.drunk-mode-active .no-results-message { color: var(--dm-text-headings); border-color: var(--dm-accent-primary); background-color: rgba(240, 230, 140, 0.3); }
 
 /* --- 7. Live Scores Popup Styles --- */
 #live-scores-popup {
@@ -1345,6 +1349,9 @@ body.live-scores-popup-open::before {
     .footer-right { justify-content: center; }
     .social-links a:first-child { margin-left: 0; }
     #live-scores-popup { width: 90%; max-height: 75vh; } /* Popup adjustments */
+
+    .carousel-button { font-size: 1rem; padding: 8px 10px; width: 35px; height: 35px; } /* Slightly smaller buttons */
+    #blog-search-input { font-size: 0.95rem; }
 }
 
 /* Extra Small Devices */
@@ -1384,8 +1391,12 @@ body.live-scores-popup-open::before {
     .marquee-content { font-size: 0.8rem; }
     #live-scores-popup { padding: var(--base-spacing); padding-top: calc(var(--base-spacing) * 2); font-size: 0.9rem; } /* Smaller padding */
     .popup-close-button { font-size: 1.3rem; top: calc(var(--base-spacing) * 0.5); right: calc(var(--base-spacing) * 0.5); }
+    
+    .carousel { padding: 0 var(--base-spacing); } /* Less padding around carousel */
+    .carousel-button { display: none; } /* Hide buttons on very small screens */
+    #blog-search-input { padding: calc(var(--base-spacing) * 0.5); }
+                                                                                                                        
 }
-
 /* --- 9. Accessibility: Focus Styles --- */
 *:focus-visible {
     outline: 3px dashed var(--link-primary);
@@ -1397,28 +1408,55 @@ a:focus, button:focus, input:focus, textarea:focus, select:focus {
     outline: 2px dashed var(--link-primary);
     outline-offset: 2px;
 }
-/* Remove default outline when custom styles are applied */
+/* Remove default outline when custom styles are applied below */
 #logo-link:focus, #logo-link:focus-visible,
 .header-toggles button:focus, .header-toggles button:focus-visible,
 .cta-button:focus, .cta-button:focus-visible,
 #nav-links a.nav-item:focus, #nav-links a.nav-item:focus-visible,
 .social-links a:focus, .social-links a:focus-visible,
 .back-to-top:focus, .back-to-top:focus-visible,
-.popup-close-button:focus, .popup-close-button:focus-visible {
+.popup-close-button:focus, .popup-close-button:focus-visible,
+.carousel-button:focus, .carousel-button:focus-visible, /* Added carousel button */
+#blog-search-input:focus, #blog-search-input:focus-visible { /* Added blog search */
     outline: none;
-    box-shadow: none;
+    box-shadow: none; /* Reset box-shadow here if applying custom below */
 }
-/* Specific focus for hamburger */
-#hamburger-menu:focus-visible {
-    outline: 3px dashed var(--link-primary);
-    outline-offset: 3px;
-    border-radius: 4px;
-    box-shadow: none;
+/* Apply custom focus rings where needed */
+#hamburger-menu:focus-visible { outline: 3px dashed var(--link-primary); outline-offset: 3px; border-radius: 4px; box-shadow: none; }
+#hamburger-menu:focus { outline: 2px dashed var(--link-primary); outline-offset: 3px; border-radius: 4px; }
+.header-toggles button:focus-visible { box-shadow: 0 0 0 2px var(--bg-primary), 0 0 0 4px var(--link-primary); }
+.header-toggles button:focus { box-shadow: 0 0 0 2px var(--bg-primary), 0 0 0 4px var(--link-primary); }
+.cta-button:focus-visible { box-shadow: 0 0 0 2px var(--bg-primary), 0 0 0 4px var(--accent-primary); }
+.cta-button:focus { box-shadow: 0 0 0 2px var(--bg-primary), 0 0 0 4px var(--accent-primary); }
+.cta-button.secondary:focus-visible { box-shadow: 0 0 0 2px var(--bg-primary), 0 0 0 4px var(--link-primary); }
+.cta-button.secondary:focus { box-shadow: 0 0 0 2px var(--bg-primary), 0 0 0 4px var(--link-primary); }
+.popup-close-button:focus-visible { box-shadow: 0 0 0 2px var(--bg-popup), 0 0 0 4px var(--accent-primary); border-radius: 4px; }
+.popup-close-button:focus { box-shadow: 0 0 0 2px var(--bg-popup), 0 0 0 4px var(--accent-primary); border-radius: 4px; }
+.social-links a:focus-visible { box-shadow: 0 0 0 2px var(--bg-footer), 0 0 0 4px var(--link-hover); border-radius: 4px; }
+.social-links a:focus { box-shadow: 0 0 0 2px var(--bg-footer), 0 0 0 4px var(--link-hover); border-radius: 4px; }
+.back-to-top:focus-visible { box-shadow: 0 0 0 2px var(--bg-footer), 0 0 0 4px var(--link-hover); border-radius: 4px; }
+.back-to-top:focus { box-shadow: 0 0 0 2px var(--bg-footer), 0 0 0 4px var(--link-hover); border-radius: 4px; }
+/* Custom focus for new elements */
+.carousel-button:focus-visible {
+    box-shadow: 0 0 0 3px var(--bg-primary), 0 0 0 5px var(--accent-primary);
+    background-color: var(--accent-primary); /* Ensure bg changes on focus */
 }
-#hamburger-menu:focus { /* Fallback */
-    outline: 2px dashed var(--link-primary);
-    outline-offset: 3px;
-    border-radius: 4px;
+.carousel-button:focus { /* Fallback */
+    box-shadow: 0 0 0 3px var(--bg-primary), 0 0 0 5px var(--accent-primary);
+    background-color: var(--accent-primary);
+}
+#blog-search-input:focus-visible {
+    border-color: var(--link-primary);
+    box-shadow: 0 0 8px rgba(69, 123, 157, 0.4); /* Subtle glow */
+}
+#blog-search-input:focus { /* Fallback */
+    border-color: var(--link-primary);
+    box-shadow: 0 0 8px rgba(69, 123, 157, 0.4);
+}
+[data-theme="dark"] #blog-search-input:focus-visible,
+[data-theme="dark"] #blog-search-input:focus {
+    border-color: var(--link-primary);
+    box-shadow: 0 0 8px rgba(111, 196, 216, 0.5); /* Adjusted glow for dark mode */
 }
 
 /* --- Blog Page Specific Styles --- */
@@ -1459,5 +1497,128 @@ body.header-scrolled .main-content-area { padding-top: calc(var(--header-shrink-
 .designed-by-link a:hover, .designed-by-link a:focus-visible { color: var(--link-primary); text-decoration: underline; }
 .designed-by-link a:focus { color: var(--link-primary); text-decoration: underline; }
 .footer-left:hover .designed-by-link { opacity: 1; }
+
+/* --- 10. Gallery Carousel --- */
+.carousel {
+    position: relative;
+    max-width: 700px; /* Adjust max width as needed */
+    margin: 0 auto;
+    padding: 0 calc(var(--base-spacing) * 3); /* Space for buttons */
+}
+.carousel-container {
+    overflow: hidden;
+    border-radius: 8px; /* Optional: match card style */
+    box-shadow: var(--shadow-image); /* Optional: add shadow */
+    position: relative;
+}
+.carousel-track {
+    list-style: none;
+    display: flex;
+    padding: 0;
+    margin: 0;
+    transition: transform var(--carousel-transition-speed) ease-in-out;
+}
+.carousel-slide {
+    flex: 0 0 100%;
+    min-width: 100%;
+    position: relative;
+}
+/* Ensure carousel images don't inherit other image styles like borders */
+.carousel-slide img.carousel-image {
+    width: 100%;
+    display: block;
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+    border: none;
+    box-shadow: none;
+}
+.carousel-slide .caption {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0,0,0,0.6);
+    color: var(--text-light);
+    padding: calc(var(--base-spacing) * 0.5);
+    margin: 0;
+    font-size: 1rem;
+    text-align: center;
+}
+[data-theme="dark"] .carousel-slide .caption {
+    background: rgba(255,255,255,0.15);
+    color: var(--text-primary);
+}
+.carousel-button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.5);
+    color: var(--text-light);
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: background-color var(--transition-speed) ease, transform var(--transition-speed) ease;
+    z-index: 10;
+}
+.carousel-button:hover, .carousel-button:focus { /* Combined for simplicity, :focus-visible handled below */
+    background-color: var(--accent-primary);
+    transform: translateY(-50%) scale(1.1);
+}
+.carousel-button--left { left: calc(var(--base-spacing) * 0.5); }
+.carousel-button--right { right: calc(var(--base-spacing) * 0.5); }
+.carousel-button.is-hidden { display: none; } /* Class added by JS */
+.carousel-nav { /* Optional: For indicator dots */
+    text-align: center;
+    margin-top: var(--base-spacing);
+}
+
+/* --- 11. Blog Page Features --- */
+.blog-controls {
+    margin-bottom: calc(var(--base-spacing) * 2);
+}
+#blog-search-input {
+    display: block;
+    width: 100%;
+    max-width: 500px; /* Limit width */
+    margin: 0 auto; /* Center it */
+    padding: calc(var(--base-spacing) * 0.7);
+    font-size: 1rem;
+    font-family: var(--font-body);
+    border: 1px solid var(--border-secondary);
+    border-radius: 5px;
+    background-color: var(--bg-card);
+    color: var(--text-primary);
+    transition: border-color var(--transition-speed) ease, box-shadow var(--transition-speed) ease, background-color var(--transition-speed) ease, color var(--transition-speed) ease;
+}
+/* Focus handled specifically in section 9 */
+[data-theme="dark"] #blog-search-input {
+    background-color: var(--bg-card);
+    color: var(--text-primary);
+    border-color: var(--border-secondary);
+}
+.no-results-message {
+    text-align: center;
+    margin: calc(var(--base-spacing) * 2) auto;
+    padding: var(--base-spacing);
+    border: 1px dashed var(--border-accent);
+    background-color: rgba(255, 250, 240, 0.5); /* Light background */
+    border-radius: 5px;
+    max-width: 500px;
+    color: var(--text-secondary);
+    font-style: italic;
+}
+[data-theme="dark"] .no-results-message {
+    border-color: var(--border-accent);
+    background-color: rgba(42, 42, 42, 0.5); /* Darker background */
+    color: var(--text-secondary);
+}
+/* Class added by JS to hide non-matching posts */
+.blog-post.is-hidden {
+    display: none;
+}
 
 /* --- End CSS --- */
