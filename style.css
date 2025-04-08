@@ -1382,3 +1382,99 @@ body.header-scrolled .main-content-area {
 }
 
 /* --- End Blog Page Styles --- */
+
+/* --- Merch Section Styles --- */
+
+#merch {
+    /* Uses .alt-bg by default, can change if needed */
+    /* Add padding if needed */
+    /* padding-bottom: calc(var(--base-spacing) * 3); */
+}
+
+.merch-grid {
+    display: grid;
+    /* Uses 3 columns like featured/gallery, adjust if needed */
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: calc(var(--base-spacing) * 2);
+    margin-bottom: calc(var(--base-spacing) * 2); /* Space before handwritten note */
+}
+
+.merch-item {
+    /* Inherits .card-item styles */
+    display: flex; /* Arrange content vertically */
+    flex-direction: column;
+    text-align: center; /* Center content within card */
+}
+
+.merch-item .card-image {
+    /* Inherits card-image styles */
+    margin-bottom: var(--base-spacing); /* Ensure space below image */
+}
+
+.merch-title {
+    font-size: 1.4rem; /* Adjust size */
+    color: var(--accent-marker); /* Use marker color */
+    margin-bottom: calc(var(--base-spacing) * 0.5);
+    font-family: var(--font-marker); /* Use marker font */
+}
+
+.merch-description {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    margin-bottom: calc(var(--base-spacing) * 1);
+    flex-grow: 1; /* Allow description to push price/button down */
+}
+
+.merch-price {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: var(--text-headings);
+    margin-bottom: calc(var(--base-spacing) * 1);
+    transition: color var(--transition-speed) ease;
+}
+
+.merch-button {
+    /* Inherits .cta-button styles */
+    /* Customize appearance */
+    padding: calc(var(--base-spacing) * 0.7) calc(var(--base-spacing) * 1.4);
+    font-size: 0.9rem;
+    margin-top: auto; /* Push button to bottom if card heights vary */
+    background-color: var(--accent-secondary); /* Use secondary color */
+    border: none;
+    color: var(--text-light);
+}
+
+.merch-button:hover,
+.merch-button:focus {
+     background-color: var(--link-primary); /* Use primary link color on hover */
+     color: var(--text-light);
+     transform: translateY(-2px) scale(1.01);
+     box-shadow: 3px 4px 8px var(--shadow-button);
+}
+
+/* Styles for a secondary button style if needed */
+.merch-button.secondary {
+    background-color: transparent;
+    color: var(--accent-secondary);
+    border: 2px solid var(--accent-secondary);
+    box-shadow: none;
+}
+.merch-button.secondary:hover,
+.merch-button.secondary:focus {
+    background-color: var(--accent-secondary);
+    color: var(--text-light);
+    transform: none;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+}
+
+/* Adjust handwritten note position if needed */
+#merch .handwritten-note {
+    text-align: center;
+    display: block; /* Make it block to center */
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 2rem; /* Space above note */
+    max-width: 80%; /* Ensure it doesn't stretch too wide */
+}
+
+/* --- End Merch Section Styles --- */
