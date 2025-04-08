@@ -743,6 +743,16 @@ section {
     }
 }
 
+/* Container for individual social feeds (Instagram, YouTube) */
+.social-feed-item {
+    /* Prevent children (like the Elfsight widget) from causing horizontal overflow */
+    overflow-x: hidden;
+    /* Include padding/border in the element's total width/height */
+    box-sizing: border-box;
+    /* Add other styling if needed, e.g., padding, background */
+    /* padding: var(--base-spacing); */ /* Example: Add if you want padding */
+}
+                                  
 .social-feed-item h3 {
     text-align: center;
     margin-bottom: var(--base-spacing);
