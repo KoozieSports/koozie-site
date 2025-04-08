@@ -1478,3 +1478,39 @@ body.header-scrolled .main-content-area {
 }
 
 /* --- End Merch Section Styles --- */
+
+/* --- Footer 'Designed By' Link Styles --- */
+
+.designed-by-link {
+    font-family: var(--font-handwritten); /* Match handwritten style */
+    font-size: 0.85rem; /* Slightly smaller */
+    color: var(--text-secondary); /* Use secondary text color */
+    margin-top: calc(var(--base-spacing) * 0.75); /* Space above */
+    margin-bottom: 0; /* Remove default paragraph bottom margin */
+    opacity: 0.85; /* Slightly faded for subtlety */
+    transition: color var(--transition-speed) ease, opacity var(--transition-speed) ease;
+}
+
+.designed-by-link i {
+    margin-right: 4px; /* Space between icon and text */
+    /* Icon color will inherit from the paragraph */
+}
+
+.designed-by-link a {
+    color: inherit; /* Inherit the paragraph color */
+    text-decoration: none; /* No underline by default */
+    transition: color var(--transition-speed) ease;
+}
+
+.designed-by-link a:hover,
+.designed-by-link a:focus {
+    color: var(--link-primary); /* Use primary link color on hover */
+    text-decoration: underline; /* Add underline on hover */
+}
+
+/* Optional: Slightly increase opacity on hover of the whole line */
+.footer-left:hover .designed-by-link {
+    opacity: 1;
+}
+
+/* --- End Footer 'Designed By' Styles --- */
