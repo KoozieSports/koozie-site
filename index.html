@@ -22,49 +22,51 @@
     <link rel="shortcut icon" href="/images/favicon.ico" />
     <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png" />
     <link rel="manifest" href="/images/site.webmanifest" />
-    <!-- NOTE: If using a specific Carousel library (like Swiper.js or Slick), link its CSS here -->
-    <!-- e.g., <link rel="stylesheet" href="path/to/swiper-bundle.min.css" /> -->
-    <!-- NOTE: If using Lightbox2, link its CSS here -->
-    <!-- e.g., <link rel="stylesheet" href="path/to/lightbox.min.css" /> -->
+    <!-- NOTE: Add external CSS library links here if needed (e.g., Lightbox) -->
 </head>
-<body id="page-top"> <!-- ID used for "Home" link -->
+<body id="page-top"> <!-- ID used for "Home" link and scrollspy -->
+
+    <!-- NEW: Scroll Progress Bar -->
+    <div id="scroll-progress-bar"></div>
 
     <header id="main-header">
         <div class="container header-container">
             <a href="#page-top" id="logo-link" title="Koozie Sports Home">
-                <!-- MODIFIED: Added class 'flipping-logo' for CSS control -->
-                <img src="images/logo.jpg" alt="Koozie Sports Logo" id="logo-img" class="flipping-logo">
+                <img src="images/logo.jpg" alt="Koozie Sports Logo" id="logo-img" class="flipping-logo" loading="eager"> <!-- Eager load logo -->
             </a>
 
-            <nav id="main-nav">
+            <nav id="main-nav" aria-label="Main Navigation">
                 <button id="hamburger-menu" aria-label="Toggle Navigation Menu" aria-expanded="false" aria-controls="nav-links">
                     <i class="fas fa-bars"></i>
                 </button>
-                <!-- === UPDATED Nav Links === -->
                 <ul id="nav-links">
                     <li><a href="#page-top" class="nav-item active" data-section="page-top">Home</a></li>
                     <li><a href="#about" class="nav-item" data-section="about">About</a></li>
                     <li><a href="#featured-league" class="nav-item" data-section="featured-league">Leagues</a></li>
                     <li><a href="blog.html" class="nav-item">Blog</a></li>
                     <li><a href="#gallery" class="nav-item" data-section="gallery">Gallery</a></li>
-                    <!-- Added Merch Link Here -->
                     <li><a href="#merch" class="nav-item" data-section="merch">Merch</a></li>
                     <li><a href="#social-feeds" class="nav-item" data-section="social-feeds">Social</a></li>
                     <li><a href="#contact" class="nav-item" data-section="contact">Contact</a></li>
                 </ul>
-                <!-- === END UPDATED Nav Links === -->
             </nav>
 
             <div class="header-toggles">
-                <!-- NEW: Dark Mode Toggle -->
-                <button id="dark-mode-toggle" title="Toggle Dark Mode">
-                    <i class="fas fa-moon"></i> <!-- Moon icon for dark mode -->
-                    <i class="fas fa-sun" style="display: none;"></i> <!-- Sun icon for light mode -->
+                <!-- Dark Mode Toggle -->
+                <button id="dark-mode-toggle" title="Toggle Dark Mode" aria-pressed="false"> <!-- JS will manage aria-pressed -->
+                    <i class="fas fa-moon"></i> <!-- Moon icon -->
+                    <i class="fas fa-sun" style="display: none;"></i> <!-- Sun icon -->
                     <span class="tooltip-text">Toggle Theme</span>
                 </button>
 
-                <!-- Existing Drunk Mode Toggle -->
-                <button id="drunk-mode-toggle" title="Activate Koozie Mode">
+                <!-- NEW: Live Scores Toggle -->
+                <button id="live-scores-toggle" title="Show Live Scores" aria-pressed="false" aria-controls="live-scores-content">
+                    <i class="fas fa-futbol"></i> <!-- Soccer ball icon, change if needed -->
+                    <span class="tooltip-text">Toggle Live Scores</span>
+                </button>
+
+                <!-- Koozie Mode Toggle -->
+                <button id="drunk-mode-toggle" title="Activate Koozie Mode" aria-pressed="false"> <!-- JS will manage aria-pressed -->
                     <i class="fas fa-beer-mug-empty"></i>
                     <span class="tooltip-text">Toggle Koozie Mode</span>
                 </button>
@@ -72,33 +74,35 @@
         </div>
     </header>
 
-    <!-- NEW: Scrolling Marquee Section -->
-    <div class="marquee-container">
+    <!-- Scrolling Marquee Section -->
+    <div class="marquee-container" aria-hidden="true"> <!-- Hide from screen readers as it's decorative -->
         <div class="marquee-content">
-            <span>Welcome to the brand new home of Koozie Sports! Grab a brew and stay awhile...                                  Warning: May contain questionable takes and Yanks bias                                 *** Follow us @koozie_sports on all platforms! *** </span>
+            <span>Welcome to the brand new home of Koozie Sports! Grab a brew and stay awhile... Warning: May contain questionable takes and Yanks bias *** Follow us @koozie_sports on all platforms! *** </span>
             <!-- Repeat content for seamless scroll -->
-            <span>Welcome to the brand new home of Koozie Sports! Grab a brew and stay awhile...                                  Warning: May contain questionable takes and Yanks bias                                 *** Follow us @koozie_sports on all platforms! *** </span>
+            <span>Welcome to the brand new home of Koozie Sports! Grab a brew and stay awhile... Warning: May contain questionable takes and Yanks bias *** Follow us @koozie_sports on all platforms! *** </span>
         </div>
     </div>
 
 
     <main>
         <!-- Hero Section -->
-        <section id="hero-section" class="notepad-section hero-bg" data-id="page-top">
-        <div class="hero-video-wrapper">
-            <!-- YouTube player iframe will be injected here by JS -->
-            <div id="youtube-player"></div>
-        </div>
+        <section id="hero-section" class="notepad-section hero-bg" data-id="page-top" role="region" aria-labelledby="hero-heading">
+            <div class="hero-video-wrapper">
+                <!-- YouTube player iframe will be injected here by JS -->
+                <div id="youtube-player"></div>
+            </div>
             <div class="hero-overlay"></div>
             <div class="container hero-content">
-                <h1 class="hero-title animate-on-scroll">Koozie Sports</h1>
+                <h1 id="hero-heading" class="hero-title animate-on-scroll">Koozie Sports</h1>
                 <p class="tagline animate-on-scroll delay-1">Just sports, maybe a couple beers.</p>
                 <a href="#featured" class="cta-button animate-on-scroll delay-2">See What's Brewin'</a>
             </div>
         </section>
 
         <!-- Quote of the Week Section -->
-        <section id="dynamic-quote-section" class="notepad-section text-center" data-id="dynamic-quote-section">
+        <section id="dynamic-quote-section" class="notepad-section text-center" data-id="dynamic-quote-section" role="region" aria-labelledby="quote-heading">
+            <!-- Added hidden heading for structure/accessibility -->
+            <h2 id="quote-heading" class="visually-hidden">Quote of the Week</h2>
              <div class="container">
                  <blockquote class="quote-text animate-on-scroll" id="dynamic-quote-text">
                      Loading quote...
@@ -108,27 +112,29 @@
             </div>
         </section>
 
-        <!-- NEW: Live Scores Section -->
-        <section id="live-scores" class="notepad-section alt-bg"> <!-- You can choose alt-bg or not -->
+        <!-- Live Scores Section - Now hidden by default via CSS -->
+        <section id="live-scores" class="notepad-section alt-bg" data-id="live-scores" role="region" aria-labelledby="live-scores-heading" aria-live="polite"> <!-- aria-live useful if content updates dynamically -->
             <div class="container">
-                <h2 class="section-title animate-on-scroll">Live Scores</h2>
-                 <p class="section-subtitle animate-on-scroll">Stay up-to-date!</p> <!-- Optional subtitle -->
+                <h2 id="live-scores-heading" class="section-title animate-on-scroll">Live Scores</h2>
+                 <p class="section-subtitle animate-on-scroll">Stay up-to-date!</p>
 
-                <!-- WIDGET CODE START -->
-<div data-widget-type="entityScores" data-entity-type="league" data-entity-id="438" data-lang="en" data-widget-id="e25a9351-9375-47e5-b3c9-df981bece258" data-limit-height-display="640"></div>
-<div id="powered-by">Powered by<a id="powered-by-link" href="https://www.365scores.com" target="_blank">365Scores.com</a></div>
-<script src="https://widgets.365scores.com/main.js"></script>
-                <!-- WIDGET CODE END -->
-
+                 <!-- Content Wrapper for Toggling -->
+                 <div id="live-scores-content" class="collapsible-content">
+                    <!-- WIDGET CODE START -->
+                    <div data-widget-type="entityScores" data-entity-type="league" data-entity-id="438" data-lang="en" data-widget-id="e25a9351-9375-47e5-b3c9-df981bece258" data-limit-height-display="640"></div>
+                    <div id="powered-by">Powered by<a id="powered-by-link" href="https://www.365scores.com" target="_blank" rel="noopener noreferrer">365Scores.com</a></div>
+                    <!-- Ensure this script is deferred or async if possible -->
+                    <script src="https://widgets.365scores.com/main.js" defer></script>
+                    <!-- WIDGET CODE END -->
+                </div>
             </div>
         </section>
         <!-- END: Live Scores Section -->
- 
 
         <!-- About Us Section -->
-        <section id="about" class="notepad-section" data-id="about">
+        <section id="about" class="notepad-section" data-id="about" role="region" aria-labelledby="about-heading">
             <div class="container">
-                <h2 class="section-title animate-on-scroll">Who Let Us Have a Website?</h2>
+                <h2 id="about-heading" class="section-title animate-on-scroll">Who Let Us Have a Website?</h2>
                 <div class="about-content layout-two-column">
                     <div class="text-content animate-on-scroll">
                         <p>Look, we're not professional analysts (obviously). We're the folks yelling at the TV, celebrating miracle catches, and debating questionable calls over cheap beer and lukewarm wings. Koozie Sports is basically that group chat that got way out of hand.</p>
@@ -136,7 +142,7 @@
                         <p><strong>Our Philosophy:</strong> Keep it fun, use a koozie, and don't spill your drink.</p>
                     </div>
                     <div class="image-content animate-on-scroll delay-1 tilt-element">
-                        <img src="images/team-photo-placeholder.jpg" alt="The Koozie Sports Crew looking moderately presentable" class="about-image framed-image interactive-image">
+                        <img src="images/team-photo-placeholder.jpg" alt="The Koozie Sports Crew looking moderately presentable" class="about-image framed-image interactive-image" loading="lazy">
                          <p class="caption handwritten-caption">The Brain(less) Trust</p>
                     </div>
                 </div>
@@ -144,25 +150,25 @@
         </section>
 
         <!-- Featured League/Sport Section -->
-        <section id="featured-league" class="notepad-section alt-bg" data-id="featured-league">
+        <section id="featured-league" class="notepad-section alt-bg" data-id="featured-league" role="region" aria-labelledby="featured-league-heading">
             <div class="container">
-                <h2 class="section-title animate-on-scroll">Currently Obsessed With: <span class="dynamic-league-name marker-text">Pickleball Pandemonium</span></h2>
+                <h2 id="featured-league-heading" class="section-title animate-on-scroll">Currently Obsessed With: <span class="dynamic-league-name marker-text">Pickleball Pandemonium</span></h2>
                  <p class="section-subtitle animate-on-scroll">Deep dives, power rankings that make no sense, and predictions fueled by optimism (and hops).</p>
                 <div class="league-grid">
                     <div class="league-card card-item animate-on-scroll tilt-element">
-                         <img src="images/league-1.jpg" alt="Pickleball Paddles" class="card-image interactive-image">
+                         <img src="images/league-1.jpg" alt="Pickleball Paddles" class="card-image interactive-image" loading="lazy">
                          <h3>Power Rankings: Week <span class="dynamic-week">7</span></h3>
                          <p>Who's up, who's down, who forgot their non-slip court shoes? Our totally scientific rankings.</p>
                          <a href="blog.html#post-league-1" class="read-more">Read the Rant »</a>
                     </div>
                     <div class="league-card card-item animate-on-scroll delay-1 wobble-on-hover">
-                        <img src="images/league-2.jpg" alt="Dramatic Game Shot" class="card-image interactive-image">
+                        <img src="images/league-2.jpg" alt="Dramatic Game Shot" class="card-image interactive-image" loading="lazy">
                         <h3>Must-Watch Game of the Week</h3>
                         <p>The matchup we're clearing our schedule (and coolers) for. The Dinks vs. The Volleys!</p>
                          <a href="blog.html#post-league-2" class="read-more">Game Preview »</a>
                     </div>
                     <div class="league-card card-item animate-on-scroll delay-2 tilt-element">
-                         <img src="images/league-3.jpg" alt="Crystal Ball Prediction" class="card-image interactive-image">
+                         <img src="images/league-3.jpg" alt="Crystal Ball Prediction" class="card-image interactive-image" loading="lazy">
                         <h3>Bold Predictions (Place Your Bets!)</h3>
                         <p>Prepare to be amazed (or mock us relentlessly). Our fearless forecast includes at least one broken paddle.</p>
                          <a href="blog.html#post-league-3" class="read-more">See the Future »</a>
@@ -172,24 +178,24 @@
         </section>
 
         <!-- Featured Blog Posts Section -->
-        <section id="featured" class="notepad-section" data-id="featured">
+        <section id="featured" class="notepad-section" data-id="featured" role="region" aria-labelledby="featured-heading">
             <div class="container">
-                <h2 class="section-title animate-on-scroll">Hot Off The Press (Or Grill)</h2>
+                <h2 id="featured-heading" class="section-title animate-on-scroll">Hot Off The Press (Or Grill)</h2>
                 <div class="featured-grid">
                     <article class="featured-item card-item animate-on-scroll tilt-element">
-                        <img src="images/featured-1-placeholder.jpg" alt="Game Action Highlight" class="interactive-image">
+                        <img src="images/featured-1-placeholder.jpg" alt="Game Action Highlight" class="interactive-image card-image" loading="lazy"> <!-- Added card-image class -->
                         <h3><a href="blog.html#post1">Game Recap: The Big Upset!</a></h3>
                         <p>You won't believe how last night's game ended. We break down the key plays (and questionable celebrations)...</p>
                         <span class="item-date handwritten-caption">October 26, 2023</span>
                     </article>
                     <article class="featured-item card-item animate-on-scroll delay-1 wobble-on-hover">
-                        <img src="images/featured-2-placeholder.jpg" alt="Player Close Up" class="interactive-image">
+                        <img src="images/featured-2-placeholder.jpg" alt="Player Close Up" class="interactive-image card-image" loading="lazy"> <!-- Added card-image class -->
                         <h3><a href="blog.html#post2">Player Spotlight: Underrated MVP?</a></h3>
                         <p>Forget the headlines. We make the case for the quiet contributor who deserves more love...</p>
                          <span class="item-date handwritten-caption">October 25, 2023</span>
                     </article>
                     <article class="featured-item card-item animate-on-scroll delay-2 tilt-element">
-                        <img src="images/featured-3-placeholder.jpg" alt="Beer and Betting Slips" class="interactive-image">
+                        <img src="images/featured-3-placeholder.jpg" alt="Beer and Betting Slips" class="interactive-image card-image" loading="lazy"> <!-- Added card-image class -->
                         <h3><a href="blog.html#post3">Weekend Beer & Bets Preview</a></h3>
                         <p>Our (highly unofficial) guide to the weekend slate and the perfect brews to pair with potential heartbreak...</p>
                          <span class="item-date handwritten-caption">October 24, 2023</span>
@@ -200,44 +206,44 @@
         </section>
 
          <!-- Gallery Section -->
-         <section id="gallery" class="notepad-section alt-bg" data-id="gallery">
+         <section id="gallery" class="notepad-section alt-bg" data-id="gallery" role="region" aria-labelledby="gallery-heading">
             <div class="container">
-                <h2 class="section-title animate-on-scroll">Wall of Fame (or Shame?)</h2>
+                <h2 id="gallery-heading" class="section-title animate-on-scroll">Wall of Fame (or Shame?)</h2>
                 <p class="section-subtitle animate-on-scroll">Snapshots from the sidelines, tailgates, and questionable victory dances.</p>
                 <div class="gallery-grid">
                     <div class="gallery-item card-item animate-on-scroll tilt-element">
                         <a href="images/gallery-1-large.jpg" data-lightbox="koozie-gallery" data-title="Pre-game Rituals: Fuelling up!">
-                            <img src="images/gallery-1.jpg" alt="Tailgate Scene" class="framed-image interactive-image">
+                            <img src="images/gallery-1.jpg" alt="Tailgate Scene" class="framed-image interactive-image" loading="lazy">
                         </a>
                         <p class="caption handwritten-caption">Pre-game Rituals</p>
                     </div>
                     <div class="gallery-item card-item animate-on-scroll delay-1 wobble-on-hover">
                          <a href="images/gallery-2-large.jpg" data-lightbox="koozie-gallery" data-title="The Big Play! (Or maybe just a lucky shot)">
-                             <img src="images/gallery-2.jpg" alt="Action Shot" class="framed-image interactive-image">
+                             <img src="images/gallery-2.jpg" alt="Action Shot" class="framed-image interactive-image" loading="lazy">
                          </a>
                          <p class="caption handwritten-caption">The Big Play!</p>
                     </div>
                      <div class="gallery-item card-item animate-on-scroll delay-2 tilt-element">
                          <a href="images/gallery-3-large.jpg" data-lightbox="koozie-gallery" data-title="Pure Agony/Ecstasy - It's hard to tell sometimes.">
-                             <img src="images/gallery-3.jpg" alt="Fan Reaction" class="framed-image interactive-image">
+                             <img src="images/gallery-3.jpg" alt="Fan Reaction" class="framed-image interactive-image" loading="lazy">
                          </a>
                          <p class="caption handwritten-caption">Pure Agony/Ecstasy</p>
                     </div>
                      <div class="gallery-item card-item animate-on-scroll delay-3 wobble-on-hover">
                         <a href="images/gallery-4-large.jpg" data-lightbox="koozie-gallery" data-title="Mascot Mayhem: He seemed friendly enough...">
-                            <img src="images/gallery-4.jpg" alt="Mascot Shenanigans" class="framed-image interactive-image">
+                            <img src="images/gallery-4.jpg" alt="Mascot Shenanigans" class="framed-image interactive-image" loading="lazy">
                          </a>
                         <p class="caption handwritten-caption">Mascot Mayhem</p>
                     </div>
                 </div>
-                <p class="handwritten-note animate-on-scroll delay-1">Click images to enlarge.</p>
+                <p class="handwritten-note animate-on-scroll delay-1">Click images to enlarge (requires Lightbox setup).</p>
             </div>
         </section>
 
         <!-- Social Feeds Section -->
-        <section id="social-feeds" class="notepad-section" data-id="social-feeds">
+        <section id="social-feeds" class="notepad-section" data-id="social-feeds" role="region" aria-labelledby="social-feeds-heading">
             <div class="container">
-                <h2 class="section-title animate-on-scroll">Straight From The Source</h2>
+                <h2 id="social-feeds-heading" class="section-title animate-on-scroll">Straight From The Source</h2>
                 <p class="section-subtitle animate-on-scroll">Catch the latest nonsense directly from our social channels.</p>
                 <div class="social-feeds-grid">
                     <!-- Instagram Feed -->
@@ -249,8 +255,14 @@
                     <!-- YouTube Feed -->
                     <div class="social-feed-item animate-on-scroll delay-2">
                         <h3 class="marker-text"><i class="fab fa-youtube fa-fw"></i> Latest YouTube Uploads</h3>
-                        <script src="https://static.elfsight.com/platform/platform.js" async></script>
-                        <div class="elfsight-app-00d9f4d0-3b35-4e2a-80b7-6733dafd1d1d" data-elfsight-app-lazy></div>
+                        <!-- Assuming you might replace this with the API fetch later -->
+                         <script src="https://static.elfsight.com/platform/platform.js" data-use-service-core defer></script>
+                         <div class="elfsight-app-00d9f4d0-3b35-4e2a-80b7-6733dafd1d1d" data-elfsight-app-lazy></div>
+                        <!-- Placeholder for API fetched videos (if Elfsight is removed) -->
+                        <!-- <div id="youtube-video-items" class="youtube-video-grid"></div> -->
+                        <!-- <p class="youtube-loading-text">Loading latest videos...</p> -->
+                        <!-- <p id="youtube-error-message" class="error-message" style="display: none;"></p> -->
+                        <!-- <p id="youtube-fallback-message" style="display: none;">Check out our <a href="YOUR_YOUTUBE_CHANNEL_LINK_HERE" target="_blank" rel="noopener noreferrer">YouTube channel</a> directly!</p> -->
                     </div>
                 </div>
             </div>
@@ -258,18 +270,17 @@
         <!-- === END Social Feeds Section === -->
 
         <!-- ========================== -->
-        <!-- NEW: Merch Section         -->
+        <!-- Merch Section              -->
         <!-- ========================== -->
-        <section id="merch" class="notepad-section alt-bg" data-id="merch"> <!-- Added data-id -->
+        <section id="merch" class="notepad-section alt-bg" data-id="merch" role="region" aria-labelledby="merch-heading">
             <div class="container">
-                <h2 class="section-title animate-on-scroll">Official Koozie Gear (Probably)</h2>
+                <h2 id="merch-heading" class="section-title animate-on-scroll">Official Koozie Gear (Probably)</h2>
                 <p class="section-subtitle animate-on-scroll">Look marginally cooler while yelling at the TV! Proceeds likely go towards more beer.</p>
 
                 <div class="merch-grid">
-
                     <!-- Sample Merch Item 1 -->
                     <div class="merch-item card-item animate-on-scroll tilt-element">
-                        <img src="images/merch-koozie-placeholder.jpg" alt="Koozie Sports Official Koozie" class="card-image interactive-image">
+                        <img src="images/merch-koozie-placeholder.jpg" alt="Koozie Sports Official Koozie" class="card-image interactive-image" loading="lazy">
                         <h3 class="merch-title marker-text">The Official Koozie</h3>
                         <p class="merch-description">Keeps your drink cold and your takes hot. Essential equipment.</p>
                         <p class="merch-price">$5.00 (Or trade for a good six-pack)</p>
@@ -278,7 +289,7 @@
 
                     <!-- Sample Merch Item 2 -->
                     <div class="merch-item card-item animate-on-scroll delay-1 wobble-on-hover">
-                        <img src="images/merch-shirt-placeholder.jpg" alt="Koozie Sports T-Shirt" class="card-image interactive-image">
+                        <img src="images/merch-shirt-placeholder.jpg" alt="Koozie Sports T-Shirt" class="card-image interactive-image" loading="lazy">
                         <h3 class="merch-title marker-text">Koozie Classic Tee</h3>
                         <p class="merch-description">Slightly less stained than your current favorite shirt. Maybe.</p>
                         <p class="merch-price">$20.00</p>
@@ -287,15 +298,12 @@
 
                     <!-- Sample Merch Item 3 -->
                     <div class="merch-item card-item animate-on-scroll delay-2 tilt-element">
-                        <img src="images/merch-hat-placeholder.jpg" alt="Koozie Sports Hat" class="card-image interactive-image">
+                        <img src="images/merch-hat-placeholder.jpg" alt="Koozie Sports Hat" class="card-image interactive-image" loading="lazy">
                         <h3 class="merch-title marker-text">Questionable Calls Cap</h3>
                         <p class="merch-description">Perfect for shielding your eyes or hiding your shame after a bad bet.</p>
                         <p class="merch-price">$15.00</p>
                         <a href="#" class="cta-button merch-button" target="_blank" rel="noopener noreferrer">Cap It Off (Link TBD)</a>
                     </div>
-
-                    <!-- Add more merch items as needed -->
-
                 </div> <!-- /.merch-grid -->
                 <p class="handwritten-note animate-on-scroll delay-3" style="text-align: center; display: block; margin-top: 2rem;">Merch store coming soon... maybe after we finish this beer.</p>
             </div>
@@ -305,9 +313,9 @@
         <!-- ========================== -->
 
         <!-- Contact Section -->
-         <section id="contact" class="notepad-section alt-bg" data-id="contact">
+         <section id="contact" class="notepad-section alt-bg" data-id="contact" role="region" aria-labelledby="contact-heading">
              <div class="container">
-                 <h2 class="section-title animate-on-scroll">Talk to Us (We Might Listen)</h2>
+                 <h2 id="contact-heading" class="section-title animate-on-scroll">Talk to Us (We Might Listen)</h2>
                  <p class="animate-on-scroll">Got a scorching hot take? A correction? Want to send us free beer? Found a typo? Here's how:</p>
                  <div class="contact-info animate-on-scroll delay-1">
                      <p><i class="fas fa-envelope fa-fw"></i> Email: <a href="mailto:nick@kooziesports.com" class="contact-link">nick@kooziesports.com</a></p>
@@ -337,7 +345,7 @@
 
     </main>
 
-    <footer id="main-footer">
+    <footer id="main-footer" role="contentinfo">
         <div class="container footer-content">
             <div class="footer-left">
                 <p>© <span id="current-year"></span> Koozie Sports. All Rights Reserved... probably.</p>
@@ -347,13 +355,13 @@
                 </p>
             </div>
             <div class="footer-right">
-                <div class="social-links">
+                <div class="social-links" aria-label="Social Media Links">
                     <a href="https://x.com/koozie_sports" target="_blank" rel="noopener noreferrer" aria-label="X/Twitter" title="X/Twitter"><i class="fab fa-x-twitter"></i></a>
                     <a href="https://www.instagram.com/koozie_sports/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" title="Instagram"><i class="fab fa-instagram"></i></a>
                     <a href="https://www.tiktok.com/@koozie_sports" target="_blank" rel="noopener noreferrer" aria-label="TikTok" title="TikTok"><i class="fa-brands fa-tiktok"></i></a>
                     <a href="https://www.youtube.com/@koozie_sports" target="_blank" rel="noopener noreferrer" aria-label="YouTube" title="YouTube"><i class="fab fa-youtube"></i></a>
                 </div>
-                 <a href="#page-top" class="back-to-top" title="Back to Top"><i class="fas fa-angles-up"></i></a>
+                 <a href="#page-top" class="back-to-top" title="Back to Top" aria-label="Back to Top"><i class="fas fa-angles-up"></i></a>
             </div>
         </div>
     </footer>
@@ -362,10 +370,9 @@
     <div id="bubble-overlay" aria-hidden="true"></div>
     <audio id="drunk-mode-sound" src="audio/beer.mp3" preload="auto"></audio>
 
-    <!-- NOTE: Add JS links for external libraries if needed -->
-    <!-- e.g., <script src="path/to/lightbox-plus-jquery.min.js"></script> -->
+    <!-- Add JS links for external libraries if needed (e.g., Lightbox) -->
 
     <!-- Site Script -->
-    <script src="script.js"></script>
+    <script src="script.js" defer></script> <!-- Added defer -->
 </body>
 </html>
