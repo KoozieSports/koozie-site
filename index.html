@@ -1,9 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light"> <!-- Added data-theme for dark mode -->
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Koozie Sports - Just sports, maybe a couple beers. Your source for irreverent sports news, analysis, and fun.">
+    <!-- NEW: Theme Color Meta Tag (adapts browser UI) -->
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#fdfaef">
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#1a1a1a">
     <title>Koozie Sports - Just sports, maybe a couple beers</title>
     <!-- CSS -->
     <link rel="stylesheet" href="style.css">
@@ -21,14 +24,16 @@
     <link rel="manifest" href="/images/site.webmanifest" />
     <!-- NOTE: If using a specific Carousel library (like Swiper.js or Slick), link its CSS here -->
     <!-- e.g., <link rel="stylesheet" href="path/to/swiper-bundle.min.css" /> -->
+    <!-- NOTE: If using Lightbox2, link its CSS here -->
+    <!-- e.g., <link rel="stylesheet" href="path/to/lightbox.min.css" /> -->
 </head>
-<body id="page-top">
+<body id="page-top"> <!-- ID used for "Home" link -->
 
     <header id="main-header">
         <div class="container header-container">
             <a href="#page-top" id="logo-link" title="Koozie Sports Home">
-                <!-- Added class 'spinning-logo' for CSS control -->
-                <img src="images/logo.jpg" alt="Koozie Sports Logo" id="logo-img" class="spinning-logo">
+                <!-- MODIFIED: Added class 'flipping-logo' for CSS control -->
+                <img src="images/logo.jpg" alt="Koozie Sports Logo" id="logo-img" class="flipping-logo">
             </a>
 
             <nav id="main-nav">
@@ -36,27 +41,50 @@
                     <i class="fas fa-bars"></i>
                 </button>
                 <ul id="nav-links">
-                    <li><a href="#page-top" class="nav-item active">Home</a></li>
-                    <li><a href="#about" class="nav-item">About</a></li>
-                    <li><a href="#featured-league" class="nav-item">Leagues</a></li>
+                    <!-- MODIFIED: Added data-section attribute for scrollspy -->
+                    <li><a href="#page-top" class="nav-item active" data-section="page-top">Home</a></li>
+                    <li><a href="#about" class="nav-item" data-section="about">About</a></li>
+                    <li><a href="#featured-league" class="nav-item" data-section="featured-league">Leagues</a></li>
                     <li><a href="blog.html" class="nav-item">Blog</a></li> <!-- Link to future blog page -->
-                    <li><a href="#gallery" class="nav-item">Gallery</a></li>
-                    <li><a href="#social-feeds" class="nav-item">Social</a></li>
-                    <li><a href="#contact" class="nav-item">Contact</a></li>
+                    <li><a href="#gallery" class="nav-item" data-section="gallery">Gallery</a></li>
+                    <li><a href="#social-feeds" class="nav-item" data-section="social-feeds">Social</a></li>
+                    <li><a href="#contact" class="nav-item" data-section="contact">Contact</a></li>
                 </ul>
             </nav>
 
-            <!-- Drunk Mode Toggle -->
-            <button id="drunk-mode-toggle" title="Activate 'Fun' Mode">
-                <i class="fas fa-beer-mug-empty"></i>
-                <span class="tooltip-text">Toggle Fun Mode</span>
-            </button>
+            <div class="header-toggles">
+                <!-- NEW: Dark Mode Toggle -->
+                <button id="dark-mode-toggle" title="Toggle Dark Mode">
+                    <i class="fas fa-moon"></i> <!-- Moon icon for dark mode -->
+                    <i class="fas fa-sun" style="display: none;"></i> <!-- Sun icon for light mode -->
+                    <span class="tooltip-text">Toggle Theme</span>
+                </button>
+
+                <!-- Existing Drunk Mode Toggle -->
+                <button id="drunk-mode-toggle" title="Activate Koozie Mode">
+                    <i class="fas fa-beer-mug-empty"></i>
+                    <span class="tooltip-text">Toggle Koozie Mode</span>
+                </button>
+            </div>
         </div>
     </header>
 
+    <!-- NEW: Scrolling Marquee Section -->
+    <div class="marquee-container">
+        <div class="marquee-content">
+            <span>Welcome to the brand new home of Koozie Sports! Grab a brew and stay awhile... *** Warning: May contain questionable takes and Yanks bias *** Follow us @koozie_sports on all platforms! *** </span>
+            <!-- Repeat content for seamless scroll -->
+            <span>Welcome to the brand new home of Koozie Sports! Grab a brew and stay awhile... *** Warning: May contain questionable takes and Yanks bias *** Follow us @koozie_sports on all platforms! *** </span>
+        </div>
+    </div>
+
+
     <main>
         <!-- Hero Section -->
-        <section id="hero" class="notepad-section hero-bg">
+        <!-- MODIFIED: ID change from 'hero' to 'hero-section' to avoid conflict with potential #hero link usage -->
+        <!-- Added data-id for scrollspy -->
+        <section id="hero-section" class="notepad-section hero-bg" data-id="page-top">
+            <!-- MODIFIED: Overlay enhanced in CSS -->
             <div class="hero-overlay"></div>
             <div class="container hero-content">
                 <h1 class="hero-title animate-on-scroll">Koozie Sports</h1>
@@ -66,17 +94,22 @@
         </section>
 
         <!-- Quote of the Week Section -->
-        <section id="quote-of-week" class="notepad-section text-center">
+        <!-- MODIFIED: ID for targeting, data-id for scrollspy, content made dynamic -->
+        <section id="dynamic-quote-section" class="notepad-section text-center" data-id="dynamic-quote-section">
              <div class="container">
-                 <blockquote class="quote-text animate-on-scroll">
-                     "You miss 100% of the shots you don't take. <span class="handwritten-emphasis">- Wayne Gretzky</span>"
-                     <p class="quote-attribution handwritten-caption">- Michael Scott... probably</p>
+                 <blockquote class="quote-text animate-on-scroll" id="dynamic-quote-text">
+                     <!-- Content will be injected by JavaScript -->
+                     Loading quote...
                  </blockquote>
+                 <p class="quote-attribution handwritten-caption" id="dynamic-quote-attribution">
+                     <!-- Attribution will be injected by JavaScript -->
+                 </p>
             </div>
         </section>
 
         <!-- About Us Section -->
-        <section id="about" class="notepad-section">
+        <!-- MODIFIED: Added data-id for scrollspy -->
+        <section id="about" class="notepad-section" data-id="about">
             <div class="container">
                 <h2 class="section-title animate-on-scroll">Who Let Us Have a Website?</h2>
                 <div class="about-content layout-two-column">
@@ -94,7 +127,8 @@
         </section>
 
         <!-- Featured League/Sport Section -->
-        <section id="featured-league" class="notepad-section alt-bg">
+        <!-- MODIFIED: Added data-id for scrollspy -->
+        <section id="featured-league" class="notepad-section alt-bg" data-id="featured-league">
             <div class="container">
                 <h2 class="section-title animate-on-scroll">Currently Obsessed With: <span class="dynamic-league-name marker-text">Pickleball Pandemonium</span></h2>
                  <p class="section-subtitle animate-on-scroll">Deep dives, power rankings that make no sense, and predictions fueled by optimism (and hops).</p>
@@ -122,7 +156,8 @@
         </section>
 
         <!-- Featured Blog Posts Section -->
-        <section id="featured" class="notepad-section">
+        <!-- MODIFIED: Added data-id for scrollspy (links to blog page, so less critical, but added for consistency if needed later) -->
+        <section id="featured" class="notepad-section" data-id="featured">
             <div class="container">
                 <h2 class="section-title animate-on-scroll">Hot Off The Press (Or Grill)</h2>
                 <div class="featured-grid">
@@ -150,11 +185,13 @@
         </section>
 
          <!-- Gallery Section -->
-         <section id="gallery" class="notepad-section alt-bg">
+         <!-- MODIFIED: Added data-id for scrollspy -->
+         <section id="gallery" class="notepad-section alt-bg" data-id="gallery">
             <div class="container">
                 <h2 class="section-title animate-on-scroll">Wall of Fame (or Shame?)</h2>
                 <p class="section-subtitle animate-on-scroll">Snapshots from the sidelines, tailgates, and questionable victory dances.</p>
                 <div class="gallery-grid">
+                    <!-- Ensure you have Lightbox JS/CSS linked if you use data-lightbox -->
                     <div class="gallery-item card-item animate-on-scroll tilt-element">
                         <a href="images/gallery-1-large.jpg" data-lightbox="koozie-gallery" data-title="Pre-game Rituals: Fuelling up!">
                             <img src="images/gallery-1.jpg" alt="Tailgate Scene" class="framed-image interactive-image">
@@ -180,45 +217,47 @@
                         <p class="caption handwritten-caption">Mascot Mayhem</p>
                     </div>
                 </div>
-                <p class="handwritten-note animate-on-scroll delay-1">Click images to enlarge (if we figure out how)</p>
+                <!-- Removed the 'if we figure out how' note assuming lightbox is intended -->
+                <p class="handwritten-note animate-on-scroll delay-1">Click images to enlarge.</p>
             </div>
         </section>
 
-        <!-- NEW: Social Feeds Section -->
-        <section id="social-feeds" class="notepad-section">
+        <!-- Social Feeds Section -->
+        <!-- MODIFIED: Added data-id for scrollspy -->
+        <section id="social-feeds" class="notepad-section" data-id="social-feeds">
             <div class="container">
                 <h2 class="section-title animate-on-scroll">Straight From The Source</h2>
                 <p class="section-subtitle animate-on-scroll">Catch the latest nonsense directly from our social channels.</p>
 
                 <div class="social-feeds-grid">
+                    <!-- Instagram Feed -->
                     <div class="social-feed-item animate-on-scroll delay-1">
-                    <h3 class="marker-text"><i class="fab fa-instagram fa-fw"></i> Latest Instagram Posts</h3>
-                    <!-- Elfsight Instagram Feed | Koozie Sports -->
-                    <script src="https://static.elfsight.com/platform/platform.js" async></script>
-                    <div class="elfsight-app-2201490b-8ef7-46de-bc32-41b3df95e8c9" data-elfsight-app-lazy></div>
-                        </div>
+                        <h3 class="marker-text"><i class="fab fa-instagram fa-fw"></i> Latest Instagram Posts</h3>
+                        <!-- Elfsight Instagram Feed | Koozie Sports -->
+                        <!-- Consider lazy loading the script if performance is an issue -->
+                        <script src="https://static.elfsight.com/platform/platform.js" data-use-service-core defer></script>
+                        <div class="elfsight-app-2201490b-8ef7-46de-bc32-41b3df95e8c9" data-elfsight-app-lazy></div>
                     </div>
 
                     <!-- YouTube Feed -->
                     <div class="social-feed-item animate-on-scroll delay-2">
                         <h3 class="marker-text"><i class="fab fa-youtube fa-fw"></i> Latest YouTube Videos</h3>
                         <div class="youtube-carousel-placeholder card-item">
-                            <!-- This div will be populated by script.js using the YouTube Data API -->
-                            <p>Loading YouTube videos...</p>
+                            <p class="youtube-loading-text">Loading YouTube videos...</p>
                              <div id="youtube-video-items" class="youtube-video-grid">
                                 <!-- Video items will be injected here by JS -->
                              </div>
                              <p id="youtube-error-message" class="error-message" style="display: none;"></p>
-                             <p class="handwritten-caption" id="youtube-fallback-message">(If nothing shows up, our API key might be on a beer run. <a href="https://www.youtube.com/@koozie_sports" target="_blank">Visit YouTube</a>)</p>
+                             <p class="handwritten-caption" id="youtube-fallback-message" style="display: none;">(If nothing shows up, our API key might be on a beer run. <a href="https://www.youtube.com/@koozie_sports" target="_blank">Visit YouTube</a>)</p>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
 
-
         <!-- Contact Section -->
-        <section id="contact" class="notepad-section alt-bg"> <!-- Changed background for variety -->
+        <!-- MODIFIED: Added data-id for scrollspy -->
+         <section id="contact" class="notepad-section alt-bg" data-id="contact">
              <div class="container">
                  <h2 class="section-title animate-on-scroll">Talk to Us (We Might Listen)</h2>
                  <p class="animate-on-scroll">Got a scorching hot take? A correction? Want to send us free beer? Found a typo? Here's how:</p>
@@ -227,13 +266,13 @@
                      <p><i class="fab fa-x-twitter fa-fw"></i> X/Twitter: <a href="https://x.com/koozie_sports" target="_blank" rel="noopener noreferrer" class="contact-link">@koozie_sports</a></p>
                      <p><i class="fab fa-instagram fa-fw"></i> Instagram: <a href="https://www.instagram.com/koozie_sports/" target="_blank" rel="noopener noreferrer" class="contact-link">@koozie_sports</a></p>
                      <p><i class="fa-brands fa-tiktok fa-fw"></i> TikTok: <a href="https://www.tiktok.com/@koozie_sports" target="_blank" rel="noopener noreferrer" class="contact-link">@koozie_sports</a> (Why not?)</p>
-                     <p><i class="fab fa-youtube fa-fw"></i> YouTube: <a href="https://www.youtube.com/@koozie_sports" target="_blank" rel="noopener noreferrer" class="contact-link">@koozie_sports</a></p> <!-- Added YouTube Link -->
+                     <p><i class="fab fa-youtube fa-fw"></i> YouTube: <a href="https://www.youtube.com/@koozie_sports" target="_blank" rel="noopener noreferrer" class="contact-link">@koozie_sports</a></p>
                      <p class="handwritten-note marker-text animate-on-scroll delay-2">Response times may vary depending on game schedules, beverage levels, and if Mercury is in retrograde.</p>
                  </div>
-                 <!-- Simple Form Placeholder -->
+                 <!-- Simple Form Placeholder - Add backend processing or mailto link for actual use -->
                  <div class="contact-form-placeholder animate-on-scroll delay-3">
                      <h3 class="marker-text">Or Send a Quick Heckle:</h3>
-                     <form action="#" method="post">
+                     <form action="#" method="post" id="heckle-form"> <!-- Added ID for potential JS interaction -->
                         <div class="form-group">
                             <label for="heckle-name" class="visually-hidden">Your Name</label>
                             <input type="text" id="heckle-name" name="name" placeholder="Your Name (Optional, Coward)">
@@ -243,6 +282,7 @@
                             <textarea id="heckle-message" name="message" rows="3" placeholder="Your brilliant take / scathing critique here..." required></textarea>
                         </div>
                          <button type="submit" class="cta-button secondary">Send It!</button>
+                         <p id="form-status-message" style="margin-top: 10px; text-align: center;"></p> <!-- For feedback -->
                      </form>
                  </div>
              </div>
@@ -261,9 +301,9 @@
                     <a href="https://x.com/koozie_sports" target="_blank" rel="noopener noreferrer" aria-label="X/Twitter" title="X/Twitter"><i class="fab fa-x-twitter"></i></a>
                     <a href="https://www.instagram.com/koozie_sports/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" title="Instagram"><i class="fab fa-instagram"></i></a>
                     <a href="https://www.tiktok.com/@koozie_sports" target="_blank" rel="noopener noreferrer" aria-label="TikTok" title="TikTok"><i class="fa-brands fa-tiktok"></i></a>
-                    <a href="https://www.youtube.com/@koozie_sports" target="_blank" rel="noopener noreferrer" aria-label="YouTube" title="YouTube"><i class="fab fa-youtube"></i></a> <!-- Added YouTube Icon -->
-                    <!-- <a href="#" aria-label="Facebook" title="Facebook (If you must)"><i class="fab fa-facebook-f"></i></a> --> <!-- Removed FB for now -->
+                    <a href="https://www.youtube.com/@koozie_sports" target="_blank" rel="noopener noreferrer" aria-label="YouTube" title="YouTube"><i class="fab fa-youtube"></i></a>
                 </div>
+                 <!-- MODIFIED: Using smooth scroll JS, ensure href is correct -->
                  <a href="#page-top" class="back-to-top" title="Back to Top"><i class="fas fa-angles-up"></i></a>
             </div>
         </div>
@@ -273,9 +313,7 @@
     <div id="bubble-overlay" aria-hidden="true"></div>
     <audio id="drunk-mode-sound" src="audio/beer.mp3" preload="auto"></audio>
 
-    <!-- NOTE: If using a specific Carousel library (like Swiper.js or Slick), link its JS here -->
-    <!-- e.g., <script src="path/to/swiper-bundle.min.js"></script> -->
-    <!-- NOTE: If using Lightbox2, link its JS here -->
+    <!-- NOTE: Add JS links for external libraries if needed -->
     <!-- e.g., <script src="path/to/lightbox-plus-jquery.min.js"></script> -->
 
     <!-- Site Script -->
