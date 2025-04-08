@@ -476,33 +476,90 @@ section {
 /* --- 3. Main Content Sections --- */
 
 /* Hero Section */
-#hero-section { /* Updated ID */
-    background: url('images/hero-bg.jpg') no-repeat center center/cover;
+#hero-section {
+    /* REMOVE any background-image: url(...) */
+    background: var(--bg-primary); /* Simple fallback color */
+    position: relative; /* Needed for absolute positioning of children */
+    overflow: hidden; /* Contain video/overlay */
+    /* Keep existing padding, min-height, display:flex, etc. */
     color: var(--text-light);
     text-align: center;
     padding: calc(var(--base-spacing) * 5) 0;
-    position: relative;
     display: flex;
     align-items: center;
     min-height: 60vh;
-    overflow: hidden;
 }
+
+/* Style the video container */
+.hero-video-wrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0; /* Lowest layer */
+    overflow: hidden;
+    pointer-events: none; /* Prevent clicking the video */
+    background-color: #000; /* Fallback while loading */
+}
+
+/* Style the YouTube player iframe */
+#youtube-player,
+.hero-video-wrapper iframe {
+    width: 100%;
+    height: 100%;
+    /* Scale video slightly to ensure no black bars appear */
+    transform: scale(1.1);
+    /* You *could* blur the video itself, but blurring the overlay is better */
+    /* filter: blur(2px); */
+}
+
+/* Style the overlay with blur and animated gradient */
 .hero-overlay {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    /* NEW: Gradient Overlay */
-    background:
-        linear-gradient(135deg, var(--bg-overlay-gradient-start), var(--bg-overlay-gradient-end)), /* Diagonal Gradient */
-        var(--bg-overlay); /* Fallback solid color */
-    z-index: 1;
-    transition: background var(--transition-speed) ease; /* Transition for dark mode */
+    z-index: 1; /* Middle layer (above video) */
+
+    /* Frosted Glass Effect (requires semi-transparent background) */
+    background-color: rgba(26, 42, 74, 0.25); /* Adjust transparency (0.0 to 1.0) */
+    backdrop-filter: blur(8px); /* Adjust blur amount */
+    -webkit-backdrop-filter: blur(8px);
+
+    /* Animated Gradient Layer */
+    background-image: linear-gradient(
+        135deg,
+        rgba(230, 57, 70, 0.1), /* Adjust transparency */
+        rgba(69, 123, 157, 0.15) /* Adjust transparency */
+    );
+    background-size: 250% 250%; /* Gradient size for movement */
+    animation: moveGradient 25s linear infinite alternate; /* Animation binding */
+
+    transition: background-color var(--transition-speed) ease, backdrop-filter var(--transition-speed) ease;
 }
+
+/* Gradient animation keyframes */
+@keyframes moveGradient {
+    0% { background-position: 0% 0%; }
+    100% { background-position: 100% 100%; }
+}
+
+/* Dark mode adjustments for the overlay */
+[data-theme="dark"] .hero-overlay {
+     background-color: rgba(10, 10, 20, 0.35); /* Darker semi-transparent bg */
+     background-image: linear-gradient(
+        135deg,
+        rgba(100, 30, 40, 0.15),
+        rgba(50, 80, 110, 0.2)
+    );
+}
+
+/* Ensure content is on top */
 .hero-content {
-    position: relative;
-    z-index: 2;
+    position: relative; /* Can be relative if parent (#hero-section) is relative */
+    z-index: 2; /* Highest layer */
 }
 
 #hero-section h1 {
