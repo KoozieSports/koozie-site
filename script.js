@@ -20,10 +20,12 @@ document.addEventListener('DOMContentLoaded', () => {
         { quote: "Is this heaven? No, it's Iowa... but the tailgate scene is divine.", attribution: "- Field of Dreams (Revised)" },
         { quote: "Rule #76: No excuses. Play like a champion... or at least look like you know what you're doing.", attribution: "- Koozie Wedding Crashers" },
         { quote: "My therapist told me to write letters to the people I hate and then burn them. Did that, but now I don't know what to do with the letters.", attribution: "- Relatable Sports Fan" },
-        { quote: "Tip of the Day: Never trust a ref wearing sunglasses indoors.", attribution: "- Koozie Sports Betting 'Advice'" }
-        { quote: "99% of gamblers quit before they win big.", attribution: "- Duck" }
+        { quote: "Tip of the Day: Never trust a ref wearing sunglasses indoors.", attribution: "- Koozie Sports Betting 'Advice'" },
+        { quote: `"Did we just become best friends?!"`, attribution: "- Brennan Huff, Step Brothers" },
+        { quote: `"There's no crying in baseball!"`, attribution: "- Jimmy Dugan, A League of Their Own" },
+        { quote: `"Just tap it in. Just tap it in. Give it a little tappy. Tap Tap Taparoo."`, attribution: "- Happy Gilmore" },
+        { quote: `"99% of gamblers quit right before they're about to win big."`, attribution: "- Ancient Proverb (Probably)" },
     ];
-
 
     // --- Cache DOM Elements ---
     const htmlElement = document.documentElement;
