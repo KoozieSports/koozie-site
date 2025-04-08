@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light"> <!-- Ensure data-theme matches index.html default -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Modify description for the blog page -->
+    <meta name="description" content="The Koozie Sports Blog - Ramblings, rants, and questionable analysis on the world of sports.">
+    <!-- Update title -->
+    <title>Blog - Koozie Sports</title>
+    <!-- >>> Links (Copy ALL from your index.html <head>) <<< -->
+    <!-- CSS -->
+    <link rel="stylesheet" href="style.css">
+    <!-- Preconnect Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Architects+Daughter&family=Roboto:wght@400;700&family=Permanent+Marker&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/images/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/images/favicon.svg" />
+    <link rel="shortcut icon" href="/images/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png" />
+    <link rel="manifest" href="/images/site.webmanifest" />
+    <!-- Theme Color Meta Tags -->
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#fdfaef">
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#1a1a1a">
+    <!-- End Links -->
+</head>
+<body id="page-top"> <!-- Assign ID if needed for JS, maybe blog-page? -->
+
+    <!-- >>> HEADER (Copy EXACTLY from your index.html) <<< -->
+    <header id="main-header">
+        <div class="container header-container">
+            <a href="index.html#page-top" id="logo-link" title="Koozie Sports Home"> <!-- Link to index.html now -->
+                <img src="images/logo.jpg" alt="Koozie Sports Logo" id="logo-img" class="flipping-logo">
+            </a>
+            <nav id="main-nav">
+                <button id="hamburger-menu" aria-label="Toggle Navigation Menu" aria-expanded="false" aria-controls="nav-links">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <ul id="nav-links">
+                    <!-- Update links to point to index.html sections -->
+                    <li><a href="index.html#page-top" class="nav-item" data-section="page-top">Home</a></li>
+                    <li><a href="index.html#about" class="nav-item" data-section="about">About</a></li>
+                    <li><a href="index.html#featured-league" class="nav-item" data-section="featured-league">Leagues</a></li>
+                    <!-- Highlight Blog link as active on this page -->
+                    <li><a href="blog.html" class="nav-item active">Blog</a></li>
+                    <li><a href="index.html#gallery" class="nav-item" data-section="gallery">Gallery</a></li>
+                    <li><a href="index.html#social-feeds" class="nav-item" data-section="social-feeds">Social</a></li>
+                    <li><a href="index.html#contact" class="nav-item" data-section="contact">Contact</a></li>
+                </ul>
+            </nav>
+            <div class="header-toggles">
+                <button id="dark-mode-toggle" title="Toggle Dark Mode">
+                    <i class="fas fa-moon"></i>
+                    <i class="fas fa-sun" style="display: none;"></i>
+                    <span class="tooltip-text">Toggle Theme</span>
+                </button>
+                <button id="drunk-mode-toggle" title="Activate Koozie Mode">
+                    <i class="fas fa-beer-mug-empty"></i>
+                    <span class="tooltip-text">Toggle Koozie Mode</span>
+                </button>
+            </div>
+        </div>
+    </header>
+    <!-- >>> END HEADER <<< -->
+
+    <!-- Add padding top to main content area to account for fixed header + marquee -->
+    <div class="main-content-area">
+        <main id="blog-main">
+            <section id="blog-posts" class="notepad-section">
+                <div class="container">
+                    <h1 class="blog-page-title marker-text">Koozie Sports Blog</h1>
+                    <p class="section-subtitle">Grab a beverage, pull up a chair. Here's the latest of our yapping.</p>
+
+                    <div class="blog-post-list">
+
+                        <!-- Sample Blog Post 1 -->
+                        <article class="blog-post card-item animate-on-scroll">
+                             <img src="images/featured-1-placeholder.jpg" alt="Blog Post Image 1" class="card-image"> <!-- Optional Image -->
+                            <div class="post-content">
+                                <h2 class="post-title"><a href="#post1">Why Your Favorite Team Probably Won't Win (But Put's Will)</a></h2>
+                                <p class="post-excerpt">A totally unbiased breakdown of the current season, fueled by optimism and cheap lager. Prepare for hot takes that might spontaneously combust...</p>
+                                <div class="post-meta">
+                                    <span class="post-date handwritten-caption">July 15, 2024</span>
+                                    <!-- <span class="post-author">by Nick</span> -->
+                                </div>
+                                <a href="#post1" class="read-more-link">Keep Reading »</a>
+                            </div>
+                        </article>
+
+                        <!-- Sample Blog Post 2 -->
+                        <article class="blog-post card-item animate-on-scroll delay-1">
+                             <!-- No image example -->
+                             <div class="post-content">
+                                <h2 class="post-title"><a href="#post2">The Definitive Power Rankings of Stadium Beers</a></h2>
+                                <p class="post-excerpt">We risked our livers and wallets to scientifically rank the best (and worst) brews available at major league venues. Spoiler: Price doesn't equal quality...</p>
+                                <div class="post-meta">
+                                    <span class="post-date handwritten-caption">July 10, 2024</span>
+                                </div>
+                                <a href="#post2" class="read-more-link">See the Rankings »</a>
+                             </div>
+                        </article>
+
+                        <!-- Sample Blog Post 3 -->
+                         <article class="blog-post card-item animate-on-scroll delay-2">
+                            <img src="images/featured-3-placeholder.jpg" alt="Blog Post Image 3" class="card-image">
+                             <div class="post-content">
+                                <h2 class="post-title"><a href="#post3">Is Pickleball Taking Over the World? (And Should We Care?)</a></h2>
+                                <p class="post-excerpt">It's noisy, it's trendy, and it's everywhere. We dive into the pandemonium and ask the important questions, like 'Can you drink while playing?'...</p>
+                                <div class="post-meta">
+                                     <span class="post-date handwritten-caption">July 5, 2024</span>
+                                 </div>
+                                <a href="#post3" class="read-more-link">Read the Rant »</a>
+                             </div>
+                        </article>
+
+                        <!-- Add more articles as needed -->
+
+                    </div> <!-- /.blog-post-list -->
+
+                    <!-- Basic Pagination Placeholder -->
+                    <nav class="pagination animate-on-scroll delay-3" aria-label="Blog Pagination">
+                         <a href="#" class="page-link disabled">« Previous</a>
+                         <span class="page-link current">1</span>
+                         <a href="#" class="page-link">2</a>
+                         <a href="#" class="page-link">Next »</a>
+                    </nav>
+
+                </div> <!-- /.container -->
+            </section>
+        </main>
+    </div> <!-- /.main-content-area -->
+
+
+    <!-- >>> FOOTER (Copy EXACTLY from your index.html) <<< -->
+     <footer id="main-footer">
+        <div class="container footer-content">
+            <div class="footer-left">
+                <p>© <span id="current-year"></span> Koozie Sports. All Rights Reserved... probably.</p>
+                <p class="footer-tagline">"Stay thirsty, my friends... for sports!"</p>
+            </div>
+            <div class="footer-right">
+                <div class="social-links">
+                    <a href="https://x.com/koozie_sports" target="_blank" rel="noopener noreferrer" aria-label="X/Twitter" title="X/Twitter"><i class="fab fa-x-twitter"></i></a>
+                    <a href="https://www.instagram.com/koozie_sports/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" title="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="https://www.tiktok.com/@koozie_sports" target="_blank" rel="noopener noreferrer" aria-label="TikTok" title="TikTok"><i class="fa-brands fa-tiktok"></i></a>
+                    <a href="https://www.youtube.com/@koozie_sports" target="_blank" rel="noopener noreferrer" aria-label="YouTube" title="YouTube"><i class="fab fa-youtube"></i></a>
+                </div>
+                 <!-- Link goes to index.html top now -->
+                 <a href="index.html#page-top" class="back-to-top" title="Back to Top"><i class="fas fa-angles-up"></i></a>
+            </div>
+        </div>
+    </footer>
+    <!-- >>> END FOOTER <<< -->
+
+    <!-- Drunk Mode Effects Overlay -->
+    <div id="bubble-overlay" aria-hidden="true"></div>
+    <audio id="drunk-mode-sound" src="audio/beer.mp3" preload="auto"></audio>
+
+    <!-- Site Script (Uses the same script as index.html) -->
+    <script src="script.js"></script>
+</body>
+</html>
