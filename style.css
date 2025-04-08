@@ -525,15 +525,6 @@ section {
     grid-template-columns: 1fr; /* Default to single column */
     gap: calc(var(--base-spacing) * 2.5);
 }
-/* Make two columns on wider screens */
-@media (min-width: 768px) {
-    .social-feeds-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-    .social-feed-item {
-        min-width: 0;
-    }
-}
 
 .social-feed-item h3 {
     text-align: center;
@@ -578,6 +569,23 @@ section {
     border-radius: 4px;
 }
 
+.instagram-carousel-placeholder .elfsight-app-2201490b-8ef7-46de-bc32-41b3df95e8c9 {
+    margin-left: auto;   /* Add automatic left margin */
+    margin-right: auto;  /* Add automatic right margin */
+    max-width: 550px;    /* Adjust this max-width as desired */
+                         /* Controls how wide the widget can get on large screens */
+    width: 100%;         /* Allows it to shrink if container is narrower */
+    /* Elfsight's script will handle the height and internal content */
+}
+
+/* Ensure the placeholder container itself allows centering */
+.instagram-carousel-placeholder {
+    /* The existing card-item styles should be fine, but ensure no
+       text-align: left; or similar property is interfering here.
+       Adding text-align: center here MIGHT help if margin:auto fails,
+       but margin:auto on the block element itself is preferred. */
+    /* text-align: center; */ /* Try uncommenting this only if margin:auto doesn't work */
+}
 
 /* YouTube Placeholder specific */
 .youtube-carousel-placeholder p:first-of-type { /* "Loading..." text */
