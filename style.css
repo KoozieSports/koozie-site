@@ -162,6 +162,8 @@ body {
         repeat-y,   /* Vertical line only repeats vertically */
         repeat;     /* Horizontal lines repeat across the whole page */
     background-attachment: local, local; /* Apply to both layers */
+    padding-top: var(--header-height); /* Push content below fixed header */
+    transition: padding-top var(--transition-speed) ease;
     /* --- End CORRECTED Background Properties --- */
 }
 
