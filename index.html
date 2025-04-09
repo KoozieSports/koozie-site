@@ -3,14 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Koozie Sports - Just sports, maybe a couple beers. Your source for irreverent sports news, analysis, and fun.">
+    <!-- SEO: Slightly more active description -->
+    <meta name="description" content="Koozie Sports: Your daily dose of irreverent sports news, questionable analysis, and maybe a couple beers. Get the latest takes, rankings, and fun.">
+    <!-- Theme Colors -->
     <meta name="theme-color" media="(prefers-color-scheme: light)" content="#fdfaef">
     <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#1a1a1a">
     <title>Koozie Sports - Just sports, maybe a couple beers</title>
+    <!-- Stylesheets -->
     <link rel="stylesheet" href="style.css">
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Architects+Daughter&family=Roboto:wght@400;700&family=Permanent+Marker&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <!-- Favicons and Manifest -->
     <link rel="icon" type="image/png" href="/images/favicon-96x96.png" sizes="96x96" />
@@ -20,30 +25,30 @@
     <link rel="manifest" href="/images/site.webmanifest" />
     <!-- Add external CSS library links here if needed -->
 </head>
-<!-- Revision: Added id="page-top" here as the primary target for 'Home' link and scrollspy -->
+<!-- Added id="page-top" here as the primary target for 'Home' link and scrollspy -->
 <body id="page-top">
 
     <!-- Scroll Progress Bar -->
-    <div id="scroll-progress-bar"></div>
+    <div id="scroll-progress-bar" aria-hidden="true"></div>
 
-    <header id="main-header">
+    <!-- Header -->
+    <header id="main-header" role="banner">
         <div class="container header-container">
-            <!-- Revision: Added title attribute for better accessibility -->
+            <!-- Added title attribute for better accessibility -->
             <a href="#page-top" id="logo-link" title="Koozie Sports Home">
-                <img src="images/logo.jpg" alt="Koozie Sports Logo" id="logo-img" class="flipping-logo" loading="eager">
+                <img src="images/logo.jpg" alt="Koozie Sports Logo" id="logo-img" class="flipping-logo" loading="eager" width="150" height="50"> <!-- Added width/height placeholders -->
             </a>
 
+            <!-- Main Navigation -->
             <nav id="main-nav" aria-label="Main Navigation">
                 <button id="hamburger-menu" aria-label="Toggle Navigation Menu" aria-expanded="false" aria-controls="nav-links">
-                    <i class="fas fa-bars"></i>
+                    <i class="fas fa-bars" aria-hidden="true"></i> <!-- Hide icon from screen readers -->
                 </button>
-                <!-- Revision: Reordered Nav Links for logical page flow and scrollspy consistency -->
+                <!-- Consistent nav link structure, data-section matches section IDs -->
                 <ul id="nav-links">
-                    <!-- Revision: data-section matches the main body id for the top -->
                     <li><a href="#page-top" class="nav-item active" data-section="page-top">Home</a></li>
                     <li><a href="#about" class="nav-item" data-section="about">About</a></li>
                     <li><a href="#featured-league" class="nav-item" data-section="featured-league">Leagues</a></li>
-                    <!-- Revision: Removed data-section from Blog link as it navigates away -->
                     <li><a href="blog.html" class="nav-item">Blog</a></li>
                     <li><a href="#gallery" class="nav-item" data-section="gallery">Gallery</a></li>
                     <li><a href="#merch" class="nav-item" data-section="merch">Merch</a></li>
@@ -52,23 +57,25 @@
                 </ul>
             </nav>
 
+            <!-- Header Interaction Toggles -->
             <div class="header-toggles">
                 <!-- Dark Mode Toggle -->
                 <button id="dark-mode-toggle" title="Toggle Dark Mode" aria-pressed="false">
-                    <i class="fas fa-moon"></i>
-                    <i class="fas fa-sun" style="display: none;"></i>
+                    <i class="fas fa-moon" aria-hidden="true"></i>
+                    <i class="fas fa-sun" style="display: none;" aria-hidden="true"></i>
                     <span class="tooltip-text">Toggle Theme</span>
                 </button>
 
-                <!-- Revision: Live Scores Toggle (Icon & aria-controls updated) -->
+                <!-- Live Scores Toggle -->
+                <!-- Note: aria-controls points to the ID of the popup container -->
                 <button id="live-scores-toggle" title="Show Live Scores" aria-pressed="false" aria-controls="live-scores-popup">
-                    <i class="fas fa-baseball-bat-ball"></i> <!-- Baseball Bat/Ball icon -->
+                    <i class="fas fa-baseball-bat-ball" aria-hidden="true"></i> <!-- Baseball Bat/Ball icon -->
                     <span class="tooltip-text">Toggle Live Scores</span>
                 </button>
 
                 <!-- Koozie Mode Toggle -->
                 <button id="drunk-mode-toggle" title="Activate Koozie Mode" aria-pressed="false">
-                    <i class="fas fa-beer-mug-empty"></i>
+                    <i class="fas fa-beer-mug-empty" aria-hidden="true"></i>
                     <span class="tooltip-text">Toggle Koozie Mode</span>
                 </button>
             </div>
@@ -76,22 +83,29 @@
     </header>
 
     <!-- Scrolling Marquee Section -->
-    <div class="marquee-container" aria-hidden="true">
+    <aside class="marquee-container" aria-hidden="true">
         <div class="marquee-content">
             <span>Welcome to the brand new home of Koozie Sports! Grab a brew and stay awhile... Warning: May contain questionable takes and Yanks bias *** Follow us @koozie_sports on all platforms! *** </span>
             <span>Welcome to the brand new home of Koozie Sports! Grab a brew and stay awhile... Warning: May contain questionable takes and Yanks bias *** Follow us @koozie_sports on all platforms! *** </span>
         </div>
-    </div>
+    </aside>
 
-    <main>
-        <!-- Revision: Removed data-id from Hero section as #page-top on body handles 'Home' -->
-        <!-- Revision: Added role="region" and aria-labelledby for semantic structure -->
+    <main id="main-content" role="main">
+        <!-- Hero Section -->
+        <!-- Added role="region" and aria-labelledby for semantic structure -->
         <section id="hero-section" class="notepad-section hero-bg" role="region" aria-labelledby="hero-heading">
-            <div class="hero-video-wrapper">
-                <div id="youtube-player"></div>
+            <div class="hero-video-wrapper" aria-hidden="true">
+                <!-- YouTube Player placeholder -->
+                <div id="youtube-player">
+                    <!-- JS will initialize the player here -->
+                    <noscript>
+                        <p>JavaScript is required to view the background video.</p>
+                    </noscript>
+                </div>
             </div>
-            <div class="hero-overlay"></div>
+            <div class="hero-overlay" aria-hidden="true"></div>
             <div class="container hero-content">
+                <!-- Use h1 for the main site title/heading -->
                 <h1 id="hero-heading" class="hero-title animate-on-scroll">Koozie Sports</h1>
                 <p class="tagline animate-on-scroll delay-1">Just sports, maybe a couple beers.</p>
                 <a href="#featured-league" class="cta-button animate-on-scroll delay-2">See What's Brewin'</a>
@@ -99,23 +113,51 @@
         </section>
 
         <!-- Quote of the Week Section -->
-        <!-- Revision: data-id might not be needed if not a primary nav target -->
-        <section id="dynamic-quote-section" class="notepad-section text-center" role="region" aria-labelledby="quote-heading">
-            <!-- Revision: Added visually-hidden heading for context -->
+        <!-- Use aside as it's supplementary content -->
+        <aside id="dynamic-quote-section" class="notepad-section text-center" role="region" aria-labelledby="quote-heading">
+            <!-- Added visually-hidden heading for context -->
             <h2 id="quote-heading" class="visually-hidden">Quote of the Week</h2>
              <div class="container">
-                 <blockquote class="quote-text animate-on-scroll" id="dynamic-quote-text">
-                     Loading quote...
+                 <blockquote class="quote-text animate-on-scroll" id="dynamic-quote-text" aria-live="polite">
+                     Loading quote... <!-- aria-live polite announces updates -->
                  </blockquote>
-                 <p class="quote-attribution handwritten-caption" id="dynamic-quote-attribution"></p>
+                 <cite class="quote-attribution handwritten-caption" id="dynamic-quote-attribution"></cite> <!-- Use cite for attribution -->
             </div>
-        </section>
+        </aside>
 
-        <!-- Live Scores Section REMOVED from main flow (Now a popup) -->
+        <!-- Live Scores Popup (Initially Hidden) -->
+        <div id="live-scores-popup" class="popup-container" hidden aria-modal="true" role="dialog" aria-labelledby="live-scores-heading">
+            <div class="popup-overlay" tabindex="-1"></div> <!-- Overlay to capture clicks -->
+            <div class="popup-content">
+                <button class="popup-close-button" aria-label="Close Live Scores">
+                    <i class="fas fa-times" aria-hidden="true"></i>
+                </button>
+                <h2 id="live-scores-heading" class="popup-title marker-text">Live Scores <span class="beta-tag">(Beta!)</span></h2>
+                <div id="live-scores-content">
+                    <!-- Placeholder: Content will be loaded here or hardcoded -->
+                    <p class="loading-text">Fetching latest scores...</p>
+                    <!-- Example Structure (Replace with actual feed/data) -->
+                    <div class="score-item">
+                        <span class="sport-icon"><i class="fas fa-baseball-ball"></i></span>
+                        <span class="teams">NYY vs BOS</span>
+                        <span class="score">7 - 3</span>
+                        <span class="status">Final</span>
+                    </div>
+                    <div class="score-item">
+                        <span class="sport-icon"><i class="fas fa-basketball-ball"></i></span>
+                        <span class="teams">LAL @ GSW</span>
+                        <span class="score">98 - 102</span>
+                        <span class="status">Q4 2:15</span>
+                    </div>
+                    <p class="handwritten-note" style="margin-top: 1rem;">Scores are definitely maybe accurate. Use for entertainment purposes only.</p>
+                    <!-- End Example Structure -->
+                </div>
+            </div>
+        </div>
 
         <!-- About Us Section -->
-        <!-- Revision: Added data-id matching nav data-section -->
-        <section id="about" class="notepad-section" data-id="about" role="region" aria-labelledby="about-heading">
+        <!-- Use standard section id for scrollspy -->
+        <section id="about" class="notepad-section" role="region" aria-labelledby="about-heading">
             <div class="container">
                 <h2 id="about-heading" class="section-title animate-on-scroll">Who Let Us Have a Website?</h2>
                 <div class="about-content layout-two-column">
@@ -124,232 +166,264 @@
                         <p>We started this to share our <span class="handwritten-emphasis marker-text">passionate</span> (read: biased) takes on everything from the NFL gridiron to the local pub league standings. Expect hot takes, cold beers, and maybe an occasional coherent thought.</p>
                         <p><strong>Our Philosophy:</strong> Keep it fun, use a koozie, and don't spill your drink.</p>
                     </div>
-                    <div class="image-content animate-on-scroll delay-1 tilt-element">
-                        <!-- Revision: Added loading="lazy" -->
-                        <img src="images/team-photo-placeholder.jpg" alt="The Koozie Sports Crew looking moderately presentable" class="about-image framed-image interactive-image" loading="lazy">
-                         <p class="caption handwritten-caption">The Brain(less) Trust</p>
-                    </div>
+                    <!-- Use figure for self-contained image content -->
+                    <figure class="image-content animate-on-scroll delay-1 tilt-element">
+                        <img src="images/team-photo-placeholder.jpg" alt="The Koozie Sports Crew looking moderately presentable" class="about-image framed-image interactive-image" loading="lazy" width="400" height="300"> <!-- Added width/height placeholders -->
+                         <figcaption class="caption handwritten-caption">The Brain(less) Trust</figcaption>
+                    </figure>
                 </div>
             </div>
         </section>
 
         <!-- Featured League/Sport Section -->
-        <!-- Revision: Added data-id matching nav data-section -->
-        <section id="featured-league" class="notepad-section alt-bg" data-id="featured-league" role="region" aria-labelledby="featured-league-heading">
+        <section id="featured-league" class="notepad-section alt-bg" role="region" aria-labelledby="featured-league-heading">
             <div class="container">
                 <h2 id="featured-league-heading" class="section-title animate-on-scroll">Currently Obsessed With: <span class="dynamic-league-name marker-text">Pickleball Pandemonium</span></h2>
                  <p class="section-subtitle animate-on-scroll">Deep dives, power rankings that make no sense, and predictions fueled by optimism (and hops).</p>
-                <div class="league-grid">
-                    <div class="league-card card-item animate-on-scroll tilt-element">
-                         <!-- Revision: Added loading="lazy" -->
-                         <img src="images/league-1.jpg" alt="Pickleball Paddles" class="card-image interactive-image" loading="lazy">
+                <!-- Use list for semantic grouping of cards -->
+                <ul class="league-grid">
+                    <!-- Use li for each card item -->
+                    <li class="league-card card-item animate-on-scroll tilt-element">
+                         <figure>
+                            <img src="images/league-1.jpg" alt="Pickleball Paddles crossing over a net" class="card-image interactive-image" loading="lazy" width="300" height="200">
+                         </figure>
                          <h3>Power Rankings: Week <span class="dynamic-week">7</span></h3>
                          <p>Who's up, who's down, who forgot their non-slip court shoes? Our totally scientific rankings.</p>
                          <a href="blog.html#post-league-1" class="read-more">Read the Rant »</a>
-                    </div>
-                    <div class="league-card card-item animate-on-scroll delay-1 wobble-on-hover">
-                        <!-- Revision: Added loading="lazy" -->
-                        <img src="images/league-2.jpg" alt="Dramatic Game Shot" class="card-image interactive-image" loading="lazy">
+                    </li>
+                    <li class="league-card card-item animate-on-scroll delay-1 wobble-on-hover">
+                        <figure>
+                            <img src="images/league-2.jpg" alt="Dramatic overhead shot of a pickleball game in action" class="card-image interactive-image" loading="lazy" width="300" height="200">
+                        </figure>
                         <h3>Must-Watch Game of the Week</h3>
                         <p>The matchup we're clearing our schedule (and coolers) for. The Dinks vs. The Volleys!</p>
                          <a href="blog.html#post-league-2" class="read-more">Game Preview »</a>
-                    </div>
-                    <div class="league-card card-item animate-on-scroll delay-2 tilt-element">
-                         <!-- Revision: Added loading="lazy" -->
-                         <img src="images/league-3.jpg" alt="Crystal Ball Prediction" class="card-image interactive-image" loading="lazy">
+                    </li>
+                    <li class="league-card card-item animate-on-scroll delay-2 tilt-element">
+                        <figure>
+                            <img src="images/league-3.jpg" alt="Person gazing intensely into a crystal ball with sports symbols" class="card-image interactive-image" loading="lazy" width="300" height="200">
+                        </figure>
                         <h3>Bold Predictions (Place Your Bets!)</h3>
                         <p>Prepare to be amazed (or mock us relentlessly). Our fearless forecast includes at least one broken paddle.</p>
                          <a href="blog.html#post-league-3" class="read-more">See the Future »</a>
-                    </div>
-                </div>
+                    </li>
+                </ul>
             </div>
         </section>
 
          <!-- Gallery Section -->
-         <!-- Revision: Added data-id matching nav data-section -->
-         <section id="gallery" class="notepad-section alt-bg" data-id="gallery" role="region" aria-labelledby="gallery-heading">
+         <section id="gallery" class="notepad-section" role="region" aria-labelledby="gallery-heading"> <!-- Removed alt-bg for variation -->
             <div class="container">
                 <h2 id="gallery-heading" class="section-title animate-on-scroll">Wall of Fame (or Shame?)</h2>
                 <p class="section-subtitle animate-on-scroll">Snapshots from the sidelines, tailgates, and questionable victory dances.</p>
-                <div class="gallery-grid">
-                    <div class="gallery-item card-item animate-on-scroll tilt-element">
-                        <!-- Revision: Removed lightbox attributes as it wasn't explicitly implemented, simplified to image link placeholder -->
-                        <a href="images/gallery-1-large.jpg" target="_blank" rel="noopener noreferrer" title="View larger image: Pre-game Rituals">
-                            <img src="images/gallery-1.jpg" alt="Tailgate Scene" class="framed-image interactive-image" loading="lazy">
-                        </a>
-                        <p class="caption handwritten-caption">Pre-game Rituals</p>
-                    </div>
-                    <div class="gallery-item card-item animate-on-scroll delay-1 wobble-on-hover">
-                         <a href="images/gallery-2-large.jpg" target="_blank" rel="noopener noreferrer" title="View larger image: The Big Play!">
-                             <img src="images/gallery-2.jpg" alt="Action Shot" class="framed-image interactive-image" loading="lazy">
-                         </a>
-                         <p class="caption handwritten-caption">The Big Play!</p>
-                    </div>
-                     <div class="gallery-item card-item animate-on-scroll delay-2 tilt-element">
-                         <a href="images/gallery-3-large.jpg" target="_blank" rel="noopener noreferrer" title="View larger image: Pure Agony/Ecstasy">
-                             <img src="images/gallery-3.jpg" alt="Fan Reaction" class="framed-image interactive-image" loading="lazy">
-                         </a>
-                         <p class="caption handwritten-caption">Pure Agony/Ecstasy</p>
-                    </div>
-                     <div class="gallery-item card-item animate-on-scroll delay-3 wobble-on-hover">
-                        <a href="images/gallery-4-large.jpg" target="_blank" rel="noopener noreferrer" title="View larger image: Mascot Mayhem">
-                            <img src="images/gallery-4.jpg" alt="Mascot Shenanigans" class="framed-image interactive-image" loading="lazy">
-                         </a>
-                        <p class="caption handwritten-caption">Mascot Mayhem</p>
-                    </div>
-                </div>
-                 <!-- Revision: Clarified note -->
-                <p class="handwritten-note animate-on-scroll delay-1">Click images to view larger (opens in new tab).</p>
+                <!-- Use list for semantic grouping -->
+                <ul class="gallery-grid">
+                     <!-- Use li and figure for each item -->
+                    <li class="gallery-item card-item animate-on-scroll tilt-element">
+                        <figure>
+                            <!-- Link opens larger image in new tab -->
+                            <a href="images/gallery-1-large.jpg" target="_blank" rel="noopener noreferrer" title="View larger image: Pre-game Rituals">
+                                <img src="images/gallery-1.jpg" alt="Tailgate scene with grill, chairs, and sports fans" class="framed-image interactive-image" loading="lazy" width="250" height="180">
+                            </a>
+                            <figcaption class="caption handwritten-caption">Pre-game Rituals</figcaption>
+                        </figure>
+                    </li>
+                    <li class="gallery-item card-item animate-on-scroll delay-1 wobble-on-hover">
+                        <figure>
+                             <a href="images/gallery-2-large.jpg" target="_blank" rel="noopener noreferrer" title="View larger image: The Big Play!">
+                                 <img src="images/gallery-2.jpg" alt="Action shot of an athlete making a diving catch" class="framed-image interactive-image" loading="lazy" width="250" height="180">
+                             </a>
+                             <figcaption class="caption handwritten-caption">The Big Play!</figcaption>
+                         </figure>
+                    </li>
+                     <li class="gallery-item card-item animate-on-scroll delay-2 tilt-element">
+                        <figure>
+                             <a href="images/gallery-3-large.jpg" target="_blank" rel="noopener noreferrer" title="View larger image: Pure Agony/Ecstasy">
+                                 <img src="images/gallery-3.jpg" alt="Close-up of a fan's face showing intense emotion during a game" class="framed-image interactive-image" loading="lazy" width="250" height="180">
+                             </a>
+                             <figcaption class="caption handwritten-caption">Pure Agony/Ecstasy</figcaption>
+                         </figure>
+                    </li>
+                     <li class="gallery-item card-item animate-on-scroll delay-3 wobble-on-hover">
+                        <figure>
+                            <a href="images/gallery-4-large.jpg" target="_blank" rel="noopener noreferrer" title="View larger image: Mascot Mayhem">
+                                <img src="images/gallery-4.jpg" alt="Sports mascot interacting playfully with the crowd" class="framed-image interactive-image" loading="lazy" width="250" height="180">
+                             </a>
+                            <figcaption class="caption handwritten-caption">Mascot Mayhem</figcaption>
+                        </figure>
+                    </li>
+                </ul>
+                 <!-- Clarified note -->
+                <p class="handwritten-note animate-on-scroll delay-1" style="text-align: center; margin-top: 1.5rem;">Click images to view larger (opens in new tab).</p>
             </div>
         </section>
 
         <!-- Merch Section -->
-        <!-- Revision: Added data-id matching nav data-section -->
-        <section id="merch" class="notepad-section alt-bg" data-id="merch" role="region" aria-labelledby="merch-heading">
+        <section id="merch" class="notepad-section alt-bg" role="region" aria-labelledby="merch-heading">
             <div class="container">
                 <h2 id="merch-heading" class="section-title animate-on-scroll">Official Koozie Gear (Probably)</h2>
                 <p class="section-subtitle animate-on-scroll">Look marginally cooler while yelling at the TV! Proceeds likely go towards more beer.</p>
-                <div class="merch-grid">
-                    <div class="merch-item card-item animate-on-scroll tilt-element">
-                        <!-- Revision: Added loading="lazy" -->
-                        <img src="images/merch-koozie-placeholder.jpg" alt="Koozie Sports Official Koozie" class="card-image interactive-image" loading="lazy">
+                <!-- Use list for semantic grouping -->
+                <ul class="merch-grid">
+                     <!-- Use li for each item -->
+                    <li class="merch-item card-item animate-on-scroll tilt-element">
+                        <figure>
+                            <img src="images/merch-koozie-placeholder.jpg" alt="Koozie Sports Official Drink Koozie" class="card-image interactive-image" loading="lazy" width="300" height="250">
+                        </figure>
                         <h3 class="merch-title marker-text">The Official Koozie</h3>
                         <p class="merch-description">Keeps your drink cold and your takes hot. Essential equipment.</p>
                         <p class="merch-price">$5.00 (Or trade for a good six-pack)</p>
-                        <a href="#" class="cta-button merch-button" target="_blank" rel="noopener noreferrer">Grab Yours (Link TBD)</a>
-                    </div>
-                    <div class="merch-item card-item animate-on-scroll delay-1 wobble-on-hover">
-                         <!-- Revision: Added loading="lazy" -->
-                        <img src="images/merch-shirt-placeholder.jpg" alt="Koozie Sports T-Shirt" class="card-image interactive-image" loading="lazy">
+                        <!-- Added placeholder link clarification -->
+                        <a href="#contact" class="cta-button merch-button" title="Merch store coming soon! Contact us for now.">Ask About It!</a>
+                        <!-- <a href="#" class="cta-button merch-button disabled" target="_blank" rel="noopener noreferrer" aria-disabled="true">Grab Yours (Link TBD)</a> -->
+                    </li>
+                    <li class="merch-item card-item animate-on-scroll delay-1 wobble-on-hover">
+                         <figure>
+                            <img src="images/merch-shirt-placeholder.jpg" alt="Koozie Sports Classic T-Shirt" class="card-image interactive-image" loading="lazy" width="300" height="250">
+                        </figure>
                         <h3 class="merch-title marker-text">Koozie Classic Tee</h3>
                         <p class="merch-description">Slightly less stained than your current favorite shirt. Maybe.</p>
                         <p class="merch-price">$20.00</p>
-                        <a href="#" class="cta-button merch-button" target="_blank" rel="noopener noreferrer">Get Shirt Done (Link TBD)</a>
-                    </div>
-                    <div class="merch-item card-item animate-on-scroll delay-2 tilt-element">
-                         <!-- Revision: Added loading="lazy" -->
-                        <img src="images/merch-hat-placeholder.jpg" alt="Koozie Sports Hat" class="card-image interactive-image" loading="lazy">
+                        <a href="#contact" class="cta-button merch-button" title="Merch store coming soon! Contact us for now.">Ask About It!</a>
+                        <!-- <a href="#" class="cta-button merch-button disabled" target="_blank" rel="noopener noreferrer" aria-disabled="true">Get Shirt Done (Link TBD)</a> -->
+                    </li>
+                    <li class="merch-item card-item animate-on-scroll delay-2 tilt-element">
+                        <figure>
+                             <img src="images/merch-hat-placeholder.jpg" alt="Koozie Sports Questionable Calls Baseball Cap" class="card-image interactive-image" loading="lazy" width="300" height="250">
+                         </figure>
                         <h3 class="merch-title marker-text">Questionable Calls Cap</h3>
                         <p class="merch-description">Perfect for shielding your eyes or hiding your shame after a bad bet.</p>
                         <p class="merch-price">$15.00</p>
-                        <a href="#" class="cta-button merch-button" target="_blank" rel="noopener noreferrer">Cap It Off (Link TBD)</a>
-                    </div>
-                </div>
-                <p class="handwritten-note animate-on-scroll delay-3" style="text-align: center; display: block; margin-top: 2rem;">Merch store coming soon... maybe after we finish this beer.</p>
+                        <a href="#contact" class="cta-button merch-button" title="Merch store coming soon! Contact us for now.">Ask About It!</a>
+                        <!-- <a href="#" class="cta-button merch-button disabled" target="_blank" rel="noopener noreferrer" aria-disabled="true">Cap It Off (Link TBD)</a> -->
+                    </li>
+                </ul>
+                <p class="handwritten-note animate-on-scroll delay-3" style="text-align: center; display: block; margin-top: 2rem;">Official merch store coming soon... maybe after we finish this beer. Hit us up via Contact!</p>
             </div>
         </section>
 
         <!-- Social Feeds Section -->
-        <!-- Revision: Added data-id matching nav data-section -->
-        <section id="social-feeds" class="notepad-section" data-id="social-feeds" role="region" aria-labelledby="social-feeds-heading">
+        <section id="social-feeds" class="notepad-section" role="region" aria-labelledby="social-feeds-heading">
             <div class="container">
                 <h2 id="social-feeds-heading" class="section-title animate-on-scroll">Straight From The Source</h2>
                 <p class="section-subtitle animate-on-scroll">Catch the latest nonsense directly from our social channels.</p>
                 <div class="social-feeds-grid">
                     <!-- Instagram Feed -->
-                    <div class="social-feed-item animate-on-scroll delay-1">
-                        <h3 class="marker-text"><i class="fab fa-instagram fa-fw"></i> Latest Instagram Posts</h3>
+                    <!-- Use article for self-contained widget -->
+                    <article class="social-feed-item animate-on-scroll delay-1" aria-labelledby="instagram-heading">
+                        <h3 id="instagram-heading" class="marker-text"><i class="fab fa-instagram fa-fw" aria-hidden="true"></i> Latest Instagram Posts</h3>
                         <!-- START Elfsight Widget -->
+                        <!-- TODO: Replace with your actual Elfsight code or alternative feed -->
                         <script src="https://static.elfsight.com/platform/platform.js" data-use-service-core defer></script>
-                        <div class="elfsight-app-2201490b-8ef7-46de-bc32-41b3df95e8c9" data-elfsight-app-lazy></div>
+                        <div class="elfsight-app-2201490b-8ef7-46de-bc32-41b3df95e8c9" data-elfsight-app-lazy>
+                            <noscript>Please enable JavaScript to view the Instagram feed.</noscript>
+                            <p>Loading Instagram feed... <a href="https://www.instagram.com/koozie_sports/" target="_blank" rel="noopener noreferrer">View on Instagram</a></p>
+                        </div>
                          <!-- END Elfsight Widget -->
-                    </div>
+                    </article>
+
                     <!-- YouTube Feed -->
-                    <div class="social-feed-item animate-on-scroll delay-2">
-                        <h3 class="marker-text"><i class="fab fa-youtube fa-fw"></i> Latest YouTube Uploads</h3>
+                    <article class="social-feed-item animate-on-scroll delay-2" aria-labelledby="youtube-heading">
+                        <h3 id="youtube-heading" class="marker-text"><i class="fab fa-youtube fa-fw" aria-hidden="true"></i> Latest YouTube Uploads</h3>
+                         <!-- START Elfsight Widget -->
+                         <!-- TODO: Replace with your actual Elfsight code or alternative feed -->
                          <script src="https://static.elfsight.com/platform/platform.js" data-use-service-core defer></script>
-                         <div class="elfsight-app-00d9f4d0-3b35-4e2a-80b7-6733dafd1d1d" data-elfsight-app-lazy></div>
-                        <!-- Placeholder for API fetched videos (if Elfsight is removed) -->
-                        <!-- <div id="youtube-video-items" class="youtube-video-grid"></div> -->
+                         <div class="elfsight-app-00d9f4d0-3b35-4e2a-80b7-6733dafd1d1d" data-elfsight-app-lazy>
+                            <noscript>Please enable JavaScript to view the YouTube feed.</noscript>
+                             <p>Loading YouTube feed... <a href="https://www.youtube.com/@koozie_sports" target="_blank" rel="noopener noreferrer">View on YouTube</a></p>
+                         </div>
+                        <!-- END Elfsight Widget -->
+                        <!-- Alternative Placeholder if using a custom API fetch (keep commented out if using Elfsight) -->
+                        <!-- <div id="youtube-video-items" class="youtube-video-grid" aria-live="polite"></div> -->
                         <!-- <p class="youtube-loading-text">Loading latest videos...</p> -->
-                        <!-- <p id="youtube-error-message" class="error-message" style="display: none;"></p> -->
+                        <!-- <p id="youtube-error-message" class="error-message" style="display: none;" role="alert"></p> -->
                         <!-- <p id="youtube-fallback-message" style="display: none;">Check out our <a href="YOUR_YOUTUBE_CHANNEL_LINK_HERE" target="_blank" rel="noopener noreferrer">YouTube channel</a> directly!</p> -->
-                    </div>
+                    </article>
                 </div>
             </div>
         </section>
 
         <!-- Contact Section -->
-        <!-- Revision: Added data-id matching nav data-section -->
-         <section id="contact" class="notepad-section alt-bg" data-id="contact" role="region" aria-labelledby="contact-heading">
-             <div class="container">
-                 <h2 id="contact-heading" class="section-title animate-on-scroll">Talk to Us (We Might Listen)</h2>
-                 <p class="animate-on-scroll">Got a scorching hot take? A correction? Want to send us free beer? Found a typo? Here's how:</p>
-                 <div class="contact-info animate-on-scroll delay-1">
-                     <p><i class="fas fa-envelope fa-fw"></i> Email: <a href="mailto:nick@kooziesports.com" class="contact-link">nick@kooziesports.com</a></p>
-                     <p><i class="fab fa-x-twitter fa-fw"></i> X/Twitter: <a href="https://x.com/koozie_sports" target="_blank" rel="noopener noreferrer" class="contact-link">@koozie_sports</a></p>
-                     <p><i class="fab fa-instagram fa-fw"></i> Instagram: <a href="https://www.instagram.com/koozie_sports/" target="_blank" rel="noopener noreferrer" class="contact-link">@koozie_sports</a></p>
-                     <p><i class="fa-brands fa-tiktok fa-fw"></i> TikTok: <a href="https://www.tiktok.com/@koozie_sports" target="_blank" rel="noopener noreferrer" class="contact-link">@koozie_sports</a> (Why not?)</p>
-                     <p><i class="fab fa-youtube fa-fw"></i> YouTube: <a href="https://www.youtube.com/@koozie_sports" target="_blank" rel="noopener noreferrer" class="contact-link">@koozie_sports</a></p>
-                     <p class="handwritten-note marker-text animate-on-scroll delay-2">Response times may vary depending on game schedules, beverage levels, and if Mercury is in retrograde.</p>
-                 </div>
-                 <div class="contact-form-placeholder animate-on-scroll delay-3">
-                     <h3 class="marker-text">Or Send a Quick Heckle:</h3>
-                     <!-- Revision: Consider using a proper form submission handler (e.g., Formspree, Netlify Forms) instead of action="#" -->
-                     <form action="#" method="post" id="heckle-form">
-                        <div class="form-group">
-                            <!-- Revision: Using visually-hidden label for better accessibility -->
-                            <label for="heckle-name" class="visually-hidden">Your Name</label>
-                            <input type="text" id="heckle-name" name="name" placeholder="Your Name (Optional, Coward)">
-                        </div>
-                        <div class="form-group">
-                             <!-- Revision: Using visually-hidden label -->
-                             <label for="heckle-message" class="visually-hidden">Message</label>
-                            <textarea id="heckle-message" name="message" rows="3" placeholder="Your brilliant take / scathing critique here..." required aria-required="true"></textarea>
-                        </div>
-                         <button type="submit" class="cta-button secondary">Send It!</button>
-                         <p id="form-status-message" style="margin-top: 10px; text-align: center;" aria-live="polite"></p> <!-- Added aria-live -->
-                     </form>
-                 </div>
-             </div>
-         </section>
+         <section id="contact" class="notepad-section alt-bg" role="region" aria-labelledby="contact-heading">
+            <div class="container">
+                <h2 id="contact-heading" class="section-title animate-on-scroll">Get In Touch (or Heckle Us)</h2>
+                <p class="section-subtitle animate-on-scroll">Got a hot take? A bone to pick? A sponsorship deal? Slide into our DMs (or use this form).</p>
+
+                <form id="contact-form" class="contact-form animate-on-scroll delay-1" action="YOUR_FORM_ENDPOINT_HERE" method="POST"> <!-- TODO: Add form endpoint -->
+                    <div class="form-group">
+                        <label for="name" class="form-label handwritten-label">Your Name:</label>
+                        <input type="text" id="name" name="name" class="form-control" required aria-required="true">
+                    </div>
+                    <div class="form-group">
+                        <label for="email" class="form-label handwritten-label">Your Email:</label>
+                        <input type="email" id="email" name="email" class="form-control" required aria-required="true">
+                    </div>
+                    <div class="form-group">
+                        <label for="subject" class="form-label handwritten-label">Subject:</label>
+                         <input type="text" id="subject" name="subject" class="form-control" required aria-required="true">
+                    </div>
+                    <div class="form-group">
+                        <label for="message" class="form-label handwritten-label">Your Message (keep it classy...ish):</label>
+                        <textarea id="message" name="message" rows="5" class="form-control" required aria-required="true"></textarea>
+                    </div>
+                    <!-- Honeypot field for basic spam prevention -->
+                    <div class="form-group visually-hidden" aria-hidden="true">
+                         <label for="fax">Fax Number (Leave Blank)</label>
+                         <input type="text" id="fax" name="fax" tabindex="-1" autocomplete="off">
+                     </div>
+                     <!-- Add GDPR/Privacy consent checkbox if needed -->
+                     <!--
+                     <div class="form-group form-check">
+                        <input type="checkbox" class="form-check-input" id="privacy-consent" name="privacy-consent" required aria-required="true">
+                        <label class="form-check-label handwritten-label" for="privacy-consent">I consent to Koozie Sports contacting me about this inquiry.</label>
+                    </div>
+                    -->
+                    <div class="form-submit">
+                        <button type="submit" class="cta-button">Send It!</button>
+                    </div>
+                    <p id="form-status" class="form-status" role="status" aria-live="polite"></p> <!-- For success/error messages -->
+                </form>
+                <p class="handwritten-note animate-on-scroll delay-2" style="text-align: center; margin-top: 1rem;">We'll try to respond... eventually. No promises.</p>
+            </div>
+        </section>
 
     </main>
 
-    <!-- Revision: Live Scores Popup Container -->
-    <!-- Moved outside main, before footer. Added role, aria-modal, aria-labelledby, hidden attribute -->
-    <div id="live-scores-popup" class="card-item" role="dialog" aria-modal="true" aria-labelledby="live-scores-popup-heading" hidden>
-         <!-- Revision: Added accessible heading (visually hidden) and close button -->
-         <h3 id="live-scores-popup-heading" class="visually-hidden">Live Scores</h3>
-         <button class="popup-close-button" aria-label="Close Live Scores" title="Close Live Scores">
-             <i class="fas fa-times"></i>
-         </button>
-         <!-- WIDGET CODE START -->
-         <!-- Revision: Added tabindex="-1" to the widget container to potentially make it focusable -->
-         <div data-widget-type="entityScores" data-entity-type="league" data-entity-id="438" data-lang="en" data-widget-id="e25a9351-9375-47e5-b3c9-df981bece258" data-limit-height-display="640" tabindex="-1"></div>
-         <div id="powered-by">Powered by<a id="powered-by-link" href="https://www.365scores.com" target="_blank" rel="noopener noreferrer">365Scores.com</a></div>
-         <!-- This script might need re-initialization in JS if widget doesn't handle being revealed -->
-         <script src="https://widgets.365scores.com/main.js" defer></script>
-         <!-- WIDGET CODE END -->
-    </div>
-
+    <!-- Footer -->
     <footer id="main-footer" role="contentinfo">
         <div class="container footer-content">
             <div class="footer-left">
-                <p>© <span id="current-year"></span> Koozie Sports. All Rights Reserved... probably.</p>
+                <!-- Dynamic year -->
+                <p>© <span id="current-year">2024</span> Koozie Sports. All Rights Reserved... probably.</p>
                 <p class="footer-tagline">"Stay thirsty, my friends... for sports!"</p>
                 <p class="designed-by-link">
-                    <i class="fas fa-palette fa-fw"></i> Designed by <a href="https://nhannon.com" target="_blank" rel="noopener noreferrer">nhannon.com</a>
+                    <i class="fas fa-palette fa-fw" aria-hidden="true"></i> Designed by <a href="https://nhannon.com" target="_blank" rel="noopener noreferrer">nhannon.com</a>
                 </p>
             </div>
             <div class="footer-right">
-                 <!-- Revision: Added aria-label to social links container -->
                 <div class="social-links" aria-label="Social Media Links">
-                    <a href="https://x.com/koozie_sports" target="_blank" rel="noopener noreferrer" aria-label="X/Twitter" title="X/Twitter"><i class="fab fa-x-twitter"></i></a>
-                    <a href="https://www.instagram.com/koozie_sports/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" title="Instagram"><i class="fab fa-instagram"></i></a>
-                    <a href="https://www.tiktok.com/@koozie_sports" target="_blank" rel="noopener noreferrer" aria-label="TikTok" title="TikTok"><i class="fa-brands fa-tiktok"></i></a>
-                    <a href="https://www.youtube.com/@koozie_sports" target="_blank" rel="noopener noreferrer" aria-label="YouTube" title="YouTube"><i class="fab fa-youtube"></i></a>
+                    <!-- Added target, rel, aria-label, and title for accessibility/SEO -->
+                    <a href="https://x.com/koozie_sports" target="_blank" rel="noopener noreferrer" aria-label="Follow us on X (formerly Twitter)" title="X/Twitter"><i class="fab fa-x-twitter"></i></a>
+                    <a href="https://www.instagram.com/koozie_sports/" target="_blank" rel="noopener noreferrer" aria-label="Follow us on Instagram" title="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="https://www.tiktok.com/@koozie_sports" target="_blank" rel="noopener noreferrer" aria-label="Follow us on TikTok" title="TikTok"><i class="fa-brands fa-tiktok"></i></a>
+                    <a href="https://www.youtube.com/@koozie_sports" target="_blank" rel="noopener noreferrer" aria-label="Subscribe on YouTube" title="YouTube"><i class="fab fa-youtube"></i></a>
                 </div>
-                 <a href="#page-top" class="back-to-top" title="Back to Top" aria-label="Back to Top"><i class="fas fa-angles-up"></i></a>
+                 <!-- Back to top button -->
+                 <a href="#page-top" class="back-to-top" title="Back to Top" aria-label="Back to Top"><i class="fas fa-angles-up" aria-hidden="true"></i></a>
             </div>
         </div>
     </footer>
 
-    <!-- Drunk Mode Effects Overlay -->
+    <!-- Drunk Mode Effects Overlay (Visual only) -->
     <div id="bubble-overlay" aria-hidden="true"></div>
+    <!-- Preload audio -->
     <audio id="drunk-mode-sound" src="audio/beer.mp3" preload="auto"></audio>
 
     <!-- Site Script -->
+    <!-- Added defer attribute to ensure HTML is parsed before script execution -->
     <script src="script.js" defer></script>
+
+    <!-- Add external JS library links here if needed (e.g., for forms, analytics) -->
+
 </body>
 </html>
