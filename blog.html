@@ -3,19 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Modify description for the blog page -->
-    <meta name="description" content="The Koozie Sports Blog - Ramblings, rants, and questionable analysis on the world of sports.">
+    <!-- SEO: More specific description -->
+    <meta name="description" content="The Koozie Sports Blog - Read our latest ramblings, rants, and questionable sports analysis. Hot takes, cold beers, and more.">
     <!-- Update title -->
     <title>Blog - Koozie Sports</title>
-    <!-- CSS -->
+    <!-- Stylesheets -->
     <link rel="stylesheet" href="style.css">
-    <!-- Preconnect Fonts -->
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Architects+Daughter&family=Roboto:wght@400;700&family=Permanent+Marker&display=swap" rel="stylesheet">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <!-- Favicon -->
+    <!-- Favicons and Manifest -->
     <link rel="icon" type="image/png" href="/images/favicon-96x96.png" sizes="96x96" />
     <link rel="icon" type="image/svg+xml" href="/images/favicon.svg" />
     <link rel="shortcut icon" href="/images/favicon.ico" />
@@ -24,89 +24,108 @@
     <!-- Theme Color Meta Tags -->
     <meta name="theme-color" media="(prefers-color-scheme: light)" content="#fdfaef">
     <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#1a1a1a">
-    <!-- End Links -->
 </head>
-<body id="blog-page" class="page-top"> <!-- Use blog-page ID, keep page-top class if needed by JS -->
+<!-- Added id="blog-page" for potential page-specific styling -->
+<body id="blog-page" class="page-top"> <!-- Keep page-top for potential JS hooks -->
 
-    <!-- NEW: Scroll Progress Bar -->
-    <div id="scroll-progress-bar"></div>
+    <!-- Scroll Progress Bar -->
+    <div id="scroll-progress-bar" aria-hidden="true"></div>
 
-    <!-- >>> HEADER (UPDATED Navigation & Toggles) <<< -->
-    <header id="main-header">
+    <!-- Header -->
+    <header id="main-header" role="banner">
         <div class="container header-container">
-            <a href="index.html#page-top" id="logo-link" title="Koozie Sports Home"> <!-- Link to index.html -->
-                <img src="images/logo.jpg" alt="Koozie Sports Logo" id="logo-img" class="flipping-logo" loading="eager"> <!-- Eager load logo -->
+            <!-- Link back to index.html top -->
+            <a href="index.html#page-top" id="logo-link" title="Koozie Sports Home">
+                <img src="images/logo.jpg" alt="Koozie Sports Logo" id="logo-img" class="flipping-logo" loading="eager" width="150" height="50"> <!-- Eager load logo -->
             </a>
+            <!-- Main Navigation -->
             <nav id="main-nav" aria-label="Main Navigation">
                 <button id="hamburger-menu" aria-label="Toggle Navigation Menu" aria-expanded="false" aria-controls="nav-links">
-                    <i class="fas fa-bars"></i>
+                    <i class="fas fa-bars" aria-hidden="true"></i>
                 </button>
                 <ul id="nav-links">
                     <!-- Links point back to index.html sections -->
-                    <li><a href="index.html#page-top" class="nav-item" data-section="page-top">Home</a></li>
-                    <li><a href="index.html#about" class="nav-item" data-section="about">About</a></li>
-                    <li><a href="index.html#featured-league" class="nav-item" data-section="featured-league">Leagues</a></li>
+                    <li><a href="index.html#page-top" class="nav-item">Home</a></li>
+                    <li><a href="index.html#about" class="nav-item">About</a></li>
+                    <li><a href="index.html#featured-league" class="nav-item">Leagues</a></li>
                     <!-- Highlight Blog link as active on this page + add aria-current -->
                     <li><a href="blog.html" class="nav-item active" aria-current="page">Blog</a></li>
-                    <li><a href="index.html#gallery" class="nav-item" data-section="gallery">Gallery</a></li>
-                    <li><a href="index.html#merch" class="nav-item" data-section="merch">Merch</a></li>
-                    <li><a href="index.html#social-feeds" class="nav-item" data-section="social-feeds">Social</a></li>
-                    <li><a href="index.html#contact" class="nav-item" data-section="contact">Contact</a></li>
+                    <li><a href="index.html#gallery" class="nav-item">Gallery</a></li>
+                    <li><a href="index.html#merch" class="nav-item">Merch</a></li>
+                    <li><a href="index.html#social-feeds" class="nav-item">Social</a></li>
+                    <li><a href="index.html#contact" class="nav-item">Contact</a></li>
                 </ul>
             </nav>
+            <!-- Header Interaction Toggles -->
             <div class="header-toggles">
                  <!-- Dark Mode Toggle -->
-                <button id="dark-mode-toggle" title="Toggle Dark Mode" aria-pressed="false"> <!-- JS will manage aria-pressed -->
-                    <i class="fas fa-moon"></i>
-                    <i class="fas fa-sun" style="display: none;"></i>
+                <button id="dark-mode-toggle" title="Toggle Dark Mode" aria-pressed="false">
+                    <i class="fas fa-moon" aria-hidden="true"></i>
+                    <i class="fas fa-sun" style="display: none;" aria-hidden="true"></i>
                     <span class="tooltip-text">Toggle Theme</span>
                 </button>
 
-                <!-- NEW: Live Scores Toggle (Consistent UI) -->
-                <button id="live-scores-toggle" title="Show Live Scores" aria-pressed="false" aria-controls="live-scores-content"> <!-- Control target doesn't exist here -->
+                <!-- Live Scores Toggle (Button present, but popup itself is on index.html) -->
+                <!-- Link back to index page where the popup lives -->
+                <a href="index.html#live-scores-popup" id="live-scores-toggle-link" class="header-button-link" title="View Live Scores (on Home Page)">
+                    <i class="fas fa-baseball-bat-ball" aria-hidden="true"></i>
+                    <span class="tooltip-text">View Live Scores</span>
+                </a>
+                <!-- Note: JS will need to handle this differently than the button toggle on index.html -->
+                <!-- OR keep the button structure if JS handles it smartly -->
+                <!-- <button id="live-scores-toggle" title="Show Live Scores (Opens on Home Page)" aria-pressed="false">
                     <i class="fas fa-futbol"></i>
-                    <span class="tooltip-text">Toggle Live Scores</span>
-                </button>
+                    <span class="tooltip-text">Show Live Scores</span>
+                </button> -->
+
 
                 <!-- Koozie Mode Toggle -->
-                <button id="drunk-mode-toggle" title="Activate Koozie Mode" aria-pressed="false"> <!-- JS will manage aria-pressed -->
-                    <i class="fas fa-beer-mug-empty"></i>
+                <button id="drunk-mode-toggle" title="Activate Koozie Mode" aria-pressed="false">
+                    <i class="fas fa-beer-mug-empty" aria-hidden="true"></i>
                     <span class="tooltip-text">Toggle Koozie Mode</span>
                 </button>
             </div>
         </div>
     </header>
-    <!-- >>> END HEADER <<< -->
+    <!-- END HEADER -->
 
-     <!-- Scrolling Marquee Section (Optional - include if you want it on blog page too) -->
-    <div class="marquee-container" aria-hidden="true">
+     <!-- Scrolling Marquee Section (Optional) -->
+    <aside class="marquee-container" aria-hidden="true">
         <div class="marquee-content">
             <span>Latest Ramblings & Rants... Don't Blame Us If Your Bets Lose... *** Follow @koozie_sports *** </span>
             <!-- Repeat content for seamless scroll -->
             <span>Latest Ramblings & Rants... Don't Blame Us If Your Bets Lose... *** Follow @koozie_sports *** </span>
         </div>
-    </div>
+    </aside>
 
-    <!-- Main content area with padding for header/marquee -->
+    <!-- Main content area -->
+    <!-- Added wrapper for potential padding needs -->
     <div class="main-content-area">
-        <main id="blog-main">
+        <main id="blog-main" role="main">
              <!-- Main Blog Section with ARIA region -->
             <section id="blog-posts" class="notepad-section" role="region" aria-labelledby="blog-heading">
                 <div class="container">
-                    <!-- Added ID to H1 for aria-labelledby -->
+                    <!-- Use H1 for the primary page heading -->
                     <h1 id="blog-heading" class="blog-page-title marker-text">Koozie Sports Blog</h1>
                     <p class="section-subtitle">Grab a beverage, pull up a chair. Here's the latest of our yapping.</p>
 
                     <div class="blog-post-list">
 
-                        <!-- Sample Blog Post 1 -->
+                        <!-- Blog Post 1 -->
+                        <!-- Use article tag for each post -->
                         <article id="post1" class="blog-post card-item animate-on-scroll"> <!-- Added ID for internal linking -->
-                             <img src="images/featured-1-placeholder.jpg" alt="Abstract sports graphic" class="card-image" loading="lazy"> <!-- Added loading lazy, updated alt -->
+                             <figure class="post-image-container"> <!-- Optional figure element for image -->
+                                <img src="images/featured-1-placeholder.jpg" alt="Abstract graphic representing sports competition" class="card-image" loading="lazy" width="400" height="250">
+                             </figure>
                             <div class="post-content">
-                                <h2 class="post-title"><a href="#post1">Why Your Favorite Team Probably Won't Win (But Put's Will)</a></h2>
+                                <!-- Link title to the post itself (useful if posts become full pages) -->
+                                <h2 class="post-title"><a href="blog.html#post1">Why Your Favorite Team Probably Won't Win (But Put's Will)</a></h2>
                                 <p class="post-excerpt">A totally unbiased breakdown of the current season, fueled by optimism and cheap lager. Prepare for hot takes that might spontaneously combust...</p>
                                 <div class="post-meta">
-                                    <span class="post-date handwritten-caption">July 15, 2024</span>
+                                    <!-- Use time element for semantic date -->
+                                    <time datetime="2024-07-15" class="post-date handwritten-caption">July 15, 2024</time>
+                                    <!-- Example: Add author or category if needed -->
+                                    <!-- <span class="post-author handwritten-caption">by The Commish</span> -->
                                 </div>
                                 <!-- Optional: Link to a full post page if implemented -->
                                 <!-- <a href="single-post.html#post1" class="read-more-link">Keep Reading »</a> -->
@@ -114,42 +133,48 @@
                             </div>
                         </article>
 
-                        <!-- Sample Blog Post 2 -->
+                        <!-- Blog Post 2 -->
                         <article id="post2" class="blog-post card-item animate-on-scroll delay-1"> <!-- Added ID -->
-                             <!-- No image example -->
+                             <!-- Example: No image -->
                              <div class="post-content">
-                                <h2 class="post-title"><a href="#post2">The Definitive Power Rankings of Stadium Beers</a></h2>
+                                <h2 class="post-title"><a href="blog.html#post2">The Definitive Power Rankings of Stadium Beers</a></h2>
                                 <p class="post-excerpt">We risked our livers and wallets to scientifically rank the best (and worst) brews available at major league venues. Spoiler: Price doesn't equal quality...</p>
                                 <div class="post-meta">
-                                    <span class="post-date handwritten-caption">July 10, 2024</span>
+                                    <time datetime="2024-07-10" class="post-date handwritten-caption">July 10, 2024</time>
                                 </div>
-                                <p class="handwritten-note">Rankings delayed due to... research.</p>
+                                <p class="handwritten-note">Rankings delayed due to... extensive research.</p>
                              </div>
                         </article>
 
-                        <!-- Sample Blog Post 3 -->
+                        <!-- Blog Post 3 -->
                          <article id="post3" class="blog-post card-item animate-on-scroll delay-2"> <!-- Added ID -->
-                            <img src="images/featured-3-placeholder.jpg" alt="Pickleball paddle and ball" class="card-image" loading="lazy"> <!-- Added loading lazy, updated alt -->
+                             <figure class="post-image-container">
+                                <img src="images/featured-3-placeholder.jpg" alt="Pickleball paddle resting on a court next to a yellow ball" class="card-image" loading="lazy" width="400" height="250">
+                             </figure>
                              <div class="post-content">
-                                <h2 class="post-title"><a href="#post3">Is Pickleball Taking Over the World? (And Should We Care?)</a></h2>
+                                <h2 class="post-title"><a href="blog.html#post3">Is Pickleball Taking Over the World? (And Should We Care?)</a></h2>
                                 <p class="post-excerpt">It's noisy, it's trendy, and it's everywhere. We dive into the pandemonium and ask the important questions, like 'Can you drink while playing?'...</p>
                                 <div class="post-meta">
-                                     <span class="post-date handwritten-caption">July 5, 2024</span>
+                                     <time datetime="2024-07-05" class="post-date handwritten-caption">July 5, 2024</time>
                                  </div>
                                  <p class="handwritten-note">Answer: Yes, carefully.</p>
                              </div>
                         </article>
 
-                        <!-- Add more articles as needed -->
+                        <!-- Add more articles following the <article> structure -->
 
                     </div> <!-- /.blog-post-list -->
 
-                    <!-- Basic Pagination Placeholder -->
+                    <!-- Basic Pagination -->
                     <nav class="pagination animate-on-scroll delay-3" aria-label="Blog Pagination">
-                         <a href="#" class="page-link disabled" aria-disabled="true" tabindex="-1">« Previous</a>
-                         <span class="page-link current" aria-current="page">1</span>
-                         <a href="#" class="page-link">2</a>
-                         <a href="#" class="page-link" aria-label="Next Page">Next »</a>
+                         <!-- Use span for disabled links, or add aria-disabled -->
+                         <span class="page-link disabled" aria-disabled="true" tabindex="-1">« Previous</span>
+                         <!-- Current page indicator -->
+                         <a href="#" class="page-link current" aria-current="page" aria-label="Current Page, Page 1">1</a>
+                         <a href="#" class="page-link" aria-label="Go to Page 2">2</a>
+                         <!-- Placeholder for ellipsis if many pages -->
+                         <!-- <span class="page-link ellipsis">...</span> -->
+                         <a href="#" class="page-link" aria-label="Go to Next Page">Next »</a>
                     </nav>
 
                 </div> <!-- /.container -->
@@ -157,34 +182,43 @@
         </main>
     </div> <!-- /.main-content-area -->
 
-     <footer id="main-footer">
+     <!-- Footer -->
+     <footer id="main-footer" role="contentinfo">
         <div class="container footer-content">
             <div class="footer-left">
-                <p>© <span id="current-year"></span> Koozie Sports. All Rights Reserved... probably.</p>
+                 <!-- Dynamic year -->
+                <p>© <span id="current-year">2024</span> Koozie Sports. All Rights Reserved... probably.</p>
                 <p class="footer-tagline">"Stay thirsty, my friends... for sports!"</p>
                 <p class="designed-by-link">
-                    <i class="fas fa-palette fa-fw"></i> Designed by <a href="https://nhannon.com" target="_blank" rel="noopener noreferrer">nhannon.com</a>
+                    <i class="fas fa-palette fa-fw" aria-hidden="true"></i> Designed by <a href="https://nhannon.com" target="_blank" rel="noopener noreferrer">nhannon.com</a>
                 </p>
             </div>
             <div class="footer-right">
-                <div class="social-links" aria-label="Social Media Links"> <!-- Added aria-label -->
-                    <a href="https://x.com/koozie_sports" target="_blank" rel="noopener noreferrer" aria-label="X/Twitter" title="X/Twitter"><i class="fab fa-x-twitter"></i></a>
-                    <a href="https://www.instagram.com/koozie_sports/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" title="Instagram"><i class="fab fa-instagram"></i></a>
-                    <a href="https://www.tiktok.com/@koozie_sports" target="_blank" rel="noopener noreferrer" aria-label="TikTok" title="TikTok"><i class="fa-brands fa-tiktok"></i></a>
-                    <a href="https://www.youtube.com/@koozie_sports" target="_blank" rel="noopener noreferrer" aria-label="YouTube" title="YouTube"><i class="fab fa-youtube"></i></a>
+                <div class="social-links" aria-label="Social Media Links">
+                    <a href="https://x.com/koozie_sports" target="_blank" rel="noopener noreferrer" aria-label="Follow us on X (formerly Twitter)" title="X/Twitter"><i class="fab fa-x-twitter"></i></a>
+                    <a href="https://www.instagram.com/koozie_sports/" target="_blank" rel="noopener noreferrer" aria-label="Follow us on Instagram" title="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="https://www.tiktok.com/@koozie_sports" target="_blank" rel="noopener noreferrer" aria-label="Follow us on TikTok" title="TikTok"><i class="fa-brands fa-tiktok"></i></a>
+                    <a href="https://www.youtube.com/@koozie_sports" target="_blank" rel="noopener noreferrer" aria-label="Subscribe on YouTube" title="YouTube"><i class="fab fa-youtube"></i></a>
                 </div>
-                 <!-- Link goes to index.html top -->
-                 <a href="index.html#page-top" class="back-to-top" title="Back to Top" aria-label="Back to Top"><i class="fas fa-angles-up"></i></a>
+                 <!-- Back to top button -->
+                 <!-- Links to page top, regardless of current scroll position -->
+                 <a href="#blog-page" class="back-to-top" title="Back to Top" aria-label="Back to Top"><i class="fas fa-angles-up" aria-hidden="true"></i></a>
+                 <!-- Alternative: Link to index page top if preferred -->
+                 <!-- <a href="index.html#page-top" class="back-to-top" title="Back to Top" aria-label="Back to Top"><i class="fas fa-angles-up" aria-hidden="true"></i></a> -->
             </div>
         </div>
     </footer>
-    <!-- >>> END FOOTER <<< -->
+    <!-- END FOOTER -->
 
-    <!-- Drunk Mode Effects Overlay -->
+    <!-- Drunk Mode Effects Overlay (Visual only) -->
     <div id="bubble-overlay" aria-hidden="true"></div>
+    <!-- Preload audio -->
     <audio id="drunk-mode-sound" src="audio/beer.mp3" preload="auto"></audio>
 
     <!-- Site Script (Uses the same script as index.html) -->
     <script src="script.js" defer></script> <!-- Added defer -->
+
+    <!-- Add external JS library links here if needed -->
+
 </body>
 </html>
